@@ -21,6 +21,6 @@ script:
   - gcloud version
   - |
     set -ex;
-    npm build && \
+    npm run build && \
     gcloud app deploy app.yaml \
     set +x
