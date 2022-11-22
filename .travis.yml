@@ -1,0 +1,29 @@
+language: minimal
+env:
+  global:
+    - CLOUD_RUN_REGION=us-west1
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1   # prevent gcloud from prompting
+before_install:
+  - gcloud auth activate-service-account --key-file=${GCLOUD_CRED_KEY}
+  - gcloud auth configure-docker        # enable "docker push" to gcr
+  - gcloud config set project "som-rit-ourvoice"
+cache:
+  directories:
+    - "$HOME/google-cloud-sdk/"
+script:
+  - gcloud version || true
+  - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
+  # Add gcloud to $PATH
+  - source /home/travis/google-cloud-sdk/path.bash.inc
+  - gcloud version
+  - |
+    set -ex;
+    docker build -t "${IMAGE}:${TRAVIS_COMMIT}" . && \
+    docker push "${IMAGE}:${TRAVIS_COMMIT}" && \
+    gcloud beta run deploy $CLOUD_RUN_SERVICE \
+      --image="$IMAGE:${TRAVIS_COMMIT}" \
+      --platform=managed \
+      --region="${CLOUD_RUN_REGION}" \
+      --ingress=all \
+      --allow-unauthenticated
+    set +x
