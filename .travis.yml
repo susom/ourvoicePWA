@@ -1,4 +1,6 @@
-language: minimal
+language: node_js
+node_js: 
+  - 16
 env:
   global:
     - CLOUD_RUN_REGION=us-west1
