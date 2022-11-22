@@ -5,8 +5,8 @@ env:
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1   # prevent gcloud from prompting
 before_install:
   - touch GOOGLE_KEY
-  - echo "${GCLOUD_CRED_KEY}" > GOOGLE_KEY
-  - gcloud auth activate-service-account --key-file=./GOOGLE_KEY
+  - echo "${GCLOUD_CRED_KEY}" > GOOGLE_KEY.json
+  - gcloud auth activate-service-account --key-file=./GOOGLE_KEY.json
   - gcloud auth configure-docker        # enable "docker push" to gcr
   - gcloud config set project "som-rit-ourvoice"
 cache:
