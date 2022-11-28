@@ -25,3 +25,33 @@ code {
 
   text-indent:-5000px;
 }
+
+.view_box{
+  width:100vw;
+  height:100vh;
+}
+
+/*REST OF HEADER STYLES IN assets/css/global_header*/
+.view_header {
+  width:100vw;
+  height:auto;
+  min-height:5vh;
+  max-height:12vh;
+  text-align:center;
+  box-shadow:0 0 2px 2px #ccc;
+}
+
+.view_body{
+
+}
+
+/*REST OF FOOTER STYLES IN assets/css/global_footer*/
+.view_footer{
+  box-shadow:0 0 2px 2px #ccc;
+  width:100vw;
+  position:fixed;
+  left:0;
+  bottom:0;
+  max-height:7vh;
+  text-align:center;
+}
