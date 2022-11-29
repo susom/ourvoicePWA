@@ -1,4 +1,4 @@
-# Ourvoice PWA [![Build Status](https://app.travis-ci.com/susom/ourvoice_admin.svg?token=vSNpxxGBXSBYMFjziTQk&branch=main)](https://app.travis-ci.com/susom/ourvoice_admin)
+# Ourvoice PWA [![Build Status](https://app.travis-ci.com/susom/ourvoicePWA.svg?branch=main)](https://app.travis-ci.com/susom/ourvoicePWA)
 
 This app's intention is to recreate the ourvoice app as a PWA for easier maintenence and deployment.
 
