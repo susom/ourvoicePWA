@@ -7,7 +7,7 @@ import {
 
 import {DatabaseContextProvider} from "./contexts/Database";
 import {SessionContextProvider} from "./contexts/Session";
-import {ProjectContextProvider} from "./contexts/Project";
+import {WalkContextProvider} from "./contexts/Walk";
 
 import GlobalHeader from "./components/global_header";
 import GlobalFooter from "./components/global_footer";
@@ -22,24 +22,26 @@ import Upload from './views/Upload';
 function App() {
   return (
     <DatabaseContextProvider>
-        <ProjectContextProvider>
-            <SessionContextProvider>
+        <SessionContextProvider>
+            <WalkContextProvider>
                 <BrowserRouter>
                     <div className="view_box">
                         <GlobalHeader/>
-                        <Routes>
-                            <Route path='/' element={<Landing />} />
-                            <Route path='/home' element={<Home />} />
-                            <Route path='/consent' element={<Consent />} />
-                            <Route path='/walk' element={<Walk />} />
-                            <Route path='/summary' element={<Summary />} />
-                            <Route path='/upload' element={<Upload />} />
-                        </Routes>
+                        <div className="view_body">
+                            <Routes>
+                                <Route path='/' element={<Landing />} />
+                                <Route path='/home' element={<Home />} />
+                                <Route path='/consent' element={<Consent />} />
+                                <Route path='/walk' element={<Walk />} />
+                                <Route path='/summary' element={<Summary />} />
+                                <Route path='/upload' element={<Upload />} />
+                            </Routes>
+                        </div>
                         <GlobalFooter/>
                     </div>
                 </BrowserRouter>
-            </SessionContextProvider>
-        </ProjectContextProvider>
+            </WalkContextProvider>
+        </SessionContextProvider>
     </DatabaseContextProvider>
   );
 }

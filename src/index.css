@@ -38,16 +38,19 @@ code {
   min-height:5vh;
   max-height:12vh;
   text-align:center;
-  box-shadow:0 0 2px 2px #ccc;
+  box-shadow:0 0 2px 1px #ccc;
 }
 
+/*REST OF VIEW Styles in assets/css/[VIEW].css*/
 .view_body{
-
+  position:relative;
+  top:50%;
+  transform: translateY(-50%);
 }
 
 /*REST OF FOOTER STYLES IN assets/css/global_footer*/
 .view_footer{
-  box-shadow:0 0 2px 2px #ccc;
+  box-shadow:0 0 2px 1px #ccc;
   width:100vw;
   position:fixed;
   left:0;
