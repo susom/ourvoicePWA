@@ -1,4 +1,4 @@
-import React, {createContext, useState} from 'react';
+import {createContext, useState} from 'react';
 import {db_walks, db_project, db_logs} from "../database/db";
 
 export const DatabaseContext = createContext({
