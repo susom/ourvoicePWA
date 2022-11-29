@@ -2,7 +2,7 @@
 
 This app's intention is to recreate the ourvoice app as a PWA for easier maintenence and deployment.
 
-This project has been containerized in Docker and deployed on App engine with TravisCI
+This project has been containerized in Docker for development and deployed on App engine with TravisCI
 
 To run in development: 
 1. `docker compose build`
