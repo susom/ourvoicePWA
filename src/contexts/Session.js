@@ -1,4 +1,4 @@
-import React, {createContext, useState} from 'react';
+import {createContext, useState} from 'react';
 
 export const SessionContext = createContext({
     data : {},
@@ -7,13 +7,12 @@ export const SessionContext = createContext({
 
 export const SessionContextProvider = ({children}) => {
     const [data, setData] = useState({
-         project_id           : "AAAA"
-        ,user_id              : ""
-        ,walk_id              : "4332"
-        ,lang                 : null
-        ,photos               : []
-        ,geotags              : []
-        ,device               : null
+        project_id : "",
+        splash_viewed : false,
+        in_walk : false,
+        current_page : [],
+        session_start : null,
+        session_end : null
     });
 
     return (
