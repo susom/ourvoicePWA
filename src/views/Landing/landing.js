@@ -1,8 +1,8 @@
 import {useState, useContext, useEffect} from "react";
-import { Navigate } from "react-router-dom";
+import {Navigate} from "react-router-dom";
 
 import {SessionContext} from "../../contexts/Session";
-import "../../assets/css/splash.css";
+import "../../assets/css/view_splash.css";
 
 export function Landing(){
     const [redirectNow, setRedirectNow] = useState(false);
