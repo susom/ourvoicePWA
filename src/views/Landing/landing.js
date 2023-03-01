@@ -1,17 +1,21 @@
-import {useState, useContext, useEffect} from "react";
+import {useContext, useState} from "react";
 import {Navigate} from "react-router-dom";
 
+import {updateContext} from "../../components/util";
 import {SessionContext} from "../../contexts/Session";
+
+
+
 import "../../assets/css/view_splash.css";
 
 export function Landing(){
+    const session_context = useContext(SessionContext);
     const [redirectNow, setRedirectNow] = useState(false);
-    const session_context               = useContext(SessionContext);
-    useEffect(() => {
-        session_context.setData({splash_viewed : false});
-    },[]);
+
+    // accessSecret();
 
     setTimeout(() => {
+        updateContext(session_context, {"splash_viewed" : true});
         setRedirectNow(true);
     }, 3000); //3 secs
 
@@ -25,4 +29,4 @@ export function Landing(){
                 <h1>Our Voice Discovery Tool</h1>
             </div>
         );
-};
+}

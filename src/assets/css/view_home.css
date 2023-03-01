@@ -23,14 +23,25 @@
     border-radius:3px;
     border:1px solid #333;
 }
+
+.home .project_setup_form input.signedIn{
+    border:none;
+    background:transparent;
+    color:#fff;
+}
+
 .home .project_setup_form span {
     display:inline-block;
     width: auto;
     margin-right: 8px;
     text-align: right;
 }
-
-.home .project_setup_form span:after{
+.home .project_setup_form span.input_field{
+    margin-right:initial;
+    text-align:left;
+    min-width:200px;
+}
+.home .project_setup_form span:not(.input_field):after{
     content:" :";
 }
 
@@ -38,7 +49,8 @@
     padding:25px 0;
 }
 
-.home .home_actions button {
+.home .home_actions button,
+.home a[role='button']{
     display:block;
     padding: 15px 0;
     margin: 0 auto 17px;
@@ -46,10 +58,11 @@
     max-width: 300px;
     box-shadow: 1px 1px 3px 1px #ccc;
     border:1px solid transparent;
+    color:#fff;
 }
 
-.home .home_actions button.start_walk,
-.home .home_actions button.project_setup{
+.home .home_actions .start_walk,
+.home .home_actions .project_setup{
     background:#96AA3D;
 }
 
@@ -58,5 +71,13 @@
     background-size:contain;
     text-indent:-5000px;
     border:none;
-    /*box-shadow:0 0 2px 1px #ccc;*/
+    box-shadow:none;
+}
+
+
+.home .home_actions .change_project{
+    background:#35587E;
+}
+.home .home_actions .upload_data{
+    background:#7C2A8B;
 }

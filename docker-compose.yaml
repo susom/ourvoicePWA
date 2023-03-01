@@ -6,7 +6,7 @@ services:
         restart: always
         stdin_open: true
         ports:
-            - "8080:3000"
+            - "8888:3000"
         environment:
             - WATCHPACK_POLLING=true
             - FAST_REFRESH=false 
@@ -14,3 +14,5 @@ services:
         volumes:
             - './:/app:delegated'
             - '/app/node_modules'
+        env_file:
+            - .env

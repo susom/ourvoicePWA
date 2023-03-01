@@ -10,6 +10,14 @@
     padding-bottom:5px;
 }
 
+.view_header .walk_id span {
+    display:none;
+}
+
+.view_header .walk_id span.has_data{
+    display:inline-block;
+}
+
 .view_header .app_title{
     display:inline-block;
     background:url("../images/logo.png") left 50% no-repeat;

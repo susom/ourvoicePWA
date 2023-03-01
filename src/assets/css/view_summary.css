@@ -1,2 +1,78 @@
 .summary {
+
+}
+
+.container {
+    text-align:center;
+}
+
+/*finish*/
+.bigpad{
+    padding:10px 0;
+}
+.horizconnect{
+    height:12px;
+    background:#57585A;
+    border-radius:0;
+    margin-bottom:0;
+}
+.consentbox.nocontent{
+    padding:0;
+    margin-top:0;
+    border:none;
+}
+.consentbox.nocontent:after{
+    bottom: -21px;
+    width: 10px;
+    height: 33px;
+}
+.consentbox.nobor{
+
+}
+.icon {
+    height:10vh;
+    background:#57585A;
+    position:relative;
+}
+
+.icon.camera{
+    background:#57585A url(../images/icon_camera.png) 50% no-repeat;
+    background-size:80%;
+}
+.icon.audiocomment{
+    background:#57585A url(../images/icon_audio_comment.png) 50% no-repeat;
+    background-size:contain;
+}
+.solidbg{
+    background:#57585A;
+    color:#fff;
+}
+
+#walkmap .consentbox{
+    padding:0;
+}
+
+#google_map{
+    min-height:200px;
+    min-width:auto;
+    margin:0;
+}
+
+.summary .btn{
+    display:block;
+    padding: 15px 0;
+    margin: 0 auto 17px;
+    width:100%;
+    max-width: 300px;
+    box-shadow: 1px 1px 3px 1px #ccc;
+    border:1px solid transparent;
+    color:#fff;
+}
+
+.summary .endwalk{
+    background:#96AA3D;
+}
+
+.summary .continuewalk{
+    background:#105881;
 }

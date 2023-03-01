@@ -5,9 +5,9 @@ import {
   Route,
 } from "react-router-dom";
 
-import {DatabaseContextProvider} from "./contexts/Database";
 import {SessionContextProvider} from "./contexts/Session";
 import {WalkContextProvider} from "./contexts/Walk";
+import {WalkmapContextProvider} from "./contexts/Walkmap";
 
 import GlobalHeader from "./components/global_header";
 import GlobalFooter from "./components/global_footer";
@@ -21,8 +21,8 @@ import Upload from './views/Upload';
 
 function App() {
   return (
-    <DatabaseContextProvider>
-        <SessionContextProvider>
+    <SessionContextProvider>
+        <WalkmapContextProvider>
             <WalkContextProvider>
                 <BrowserRouter>
                     <div className="view_box">
@@ -41,8 +41,8 @@ function App() {
                     </div>
                 </BrowserRouter>
             </WalkContextProvider>
-        </SessionContextProvider>
-    </DatabaseContextProvider>
+        </WalkmapContextProvider>
+    </SessionContextProvider>
   );
 }
 
