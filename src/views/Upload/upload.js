@@ -1,10 +1,13 @@
 import {useContext, useEffect, useState} from "react";
 
-import { Offline, Online } from 'react-detect-offline';
+import {db_walks, db_project, db_logs} from "../../database/db";
+import {updateContext} from "../../components/util";
+
 import {SessionContext} from "../../contexts/Session";
 
-// import "../../assets/css/view_upload.css";
-
+import "../../assets/css/view_upload.css";
+import {collection, getDocs, query} from "firebase/firestore";
+import {firestore} from "../../database/Firebase";
 
 function ViewBox(props){
     const [project,setProject] = useState(null);
@@ -12,6 +15,32 @@ function ViewBox(props){
     const onClickNavigate = (view) => {
         props.navigate(view);
     };
+
+    async function getWalks(){
+        const q = query(collection(firestore, "ov_walks"));
+
+        const snapshots = await getDocs(q);
+
+        if(!snapshots.empty && snapshots.size){
+            let num_photos      = 0;
+            let num_txt_audio   = 0;
+            snapshots.forEach((doc) => {
+                if (doc.exists() ){
+                    const data = doc.data();
+                    //MAKE SURE NOT ARCHIVED (can't use in where query above cause firestore cant query for field that is potentially not existing)
+
+                    if(data.photos.length){
+                        data.photos.forEach((photo) => {
+                            num_txt_audio += Object.keys(photo.audios).length;
+                            if(photo.text_comment){
+                                // num_txt_audio++;
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    }
 
     return (
 
@@ -59,7 +88,7 @@ function ViewBox(props){
 export function Upload({db_walks, db_project, db_logs, Axios, Navigate}){
     const session_context = useContext(SessionContext);
     useEffect(() => {
-        session_context.setData({splash_viewed : true});
+
     },[]);
 
     return (

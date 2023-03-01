@@ -2,14 +2,20 @@
 import Dexie from 'dexie';
 
 //Our Voice APP uses 3 separate data
-export const db_walks = new Dexie('ov_walks');
-db_walks.version(1).stores({
-    walks :  '++id, device, photos, geotags, project_id, lang, timestamp'
-});
 
 export const db_project = new Dexie('ov_project');
 db_project.version(1).stores({
-    active_project  : 'project_id, expire_date, name, languages, audio_comments, text_comments, thumbs, custom_take_photo_text, show_project_tags, tags, ov_meta, timestamp'
+    active_project  : 'project_id, audio_comments, custom_take_photo_text, expire_date, languages, name, project_created, project_email, show_project_tags, tags, text_comments, thumbs, ov_meta, timestamp'
+});
+
+export const db_walks = new Dexie('ov_walks');
+db_walks.version(1).stores({
+    walks :  '++id, project_id, user_id, timestamp, walk_id, lang, photos, geotags, device'
+});
+
+export const db_files = new Dexie('ov_files');
+db_files.version(1).stores({
+    files  : '++id, name, file'
 });
 
 export const db_logs = new Dexie('ov_logs');

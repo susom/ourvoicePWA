@@ -1,2 +1,102 @@
-.consent{
+/*consent*/
+.panel {
+    position  : relative;
+    min-width : 100%;
+    text-align:center;
+}
+
+.content {
+    margin:0 auto;
+}
+
+.buttons button, .buttons .btn{
+    display:block;
+    padding: 15px 0;
+    margin: 0 auto 17px;
+    width:100%;
+    max-width: 300px;
+    box-shadow: 1px 1px 3px 1px #ccc;
+    border:1px solid transparent;
+    color:#fff;
+    background:#96AA3D;
+}
+
+#consent_0 .consentbox ,
+#consent_1 .safteytip div{
+    font-size:130%;
+}
+#consent_0 .consentbox ,
+#consent_1 .consentbox{
+    padding-top:8px !important;
+    padding-bottom:8px !important;
+}
+
+.consentbox{
+    border:1px solid #57585A;
+    border-radius:5px;
+    margin:10px auto 20px;
+    position:relative;
+
+    text-align:center;
+    font-size:108%;
+    padding:5px auto;
+}
+.vertconnect:after{
+    content:"";
+    position:absolute;
+    left:50%;
+    margin-left:-10px;
+    bottom:-22px;
+    width:10px;
+    height:22px;
+    background:#57585A;
+}
+
+.safteytip {
+    text-align:left;
+    margin:10px 0;
+}
+.safteytip div {
+    display:table;
+    min-height:9vh;
+    font-size:140%;
+    line-height:108%;
+}
+.safteytip img {
+    max-width:10vmax;
+    max-height:10vmax;
+    display:block;
+    margin:0 auto;
+}
+.safteytip span{
+    display:table-cell;
+    vertical-align: middle;
+}
+
+
+.green_man_speech{
+    position:relative;
+    z-index:0;
+}
+.green_man_speech:before{
+    content:"";
+    position:absolute;
+    width:30px; height:30px;
+    top:50%;
+    margin-top:-10px;
+    left:-33px;
+    background:url(../images/icon_green_person.png) 50% no-repeat;
+    background-size:contain;
+    z-index:1;
+}
+.green_man_speech:after{
+    content:"";
+    position:absolute;
+    width:10px; height:10px;
+    margin-top:-5px;
+    top:45%;
+    left:0;
+    background:url(../images/icon_speech_bubble.png) 50% no-repeat;
+    background-size:contain;
+    z-index: 1;
 }

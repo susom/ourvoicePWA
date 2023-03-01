@@ -1,34 +1,25 @@
 import {useEffect, useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
+
 import Button from 'react-bootstrap/Button';
 
 import { collection, getDoc, getDocs, doc, onSnapshot, where, query } from "firebase/firestore";
 import {firestore, firebaseAuth} from "../../database/Firebase";
 import {signInAnonymously,onAuthStateChanged} from "firebase/auth";
 
-import {DatabaseContext} from "../../contexts/Database";
-import {SessionContext} from "../../contexts/Session";
+import {db_walks, db_project, db_files, db_logs} from "../../database/db";
+import {updateContext, tsDiffInHours} from "../../components/util";
 
+import {WalkmapContext} from "../../contexts/Walkmap";
+import {SessionContext} from "../../contexts/Session";
+import {WalkContext} from "../../contexts/Walk";
+
+import HomeLead from "../../components/home_lead";
 import "../../assets/css/view_home.css";
 
-function ViewLead(){
-    return (
-        <div className="view_lead">
-            <p>Thank you for your interest in the Discovery Tool</p>
-            <p>The Discovery Tool is only available for use in approved projects.</p>
-            <p>For more information please visit<br/><a href="https://ourvoice.stanford.edu">https://ourvoice.stanford.edu</a></p>
-        </div>
-    );
-}
-
 function ViewProjectDetails(props){
-    const db_project            = props.db_project;
-    const db_context            = useContext(DatabaseContext);
-    const db                    = db_context.data;
-
-
-    const [pcode, setPcode]     = useState("");
-    const [pword, setPword]     = useState("");
+    const session_context       = useContext(SessionContext);
+    const walk_context          = useContext(WalkContext);
     const [status, setStatus]   = useState("");
 
     //hmm by setting firestore rule to request.auth.uid != null it works whether or not im signed in anonymosly?
@@ -43,56 +34,51 @@ function ViewProjectDetails(props){
     //     console.error(error,errorCode,errorMessage);
     // });
 
-    // console.log("Project Details context", project_deets["project_code"]);
     async function checkLogin(){
-        const q = query(collection(firestore, "dev_ov_projects")
-            , where("code", "==", pcode)
-            , where("project_pass", "==", pword)
+        const q = query(collection(firestore, "ov_projects")
+            , where("code", "==", props.pcode)
+            , where("project_pass", "==", props.pword)
         );
 
         const snapshots = await getDocs(q);
-
         if(!snapshots.empty && snapshots.size){
             snapshots.forEach((doc) => {
                 if (doc.exists() ){
                     const data = doc.data();
                     //MAKE SURE NOT ARCHIVED (can't use in where query above cause firestore cant query for field that is potentially not existing)
+
                     if(!data.hasOwnProperty("archived")){
-                        //doc.metadata //fromCache : false, hasPendingWrites :false
-                        //doc.id = pcode
-                        //doc.get([field]);
                         setStatus("");
                         props.projectSignInOut(true);
 
-                        console.log(data, data["tags"], doc.get("tags"));
-
                         const active_project_data = {
-                            project_id  : pcode,
-                            timestamp : Date.now(),
-                            expire_date : doc.get("expire_date"),
-                            name : doc.get("name"),
-                            languages : doc.get("languages"),
-                            custom_take_photo_text : doc.get("custom_take_photo_text"),
-                            audio_comments : parseInt(doc.get("audio_comments")),
-                            text_comments : parseInt(doc.get("text_comments")),
-                            thumbs: parseInt(doc.get("thumbs")),
-                            show_project_tags : data.hasOwnProperty("show_project_tags") ? parseInt(doc.get("show_project_tags")) : 0,
-                            tags :data.hasOwnProperty("tags") ? doc.get("tags") : [],
+                            project_id              : props.pcode,
+                            audio_comments          : parseInt(doc.get("audio_comments")),
+                            custom_take_photo_text  : doc.get("custom_take_photo_text"),
+                            expire_date             : doc.get("expire_date"),
+                            languages               : doc.get("languages"),
+                            name                    : doc.get("name"),
+                            project_created         : doc.get("project_created"),
+                            project_email           : doc.get("project_email"),
+                            show_project_tags       : data.hasOwnProperty("show_project_tags") ? parseInt(doc.get("show_project_tags")) : 0,
+                            tags                    : data.hasOwnProperty("tags") ? doc.get("tags") : [],
+                            text_comments           : parseInt(doc.get("text_comments")),
+                            thumbs                  : parseInt(doc.get("thumbs")),
+                            ov_meta                 : null,
+                            timestamp               : Date.now()
                         };
-                        /*
-                        // * ov_meta
-                        */
+
+                        //TODO GET ov_meta AND PUT IN AP too
                         updateActiveProject(active_project_data);
                     }else{
                         setStatus("Invalid Project Id or Project Password");
-                        setPword("");
+                        props.setPword("");
                     }
                 }
             });
-            // snapshots.metadata //fromCache : false, hasPendingWrites :false
         }else{
             setStatus("Invalid Project Id or Project Password");
-            setPword("");
+            props.setPword("");
         }
 
         // USE THIS PATTERN IF NEED TO ONLY PULL NEW SINCE LAST PULL?
@@ -106,73 +92,67 @@ function ViewProjectDetails(props){
 
     async function updateActiveProject(active_project_data) {
         try {
-            // const id = await db_project.active_project.add(active_project_data).then(async() => {
-            //     const all_project_data = await db_project.active_project.toArray();
-            //     console.log("all active project data", all_project_data);
-            //     // props.projectSignInOut(true);
-            // });
             db_project.active_project.clear();
             const id = await db_project.active_project.add(active_project_data).then(() => {
                 setStatus("");
             });
+
+            props.setPcode(active_project_data.project_id);
+            updateContext(session_context, { "project_info" : active_project_data, "project_id" : active_project_data.project_id });
+            updateContext(walk_context, {"project_id" : active_project_data.project_id});
         } catch (error) {
-            console.log(`Failed to add ${pcode}: ${error}`);
+            console.log(`Failed to add ${props.pcode}: ${error}`);
         }
     }
 
     const getPostInfo = (e) => {
         e.preventDefault();
 
-        if(pcode !== "" && pword !== ""){
+        if(props.pcode !== "" && props.pword !== ""){
             let active_project_data = {
-                project_id : pcode,
-                project_pw : pword,
-                project_meta : ["butthead", "beavis"],
+                project_id : props.pcode,
+                project_pw : props.pword,
                 timestamp : Date.now()
             }
 
-            //TODO i dont want to save the passcode right, Also if there is an active project I should just auto log it in if < 24 hours
-            //TODO IF there is an active project > 24 hours, i should check if online and then refresh it anyway
-            const active_project = db_project.active_project.where({project_id: pcode}).first();
-
+            const active_project = db_project.active_project.where({project_id: props.pcode}).first();
             active_project.then( function(project_data) {
-                // Post my cars to the server:
-                const date_diff     = project_data ? Date.now() - project_data["timestamp"]  : 0;
-                const diff_hours    = 25;//Math.round(date_diff/(60 * 1000 * 60));
-
-
-
-
-                if(date_diff && diff_hours <= 24){
-                    console.log("there is an active project! last updated ", diff_hours , " ago");
+                const diff_hours = project_data ? tsDiffInHours(project_data["timestamp"] , Date.now()) : 999;
+                if(diff_hours <= 24){
+                    setStatus("");
+                    props.projectSignInOut(true);
+                    updateContext(session_context, {"project_id" : project_data.project_id});
+                    updateContext(walk_context, {"project_id" : project_data.project_id});
+                    console.log("has active project, so auto login, do i need to set session context?", session_context.data, walk_context.data);
                 }else{
-                    console.log("there is no active project or the 24 hour period has expired, so check against server IF OFFLINE");
+                    console.log("there is no active project or the 24 hour period has expired");
                     if(navigator.onLine){
-                        //TODO if online pull new copy, if offline continue using the stale one for now until next refresh.
-                        //TODO if they leave app open and its > 24 hours... need to log out and make them log back in periodically... poll?
-
+                        console.log("May or May not have active project, but ONLINE so check server for fresh project data", session_context.data);
+                        // if online pull new copy, if offline continue using the stale one for now until next refresh.
                         checkLogin();
                     }else{
                         //is offline
-                        console.log("am offline, fall back to use the stale (24+ hour old) active_project data");
+                        console.log("May or May not have active project, OFFLINE so auto login", session_context.data);
                     }
                 }
             }).catch(function(error) {
                 // Handle error
-                console.log("what error? getPostInfo()", error);
+                console.log("IndexDB query error? active_project", error);
             });
         }
     };
 
-    const pw_or_language = props.signedIn ? (
+    let pw_or_language = props.signedIn  ? (
         <label><span>Language</span>
-            <select onChange={ e => console.log("TODO change language") }>
-                <option>English</option>
-            </select>
+            <span className="input_field">
+                <select onChange={ e => console.log("TODO change language") }>
+                    <option>English</option>
+                </select>
+            </span>
         </label>
     ) : (
         <label><span>Passcode</span>
-            <input type="password" onChange={ e => setPword(e.target.value)} value={pword} placeholder='eg; 1234'/>
+            <span className="input_field"><input type="password" onChange={ e => props.setPword(e.target.value)} value={props.pword} placeholder='eg; 1234'/></span>
         </label>
     );
 
@@ -181,7 +161,7 @@ function ViewProjectDetails(props){
             <div className="project_login">
                 <p className="signin_status">{status}</p>
                 <label><span>Project ID</span>
-                    <input type="text" className={props.signedIn ? "signedIn" : ""} disabled={props.signedIn ? true : false} onChange={ e => setPcode(e.target.value)} value={pcode} placeholder='eg; ABCD'/>
+                    <span className="input_field"><input type="text" className={props.signedIn ? "signedIn" : ""} disabled={props.signedIn && session_context.data.project_id != null ? true : false} onChange={ e => props.setPcode(e.target.value) } value={props.pcode} placeholder='eg; ABCD'/></span>
                 </label>
                 {pw_or_language}
             </div>
@@ -190,51 +170,75 @@ function ViewProjectDetails(props){
 }
 
 function Actions(props){
-    const onClickNav = props.onClickNav;
+    const session_context       = useContext(SessionContext);
+    const walk_context          = useContext(WalkContext);
+
     const [clicks, setClicks]   = useState(0);
-    const db_context            = useContext(DatabaseContext);
-    const db                    = db_context.data;
 
     const onClickDeleteInc = () => {
         setClicks(clicks+1);
-        if(clicks == 8){
+        if(clicks == 10){
             if(window.confirm('All Discovery Tool data saved on this device will be deleted and reset. Click \'Ok\' to proceed.')){
                 console.log("truncate followind DB; db_walks, db_project, db_logs, localStorage");
 
                 //TRUNCATE ALL THREE LOCAL INDEXDBs'
-                db.walks.table("walks").clear();
-                db.project.table("active_project").clear();
-                db.logs.table("logs").clear();
+                db_project.table("active_project").clear();
+                db_walks.table("walks").clear();
+                db_files.table("files").clear();
+                db_logs.table("logs").clear();
                 localStorage.clear();
 
                 //RESET UI BY CHANGING SIGN IN /OUT STATE
+                updateContext(session_context, {"project_id" : null, "project_info" : {}});
                 props.projectSignInOut(false);
-            }
 
+                console.log("please let me master contexts goddamn it", session_context.data);
+            }
             //RESET CLICK COUNT TO 0
             setClicks(0);
         }
     }
 
+    const startConsent = (e) => {
+        //DONT NEED ANYTHING HERE
+    }
+    const signInProject = (e) => {
+        //DONT NEED ANYTHING HERE?
+        // console.log("sign in project");
+    }
+
+    const changeProject = (e) => {
+        props.projectSignInOut(false);
+        updateContext(session_context, {"project_id" : null});
+        updateContext(walk_context, {"project_id" : null});
+        console.log("change project");
+    }
+
     //DO WE STILL NEED AN "upload page"?
-    return props.signedIn ? (
+    return props.signedIn  ? (
         <div className="home_actions">
             <Button
-                className="start_walk"
+                className="start_walk project_setup"
                 variant="primary"
                 as={Link} to="/consent"
-            >Start</Button>
+                onClick={(e) => {
+                    startConsent(e);
+                }}
+            >Start Walk</Button>
 
             <Button
-                className="change_project"
+                className="change_project project_setup"
                 variant="info"
-                onClick={ () => props.projectSignInOut(false) }
+                onClick={(e) => {
+                    changeProject(e);
+                }}
+                as={Link} to="/home"
             >Change Project</Button>
 
             <Button
-                className="upload_data"
+                className="upload_data project_setup"
                 variant="info"
-                onClick={onClickNav("/consent")}
+                as={Link} to="/upload"
             >View/Upload Data</Button>
         </div>
     ) : (
@@ -244,6 +248,9 @@ function Actions(props){
                 type="submit"
                 variant="success"
                 className="project_setup"
+                onClick={(e) => {
+                    signInProject(e);
+                }}
             >Setup project on this device</Button>
 
             <Button
@@ -251,18 +258,17 @@ function Actions(props){
                 className="truncate_database"
                 onClick={onClickDeleteInc}
             >Truncate Local Database</Button>
-
         </div>
     );
 }
 
 function ViewBox(props){
-    const [project,setProject] = useState(null);
-
     const history = useNavigate();
+    const session_context = useContext(SessionContext);
 
     const onSignInOut = (flag) => {
         props.setSignedIn(flag);
+        updateContext(session_context, {"signed_in" : flag});
     }
 
     const onClickNavigate = (view) => {
@@ -271,14 +277,24 @@ function ViewBox(props){
 
     return (
             <div className="content home">
-                <ViewLead/>
+                <HomeLead signedIn={props.signedIn}/>
 
                 <ViewProjectDetails
+                    pcode={props.pcode}
+                    setPcode={props.setPcode}
+                    pword={props.pword}
+                    setPword={props.setPword}
+
                     signedIn={props.signedIn}
                     projectSignInOut={onSignInOut}
                 />
 
                 <Actions
+                    pcode={props.pcode}
+                    setPcode={props.setPcode}
+                    pword={props.pword}
+                    setPword={props.setPword}
+
                     signedIn={props.signedIn}
                     projectSignInOut={onSignInOut}
                     onClickNav = { onClickNavigate }
@@ -288,6 +304,79 @@ function ViewBox(props){
 }
 
 export function Home(){
+    const walkmap_context           = useContext(WalkmapContext); //THE API NEEDS TO "warm up" SO KICK IT OFF HERE BUT DONT STORE DATA UNTIL 'in_walk'
+    const session_context           = useContext(SessionContext);
+    const walk_context              = useContext(WalkContext);
+
+    const [pcode, setPcode]         = useState("");
+    const [pword, setPword]         = useState("");
+    const [signedIn, setSignedIn]   = useState(null);
+
+    useEffect(() => {
+        //check if there is a recent login to a project and set in session if so
+        const active_project_col = db_project.active_project.toCollection();
+
+        // Query the object store to get the number of records
+        active_project_col.count().then(count => {
+            if (count > 0) {
+                const getActiveProject  = async () => {
+                    try {
+                        const firstRecord = await active_project_col.first();
+                        return firstRecord;
+                    } catch (error) {
+                        console.error('Error getting active project: ', error);
+                    }
+                }
+                const active_project    = getActiveProject();
+
+                active_project.then((ap) => {
+                    const diffInHours = tsDiffInHours(ap["timestamp"], Date.now());
+                    if(diffInHours<24){
+                        // console.log("Project Info in Cache is < 24h, populate Session_context", ap);
+                        let session_data = {
+                            project_id : ap["project_id"],
+                            splash_viewed : true,
+                            signed_in : true,
+                            project_info : ap
+                        };
+                        updateContext(session_context, session_data);
+                        setPcode(ap["project_id"]);
+                        setSignedIn(true);
+                    }
+                });
+            }else{
+                // console.log("no active project, need to login");
+            }
+        }).catch(error => {
+            console.error('Error counting records:', error);
+        });
+
+        // const get_ov_meta = async () => {
+        //     try {
+        //         const docref    = doc(collection(firestore, 'ov_meta'));
+        //         const colref    = collection(docref, 'app_data');
+        //         console.log("what you mean missing permissions", colref);
+        //         const snapshots = await getDocs(colref);
+        //
+        //         if(!snapshots.empty && snapshots.size){
+        //             console.log("ov_meta please", snapshots.size);
+        //             snapshots.forEach((doc) => {
+        //                 if (doc.exists() ){
+        //                     const data = doc.data();
+        //                     return data;
+        //                 }
+        //             });
+        //         }
+        //
+        //         return null;
+        //     } catch (error) {
+        //         console.error('Error getting ov_meta: ', error);
+        //     }
+        //
+        // }
+        // const ov_meta = get_ov_meta();
+    }, []);
+
     // useEffect(() => {
     //     //LITERALLY DO NOT NEED THIS SINCE FIREBASE WILL PUSH WHEN ONLINE
     //     onAuthStateChanged(firebaseAuth, (user) => {
@@ -312,14 +401,7 @@ export function Home(){
     //     });;
     // },[]);
 
-    const session_context = useContext(SessionContext);
-    useEffect(() => {
-        session_context.setData({splash_viewed : true});
-    },[]);
-
-    const [signedIn, setSignedIn] = useState(null);
-
     return (
-        <ViewBox signedIn={signedIn} setSignedIn={setSignedIn} />
+        <ViewBox signedIn={signedIn} setSignedIn={setSignedIn} pcode={pcode} setPcode={setPcode} pword={pword} setPword={setPword}/>
     )
 }
