@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import {db_walks, db_logs} from "../../database/db";
+import {db_walks} from "../../database/db";
 import {updateContext} from "../../components/util";
 
 import {WalkContext} from "../../contexts/Walk";
@@ -114,25 +114,25 @@ export function Consent({Navigate}){
                         </Row>
 
                         <Row className="safteytip">
-                            <Col sm={{span:3, offset:1}}><span><img src={pic_walk_with_another}/></span></Col>
+                            <Col sm={{span:3, offset:1}}><span><img alt='' src={pic_walk_with_another}/></span></Col>
                             <Col sm={7}><span data-translation-key="saftey_tips_1">Walk with another person, if possible</span>
                             </Col>
                         </Row>
 
                         <Row className="safteytip">
-                            <Col sm={{span:3, offset:1}}><span><img src={pic_danger_2}/></span></Col>
+                            <Col sm={{span:3, offset:1}}><span><img alt='' src={pic_danger_2}/></span></Col>
                             <Col sm={7}><span data-translation-key="saftey_tips_2">Pay attention and avoid dangerous situations</span>
                             </Col>
                         </Row>
 
                         <Row className="safteytip">
-                            <Col sm={{span:3, offset:1}}><span><img src={pic_no_faces}/></span></Col>
+                            <Col sm={{span:3, offset:1}}><span><img alt='' src={pic_no_faces}/></span></Col>
                             <Col sm={7}><span data-translation-key="saftey_tips_3">Do not take pictures of people's faces</span>
                             </Col>
                         </Row>
 
                         <Row className="safteytip">
-                            <Col sm={{span:3, offset:1}}><span><img src={pic_ask_help}/></span></Col>
+                            <Col sm={{span:3, offset:1}}><span><img alt=''  src={pic_ask_help}/></span></Col>
                             <Col sm={7}><span data-translation-key="saftey_tips_4">Ask for help if you need it</span>
                             </Col>
                         </Row>

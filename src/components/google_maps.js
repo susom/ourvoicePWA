@@ -32,7 +32,7 @@ const GMapContainer = ({ coordinates }) => {
         if(window.google){
             setApiLoaded(true);
         }
-    },[window.google]);
+    },[]);
 
     return (
         !apiLoaded ? <LoadScript googleMapsApiKey="AIzaSyB7bJMYfQLt_xOhecW4RnHRNhdUCv8zE4M" >

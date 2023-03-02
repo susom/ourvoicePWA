@@ -10,7 +10,7 @@ import "../assets/css/global_footer.css";
 function GlobalFooter (){
     //if upload, summary, change project, go home
     const location          = useLocation();
-    const show_footer       = location.pathname != "/" && location.pathname != "/home";
+    const show_footer       = location.pathname !== "/" && location.pathname !== "/home";
 
     const session_context   = useContext(SessionContext);
     const walk_context      = useContext(WalkContext);

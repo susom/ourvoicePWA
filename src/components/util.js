@@ -27,7 +27,7 @@ export function updateContext(context, updates){
 
     //OR IF DEEP COPY use lodash
     //using lodash to deep copy and deep merge doesnt fucking work
-    const updated_obj   = deepMerge(context.data, updates);
+    // const updated_obj   = deepMerge(context.data, updates);
 
     context.setData(context_copy);
 }

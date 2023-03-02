@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col';
 import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 
-import {db_walks, db_project, db_logs} from "../../database/db";
+import {db_walks} from "../../database/db";
 import {updateContext, putDb} from "../../components/util";
 import GMapContainer from "../../components/google_maps";
 
@@ -52,7 +52,7 @@ function ViewBox(props){
             let fcounts = 0;
             for(let ph_i in walk_context.data.photos){
                 let photo   = walk_context.data.photos[ph_i];
-                if(photo.hasOwnProperty("text_comment") && photo.text_comment != ""){
+                if(photo.hasOwnProperty("text_comment") && photo.text_comment !== ""){
                     setObsCount(obsCount + 1);
                     fcounts++;
                 }
@@ -63,7 +63,7 @@ function ViewBox(props){
             }
             setObsCount(fcounts);
         }
-    },[walk_context.data]);
+    },[walk_context.data, coordinates, obsCount]);
 
     // const newMarker = {
     //     lat: latLng.lat(),

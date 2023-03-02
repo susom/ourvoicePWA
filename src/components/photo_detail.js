@@ -5,9 +5,9 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import {GrKeyboard} from 'react-bootstrap-icons';
+// import {GrKeyboard} from 'react-bootstrap-icons';
 
-import {db_walks, db_files, db_logs} from "../database/db";
+import {db_walks, db_files} from "../database/db";
 import {updateContext, hasGeo, cloneDeep} from "../components/util";
 
 import {SessionContext} from "../contexts/Session";
@@ -126,7 +126,7 @@ function PhotoDetail(props){
                 console.log(`Failed to add ${walk_context.data.walk_id}: ${error}`);
             }
         };
-        const walk_update_promise = update_walk();
+        update_walk();
         // console.log("Saved Walk to INdexDB", walk_update_promise);
 
         clearStates();
@@ -177,7 +177,7 @@ function PhotoDetail(props){
                                     <Container>
                                         <Row className="recent_pic">
                                             <Col>
-                                                <img src={props.photo ? props.photo : icon_walk} id="recent_pic"/>
+                                                <img src={props.photo ? props.photo : icon_walk} id="recent_pic" alt="current"/>
                                             </Col>
                                         </Row>
 
@@ -190,11 +190,11 @@ function PhotoDetail(props){
 
                                         <Row className="audio_text">
                                             <Col sm={{span: 2, offset: 1}} className="text_text">
-                                            <a href="#" className={`btn daction keyboard ${textComment != "" && textComment != null ? "edit" : ""}`} onClick={(e)=>{
+                                            <a href="/#" className={`btn daction keyboard ${textComment !== "" && textComment !== null ? "edit" : ""}`} onClick={(e)=>{
                                                     e.preventDefault();
                                                     setShowText(!showText);
                                                     document.getElementById("text_comment").focus();
-                                                }}></a>
+                                                }}>keyboard</a>
                                             </Col>
                                             <Col sm={{span: 9, offset: 0}} className="record_audio">
                                                 <AudioRecorderWithIndexDB stateAudios={audios} stateSetAudios={setAudios}/>
@@ -202,7 +202,7 @@ function PhotoDetail(props){
                                                 <div id="saved_audio">
                                                     {
                                                         Object.keys(audios).map((key, idx) => {
-                                                            return <a className="saved" key={key} onClick={(e) => { handleAudio(e, key) }}>{idx+1}</a>
+                                                            return <a href="/#" className="saved" key={key} onClick={(e) => { handleAudio(e, key) }}>{idx+1}</a>
                                                         })
                                                     }
                                                 </div>
@@ -234,7 +234,7 @@ function PhotoDetail(props){
                                                         session_context.data.project_info.tags.length
                                                             ? <Col id="project_tags" className="col-sm-10 col-sm-offset-1">
                                                                 {session_context.data.project_info.tags.map((item)=>(
-                                                                    <a href="#" className={`project_tag ${tags.includes(item) ? 'on' : ''}`} key={item} onClick={(e)=> {
+                                                                    <a href="/#" className={`project_tag ${tags.includes(item) ? 'on' : ''}`} key={item} onClick={(e)=> {
                                                                         saveTag(e, item);
                                                                     }}>{item}</a>
                                                                 ))}
@@ -255,14 +255,14 @@ function PhotoDetail(props){
                                         </Row>
 
                                         <Row className="goodbad votes smilies">
-                                            <Col sm={{span: 2, offset: 2}}><a href="#"
+                                            <Col sm={{span: 2, offset: 2}}><a href="/#"
                                                                               className={`vote up smilies ${upVote ? 'on' : ''} `}
-                                                                              onClick={(e) => voteClick(e, 1)}></a></Col>
+                                                                              onClick={(e) => voteClick(e, 1)}>up</a></Col>
                                             <Col sm={{span: 4, offset: 0}} className="jointext"
                                                  data-translation-key="chose_one">Choose one or both</Col>
-                                            <Col sm={{span: 2, offset: 0}}><a href="#"
+                                            <Col sm={{span: 2, offset: 0}}><a href="/#"
                                                                               className={`vote down smilies ${downVote ? 'on' : ''}`}
-                                                                              onClick={(e) => voteClick(e, 0)}></a></Col>
+                                                                              onClick={(e) => voteClick(e, 0)}>down</a></Col>
                                         </Row>
 
                                         <Row className="btns">

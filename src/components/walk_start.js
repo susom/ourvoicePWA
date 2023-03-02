@@ -56,13 +56,13 @@ function WalkStart(props){
                             <Container>
                                 <Row>
                                     <Col className="custom_takephoto_text">
-                                        <h5 className="offset-sm-1 col-sm-10"></h5>
+                                        <h5 className="offset-sm-1 col-sm-10">&nbps;</h5>
                                     </Col>
                                 </Row>
 
                                 <Row className="photoaction">
                                     <Col className="actions">
-                                        <a href="#" onClick={takePhotoHandler} className="btn button action daction camera">
+                                        <a href="/#" onClick={takePhotoHandler} className="btn button action daction camera">
                                             <b data-translation-key="take_photo">Take a photo</b>
                                             <b data-translation-key="take_another">Take another photo</b>
                                         </a>

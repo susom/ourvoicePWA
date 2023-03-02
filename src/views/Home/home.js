@@ -3,9 +3,9 @@ import { useNavigate, Link } from "react-router-dom";
 
 import Button from 'react-bootstrap/Button';
 
-import { collection, getDoc, getDocs, doc, onSnapshot, where, query } from "firebase/firestore";
-import {firestore, firebaseAuth} from "../../database/Firebase";
-import {signInAnonymously,onAuthStateChanged} from "firebase/auth";
+import { collection, getDocs, where, query } from "firebase/firestore";
+import {firestore} from "../../database/Firebase";
+// import {signInAnonymously,onAuthStateChanged} from "firebase/auth";
 
 import {db_walks, db_project, db_files, db_logs} from "../../database/db";
 import {updateContext, tsDiffInHours} from "../../components/util";
@@ -93,7 +93,7 @@ function ViewProjectDetails(props){
     async function updateActiveProject(active_project_data) {
         try {
             db_project.active_project.clear();
-            const id = await db_project.active_project.add(active_project_data).then(() => {
+            await db_project.active_project.add(active_project_data).then(() => {
                 setStatus("");
             });
 
@@ -109,11 +109,6 @@ function ViewProjectDetails(props){
         e.preventDefault();
 
         if(props.pcode !== "" && props.pword !== ""){
-            let active_project_data = {
-                project_id : props.pcode,
-                project_pw : props.pword,
-                timestamp : Date.now()
-            }
 
             const active_project = db_project.active_project.where({project_id: props.pcode}).first();
             active_project.then( function(project_data) {
@@ -161,7 +156,7 @@ function ViewProjectDetails(props){
             <div className="project_login">
                 <p className="signin_status">{status}</p>
                 <label><span>Project ID</span>
-                    <span className="input_field"><input type="text" className={props.signedIn ? "signedIn" : ""} disabled={props.signedIn && session_context.data.project_id != null ? true : false} onChange={ e => props.setPcode(e.target.value) } value={props.pcode} placeholder='eg; ABCD'/></span>
+                    <span className="input_field"><input type="text" className={props.signedIn ? "signedIn" : ""} disabled={props.signedIn && session_context.data.project_id !== null ? true : false} onChange={ e => props.setPcode(e.target.value) } value={props.pcode} placeholder='eg; ABCD'/></span>
                 </label>
                 {pw_or_language}
             </div>
@@ -177,7 +172,7 @@ function Actions(props){
 
     const onClickDeleteInc = () => {
         setClicks(clicks+1);
-        if(clicks == 10){
+        if(clicks === 10){
             if(window.confirm('All Discovery Tool data saved on this device will be deleted and reset. Click \'Ok\' to proceed.')){
                 console.log("truncate followind DB; db_walks, db_project, db_logs, localStorage");
 
@@ -306,7 +301,8 @@ function ViewBox(props){
 export function Home(){
     const walkmap_context           = useContext(WalkmapContext); //THE API NEEDS TO "warm up" SO KICK IT OFF HERE BUT DONT STORE DATA UNTIL 'in_walk'
     const session_context           = useContext(SessionContext);
-    const walk_context              = useContext(WalkContext);
+
+    console.log(walkmap_context.data.length);
 
     const [pcode, setPcode]         = useState("");
     const [pword, setPword]         = useState("");
@@ -375,7 +371,7 @@ export function Home(){
         //
         // }
         // const ov_meta = get_ov_meta();
-    }, []);
+    }, [session_context]);
 
     // useEffect(() => {
     //     //LITERALLY DO NOT NEED THIS SINCE FIREBASE WILL PUSH WHEN ONLINE

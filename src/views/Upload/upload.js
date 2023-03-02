@@ -1,46 +1,41 @@
-import {useContext, useEffect, useState} from "react";
+import {useEffect} from "react";
 
-import {db_walks, db_project, db_logs} from "../../database/db";
-import {updateContext} from "../../components/util";
-
-import {SessionContext} from "../../contexts/Session";
+// import {db_walks, db_project, db_logs} from "../../database/db";
+// import {updateContext} from "../../components/util";
 
 import "../../assets/css/view_upload.css";
-import {collection, getDocs, query} from "firebase/firestore";
-import {firestore} from "../../database/Firebase";
 
 function ViewBox(props){
-    const [project,setProject] = useState(null);
 
-    const onClickNavigate = (view) => {
-        props.navigate(view);
-    };
+    // const onClickNavigate = (view) => {
+    //     props.navigate(view);
+    // };
 
-    async function getWalks(){
-        const q = query(collection(firestore, "ov_walks"));
-
-        const snapshots = await getDocs(q);
-
-        if(!snapshots.empty && snapshots.size){
-            let num_photos      = 0;
-            let num_txt_audio   = 0;
-            snapshots.forEach((doc) => {
-                if (doc.exists() ){
-                    const data = doc.data();
-                    //MAKE SURE NOT ARCHIVED (can't use in where query above cause firestore cant query for field that is potentially not existing)
-
-                    if(data.photos.length){
-                        data.photos.forEach((photo) => {
-                            num_txt_audio += Object.keys(photo.audios).length;
-                            if(photo.text_comment){
-                                // num_txt_audio++;
-                            }
-                        });
-                    }
-                }
-            });
-        }
-    }
+    // async function getWalks(){
+    //     const q = query(collection(firestore, "ov_walks"));
+    //
+    //     const snapshots = await getDocs(q);
+    //
+    //     if(!snapshots.empty && snapshots.size){
+    //         let num_photos      = 0;
+    //         let num_txt_audio   = 0;
+    //         snapshots.forEach((doc) => {
+    //             if (doc.exists() ){
+    //                 const data = doc.data();
+    //                 //MAKE SURE NOT ARCHIVED (can't use in where query above cause firestore cant query for field that is potentially not existing)
+    //
+    //                 if(data.photos.length){
+    //                     data.photos.forEach((photo) => {
+    //                         num_txt_audio += Object.keys(photo.audios).length;
+    //                         if(photo.text_comment){
+    //                             // num_txt_audio++;
+    //                         }
+    //                     });
+    //                 }
+    //             }
+    //         });
+    //     }
+    // }
 
     return (
 
@@ -53,8 +48,8 @@ function ViewBox(props){
                         <div className="col-sm-2"><span data-translation-key="date">Date</span></div>
                         <div className="col-sm-2"><span data-translation-key="project">Project</span></div>
                         <div className="col-sm-2"><span data-translation-key="walk_id">ID</span></div>
-                        <div className="col-sm-2"><span><img src="img/icon_camera_black.png"/></span></div>
-                        <div className="col-sm-2"><span><img src="img/icon_audio_comment_black.png"/></span></div>
+                        <div className="col-sm-2"><span><img alt='' src="img/icon_camera_black.png"/></span></div>
+                        <div className="col-sm-2"><span><img alt='' src="img/icon_audio_comment_black.png"/></span></div>
                         <div className="col-sm-2"><span data-translation-key="upload_status">Status</span></div>
                     </div>
 
@@ -66,19 +61,11 @@ function ViewBox(props){
                                 <div className="col-sm-2 walkid">9876</div>
                                 <div className="col-sm-2">1</div>
                                 <div className="col-sm-2">1</div>
-                                <div className="col-sm-2 reset"><a className="resync"></a></div>
                             </div>
                         </div>
                     </div>
 
-                    <div id='progressoverlay'>
-                        <h3 data-translation-key="upload_progress">Upload progress</h3>
-                        <div id="progressbar">
-                            <span></span>
-                        </div>
-                        <h4><b id="percent_uploaded">0</b>%</h4>
-                        <a href="#" id="cancel_upload" data-translation-key="cancel">Cancel</a>
-                    </div>
+
                 </div>
             </div>
 
@@ -86,12 +73,11 @@ function ViewBox(props){
 }
 
 export function Upload({db_walks, db_project, db_logs, Axios, Navigate}){
-    const session_context = useContext(SessionContext);
     useEffect(() => {
-
+        console.log("consent");
     },[]);
 
     return (
-        <ViewBox navTo="/home"  db={db_walks} Axios={Axios}/>
+        <ViewBox navTo="/home"/>
     )
 };

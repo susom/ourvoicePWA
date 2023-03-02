@@ -16,7 +16,7 @@ export const WalkmapContextProvider = ({children}) => {
                 let same_geo = false;
                 if(data.length){
                     const lastpos   = data[data.length - 1] ;
-                    same_geo  = pos.coords.latitude == lastpos.lat && pos.coords.longitude == lastpos.lng;
+                    same_geo  = pos.coords.latitude === lastpos.lat && pos.coords.longitude === lastpos.lng;
                 }
 
                 if(pos.coords.accuracy < 50 && !same_geo){
@@ -98,7 +98,7 @@ export const WalkmapContextProvider = ({children}) => {
         // return () => {
         //     navigator.geolocation.clearWatch(interval);
         // }
-    }, [session_context]);
+    });
 
     return (
         <WalkmapContext.Provider value={{data, setData}}>

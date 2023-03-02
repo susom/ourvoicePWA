@@ -2,7 +2,7 @@ import {useContext} from "react";
 import {useLocation} from 'react-router-dom';
 import {Offline, Online} from "react-detect-offline";
 import {CloudCheckFill, CloudMinusFill} from 'react-bootstrap-icons';
-import { BrowserView, MobileView } from 'react-device-detect';
+// import { BrowserView, MobileView } from 'react-device-detect';
 
 import {SessionContext} from "../contexts/Session";
 import {WalkContext} from "../contexts/Walk";
@@ -10,7 +10,7 @@ import "../assets/css/global_header.css";
 
 function GlobalHeader() {
     const location          = useLocation();
-    const show_header       = location.pathname != "/" && location.pathname != "/home";
+    const show_header       = location.pathname !== "/" && location.pathname !== "/home";
 
     const session_context   = useContext(SessionContext);
     const walk_context      = useContext(WalkContext);
@@ -18,7 +18,7 @@ function GlobalHeader() {
     const project_info      = session_context.data.project_info;
     const walk_info         = walk_context.data;
 
-    const in_session        = project_info.project_id && location.pathname != "/consent";
+    const in_session        = project_info.project_id && location.pathname !== "/consent";
 
     return !show_header ? ( "" ) : (
         <div className={`view_header ${in_session ? "in_session" : ""}`}>
