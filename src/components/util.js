@@ -57,5 +57,13 @@ export function tsDiffInHours(ts_1, ts_2){
     return roundedDiffInHours;
 }
 
+export function tsToYmd(ts){
+    const date  = new Date(ts);
+    const year  = String(date.getFullYear()).substring(2);
+    const month = String(date.getMonth() + 1);
+    const day   = String(date.getDate());
+    return `${month}/${day}/${year}`;
+}
+
 
 

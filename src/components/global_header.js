@@ -18,7 +18,7 @@ function GlobalHeader() {
     const project_info      = session_context.data.project_info;
     const walk_info         = walk_context.data;
 
-    const in_session        = project_info.project_id && location.pathname !== "/consent";
+    const in_session        = project_info.project_id && location.pathname !== "/consent" && location.pathname !== "/upload";
 
     return !show_header ? ( "" ) : (
         <div className={`view_header ${in_session ? "in_session" : ""}`}>

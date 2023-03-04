@@ -1,2 +1,32 @@
-.upload{
+.upload.container{
+    transform: translateY(-100%);
+}
+
+.hdr_icon {
+    max-width:30px;
+}
+
+.color_success {
+    color:green;
+}
+.color_pending {
+    color:red;
+}
+
+.table_row {
+    margin-bottom:10px;
+}
+
+.table_header {
+    border-bottom:1px solid #ccc;
+    margin-bottom:10px;
+}
+
+.table_header div {
+    font-weight:bold;
+    padding:3px 0 7px;
+}
+
+.upload_desc {
+    margin-bottom:25px;
 }

@@ -1,83 +1,88 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
-// import {db_walks, db_project, db_logs} from "../../database/db";
-// import {updateContext} from "../../components/util";
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
+import {db_walks} from "../../database/db";
+import {tsToYmd} from "../../components/util";
 
 import "../../assets/css/view_upload.css";
+import icon_camera_black from "../../assets/images/icon_camera_black.png";
+import icon_audio_comment_black from "../../assets/images/icon_audio_comment_black.png";
+
+import { CloudUploadFill, CloudUpload} from 'react-bootstrap-icons';
 
 function ViewBox(props){
 
-    // const onClickNavigate = (view) => {
-    //     props.navigate(view);
-    // };
-
-    // async function getWalks(){
-    //     const q = query(collection(firestore, "ov_walks"));
-    //
-    //     const snapshots = await getDocs(q);
-    //
-    //     if(!snapshots.empty && snapshots.size){
-    //         let num_photos      = 0;
-    //         let num_txt_audio   = 0;
-    //         snapshots.forEach((doc) => {
-    //             if (doc.exists() ){
-    //                 const data = doc.data();
-    //                 //MAKE SURE NOT ARCHIVED (can't use in where query above cause firestore cant query for field that is potentially not existing)
-    //
-    //                 if(data.photos.length){
-    //                     data.photos.forEach((photo) => {
-    //                         num_txt_audio += Object.keys(photo.audios).length;
-    //                         if(photo.text_comment){
-    //                             // num_txt_audio++;
-    //                         }
-    //                     });
-    //                 }
-    //             }
-    //         });
-    //     }
-    // }
+    const countAudios = (photos) => {
+        let count = 0;
+        for (let i in photos) {
+            if (photos[i].hasOwnProperty("audios")) {
+                count += Object.keys(photos[i].audios).length;
+            }
+        }
+        return count;
+    }
 
     return (
 
-            <div className="content upload">
-                <div className="container">
-                    <p className="instructions_upload"><span className="legend_upload ajaxup">&#8686;</span> <span
-                        data-translation-key="instructions_upload">Click purple button to upload all walk data</span>
-                    </p>
-                    <div className="row table_header">
-                        <div className="col-sm-2"><span data-translation-key="date">Date</span></div>
-                        <div className="col-sm-2"><span data-translation-key="project">Project</span></div>
-                        <div className="col-sm-2"><span data-translation-key="walk_id">ID</span></div>
-                        <div className="col-sm-2"><span><img alt='' src="img/icon_camera_black.png"/></span></div>
-                        <div className="col-sm-2"><span><img alt='' src="img/icon_audio_comment_black.png"/></span></div>
-                        <div className="col-sm-2"><span data-translation-key="upload_status">Status</span></div>
-                    </div>
+            <Container className="content upload">
+                <Row className={`upload_desc`}>
+                    <Col>
+                        <p className="instructions_upload">
+                            <span data-translation-key="instructions_upload">Data will upload automatically when your device is online. <br/>This app does not need to be open!</span>
+                        </p>
+                        <span><CloudUploadFill className={`color_success`}/> Data Uploaded</span> <span> | </span> <span><CloudUpload className={`color_pending`}/> Data Pending Upload</span>
+                    </Col>
+                </Row>
 
-                    <div className="row" id="list_data">
-                        <div className="col-sm-12 upload_table">
-                            <div className="row table ">
-                                <div className="col-sm-2">1/1/19</div>
-                                <div className="col-sm-2">AARP</div>
-                                <div className="col-sm-2 walkid">9876</div>
-                                <div className="col-sm-2">1</div>
-                                <div className="col-sm-2">1</div>
-                            </div>
-                        </div>
-                    </div>
+                <Row className={`table_header`}>
+                    <Col sm={{span:2}}><span data-translation-key="date">Date</span></Col>
+                    <Col sm={{span:2}}><span data-translation-key="project">Project</span></Col>
+                    <Col sm={{span:2}}><span data-translation-key="walk_id">ID</span></Col>
+                    <Col sm={{span:2}}><span><img alt='' className={`hdr_icon`} src={icon_camera_black}/></span></Col>
+                    <Col sm={{span:2}}><span><img alt='' className={`hdr_icon`} src={icon_audio_comment_black}/></span></Col>
+                    <Col sm={{span:2}}><span data-translation-key="upload_status">Status</span></Col>
+                </Row>
 
-
-                </div>
-            </div>
+                {props.walks.map(item => (
+                    <Row className={`table_row list_data`} key={item.id}>
+                        <Col sm={{span:2}}>{tsToYmd(item.timestamp)}</Col>
+                        <Col sm={{span:2}}>{item.project_id}</Col>
+                        <Col sm={{span:2}} className={`walkid`}>{item.walk_id}</Col>
+                        <Col sm={{span:2}}>{item.photos.length}</Col>
+                        <Col sm={{span:2}}>{countAudios(item.photos) + (item.text_comment !== "" ? 1 : 0)}</Col>
+                        <Col sm={{span:2}}>{item.uploaded ? <CloudUploadFill className={'color_success'}/> : <CloudUpload className={'color_pending'}/>}</Col>
+                    </Row>
+                ))}
+            </Container>
 
     )
 }
 
-export function Upload({db_walks, db_project, db_logs, Axios, Navigate}){
+export function Upload(){
+    const [walks, setWalks] = useState([]);
+
     useEffect(() => {
-        console.log("consent");
+        // Query the object store to get the number of records
+        const walks_col = db_walks.walks.toCollection();
+
+        walks_col.count().then(count => {
+            if (count > 0) {
+                walks_col.toArray(( arr_data) => {
+                    console.log(count, "walks", arr_data);
+                    setWalks(arr_data);
+                });
+            }else{
+                console.log("no walks in DB");
+            }
+        }).catch(error => {
+            console.error('Error counting walks:', error);
+        });
     },[]);
 
     return (
-        <ViewBox navTo="/home"/>
+        <ViewBox walks={walks}/>
     )
 };
