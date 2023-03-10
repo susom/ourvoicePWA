@@ -10,7 +10,7 @@ db_project.version(1).stores({
 
 export const db_walks = new Dexie('ov_walks');
 db_walks.version(1).stores({
-    walks :  '++id, project_id, user_id, timestamp, walk_id, lang, photos, geotags, device'
+    walks :  '++id, project_id, user_id, timestamp, walk_id, lang, photos, geotags, device, uploaded, complete'
 });
 
 export const db_files = new Dexie('ov_files');

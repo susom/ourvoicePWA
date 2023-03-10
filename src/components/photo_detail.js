@@ -5,7 +5,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
-// import {GrKeyboard} from 'react-bootstrap-icons';
 
 import {db_walks, db_files} from "../database/db";
 import {updateContext, hasGeo, cloneDeep} from "../components/util";
@@ -23,7 +22,6 @@ function ViewBox(props){
         </div>
     );
 }
-
 
 function PhotoDetail(props){
     const session_context   = useContext(SessionContext);
@@ -82,7 +80,7 @@ function PhotoDetail(props){
 
         const photos        = cloneDeep(walk_context.data.photos);
         const photo_i       = photos.length;
-        const photo_id      = walk_context.data.project_id + "_" + walk_context.data.user_id + "_photo_" + photo_i + ".jpg";
+        const photo_id      = walk_context.data.project_id + "_" + walk_context.data.user_id + "_" + walk_context.data.timestamp + "_photo_" + photo_i + ".jpg";
 
         const upvote_val    = upVote ? 1 : 0;
         const downvote_val  = downVote ? 2 : 0;
@@ -93,7 +91,7 @@ function PhotoDetail(props){
         const audio_names   = {};
         for(let audio_name in audios){
             audio_names[audio_name] = "";
-            let audio_id = walk_context.data.project_id + "_" + walk_context.data.user_id + "_" + audio_name;
+            let audio_id = walk_context.data.project_id + "_" + walk_context.data.user_id + "_" + walk_context.data.timestamp + "_" + audio_name;
             files_to_save.push({"name" : audio_id, "file" : audios[audio_name]});
         }
 
@@ -145,10 +143,12 @@ function PhotoDetail(props){
         e.preventDefault();
         if(e.target.classList.contains("playing")){
             //if playing then stop and remove css
-            e.target.classList.remove('playing');
             const audio = audioPlaying;
-            audio.pause();
-            audio.remove();
+            if(audio){
+                e.target.classList.remove('playing');
+                audio.pause();
+                audio.remove();
+            }
             setAudioPlaying(null);
         }else{
             //if not playing then play, and add class "playing"

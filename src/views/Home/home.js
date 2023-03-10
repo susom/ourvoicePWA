@@ -14,6 +14,7 @@ import {WalkmapContext} from "../../contexts/Walkmap";
 import {SessionContext} from "../../contexts/Session";
 import {WalkContext} from "../../contexts/Walk";
 
+import AlertModal from "../../components/modal";
 import HomeLead from "../../components/home_lead";
 import "../../assets/css/view_home.css";
 
@@ -21,6 +22,7 @@ function ViewProjectDetails(props){
     const session_context       = useContext(SessionContext);
     const walk_context          = useContext(WalkContext);
     const [status, setStatus]   = useState("");
+
 
     //hmm by setting firestore rule to request.auth.uid != null it works whether or not im signed in anonymosly?
     // signInAnonymously(firebaseAuth).then(() => {
@@ -78,6 +80,10 @@ function ViewProjectDetails(props){
             });
         }else{
             setStatus("Invalid Project Id or Project Password");
+
+            props.setAlertMessage({"title" : "Pleas try again", "body" : "Wrong Project ID or Passcode", "cancel_txt" : "Close" , "ok_txt" : ""});
+            props.setShowModal(true);
+
             props.setPword("");
         }
 
@@ -173,6 +179,8 @@ function Actions(props){
     const onClickDeleteInc = () => {
         setClicks(clicks+1);
         if(clicks === 10){
+
+
             if(window.confirm('All Discovery Tool data saved on this device will be deleted and reset. Click \'Ok\' to proceed.')){
                 console.log("truncate followind DB; db_walks, db_project, db_logs, localStorage");
 
@@ -206,7 +214,7 @@ function Actions(props){
         props.projectSignInOut(false);
         updateContext(session_context, {"project_id" : null});
         updateContext(walk_context, {"project_id" : null});
-        console.log("change project");
+        // console.log("change project");
     }
 
     //DO WE STILL NEED AN "upload page"?
@@ -258,9 +266,21 @@ function Actions(props){
 }
 
 function ViewBox(props){
-    const history = useNavigate();
-    const session_context = useContext(SessionContext);
+    const history           = useNavigate();
+    const session_context   = useContext(SessionContext);
 
+    const [alertMessage, setAlertMessage]   = useState({});
+    const [showModal, setShowModal]         = useState(false);
+    const [handleCancel, setHandleCancel]   = useState(() => {
+        return () => {
+            console.log("default cancel");
+            setShowModal(false);
+        }  });
+    const [handleOK, setHandleOK]           = useState(() => {
+        return () => {
+            console.log("default cancel");
+            setShowModal(false);
+        } })
     const onSignInOut = (flag) => {
         props.setSignedIn(flag);
         updateContext(session_context, {"signed_in" : flag});
@@ -280,6 +300,11 @@ function ViewBox(props){
                     pword={props.pword}
                     setPword={props.setPword}
 
+                    setAlertMessage={setAlertMessage}
+                    setShowModal={setShowModal}
+                    setModalCancel={setHandleCancel}
+                    setModalOK={setHandleOK}
+
                     signedIn={props.signedIn}
                     projectSignInOut={onSignInOut}
                 />
@@ -290,10 +315,16 @@ function ViewBox(props){
                     pword={props.pword}
                     setPword={props.setPword}
 
+                    setAlertMessage={setAlertMessage}
+                    setShowModal={setShowModal}
+                    setModalCancel={setHandleCancel}
+                    setModalOK={setHandleOK}
+
                     signedIn={props.signedIn}
                     projectSignInOut={onSignInOut}
                     onClickNav = { onClickNavigate }
                 />
+                <AlertModal show={showModal} handleCancel={handleCancel} handleOK={handleOK} message={alertMessage}/>
             </div>
     )
 }
@@ -302,7 +333,7 @@ export function Home(){
     const walkmap_context           = useContext(WalkmapContext); //THE API NEEDS TO "warm up" SO KICK IT OFF HERE BUT DONT STORE DATA UNTIL 'in_walk'
     const session_context           = useContext(SessionContext);
 
-    console.log(walkmap_context.data.length);
+    console.log("kick off walkmap to warm up GPS",walkmap_context.data.length);
 
     const [pcode, setPcode]         = useState("");
     const [pword, setPword]         = useState("");

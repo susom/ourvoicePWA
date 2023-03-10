@@ -1,4 +1,5 @@
-import {useContext, useState} from "react";
+import {useContext, useState, useEffect} from "react";
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import {Link} from "react-router-dom";
@@ -32,6 +33,13 @@ export function Consent({Navigate}){
     const [curPage, setCurPage] = useState(0);
     const session_context       = useContext(SessionContext);
     const walk_context          = useContext(WalkContext);
+    const navigate              = useNavigate();
+
+    useEffect(() => {
+        if (!session_context.data.project_id) {
+            navigate('/home');
+        }
+    }, [session_context.data.project_id]);
 
     const onClickReturnHome = (e) => {
         e.preventDefault();

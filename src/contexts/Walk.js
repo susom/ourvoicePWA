@@ -11,8 +11,8 @@ const context_init = {
     ,geotags    : []
     ,device     : {"platform" : platform, "userAgent" : userAgent}
     ,timestamp  : null
-    ,uploaded   : false
-    ,complete   : false
+    ,uploaded   : 0
+    ,complete   : 0
 }
 
 export const WalkContext = createContext({

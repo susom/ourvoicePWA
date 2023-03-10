@@ -1,4 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
+import { useNavigate } from 'react-router-dom';
 import { Polyline, Marker } from '@react-google-maps/api';
 
 import Container from 'react-bootstrap/Container';
@@ -38,6 +39,7 @@ function ViewBox(props){
     const session_context   = useContext(SessionContext);
     const walkmap_context   = useContext(WalkmapContext);
     const walk_context      = useContext(WalkContext);
+
 
     const [coordinates,setCoordinates]  = useState([]);
     const [photoCount, setPhotoCount]   = useState(0);
@@ -80,7 +82,7 @@ function ViewBox(props){
         updateContext(session_context, {"in_walk" : false});
 
         //set completed = true, to let SW know it can push upload
-        updateContext(walk_context, {"complete" : true});
+        updateContext(walk_context, {"complete" : 1});
 
         putDb(db_walks.walks, walk_context.data);
         walk_context.resetData();
@@ -179,6 +181,15 @@ function ViewBox(props){
 
 
 export function Summary(){
+    const session_context   = useContext(SessionContext);
+    const navigate          = useNavigate();
+
+    useEffect(() => {
+        if (!session_context.data.project_id) {
+            navigate('/home');
+        }
+    }, [session_context.data.project_id]);
+
     return (
         <ViewBox />
     )

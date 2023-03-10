@@ -1,11 +1,13 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useContext} from "react";
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import {db_walks} from "../../database/db";
-import {tsToYmd} from "../../components/util";
+import {SessionContext} from "../../contexts/Session";
+import {db_files, db_logs, db_project, db_walks} from "../../database/db";
+
+import {tsToYmd, updateContext} from "../../components/util";
 
 import "../../assets/css/view_upload.css";
 import icon_camera_black from "../../assets/images/icon_camera_black.png";
@@ -14,8 +16,24 @@ import icon_audio_comment_black from "../../assets/images/icon_audio_comment_bla
 import { CloudUploadFill, CloudUpload} from 'react-bootstrap-icons';
 
 function ViewBox(props){
+    const session_context = useContext(SessionContext);
 
-    const countAudios = (photos) => {
+    const clearLocal    = () => {
+        if(window.confirm('All Discovery Tool data saved on this device will be deleted and reset. Click \'Ok\' to proceed.')){
+            //TRUNCATE ALL FOUR LOCAL INDEXDBs'
+            db_project.table("active_project").clear();
+            db_walks.table("walks").clear();
+            db_files.table("files").clear();
+            db_logs.table("logs").clear();
+            localStorage.clear();
+
+            //RESET UI BY CHANGING SIGN IN /OUT STATE
+            updateContext(session_context, {"project_id" : null, "project_info" : {}});
+            props.setWalks([]);
+        }
+    }
+
+    const countAudios   = (photos) => {
         let count = 0;
         for (let i in photos) {
             if (photos[i].hasOwnProperty("audios")) {
@@ -56,6 +74,12 @@ function ViewBox(props){
                         <Col sm={{span:2}}>{item.uploaded ? <CloudUploadFill className={'color_success'}/> : <CloudUpload className={'color_pending'}/>}</Col>
                     </Row>
                 ))}
+
+                <Row className={`btn_row`}>
+                    <Col>
+                        <button className={`btn btn-danger`} onClick={clearLocal}>Delete All Stored Data</button>
+                    </Col>
+                </Row>
             </Container>
 
     )
@@ -71,7 +95,7 @@ export function Upload(){
         walks_col.count().then(count => {
             if (count > 0) {
                 walks_col.toArray(( arr_data) => {
-                    console.log(count, "walks", arr_data);
+                    console.log(count, "walks");
                     setWalks(arr_data);
                 });
             }else{
@@ -83,6 +107,6 @@ export function Upload(){
     },[]);
 
     return (
-        <ViewBox walks={walks}/>
+        <ViewBox walks={walks} setWalks={setWalks}/>
     )
 };

@@ -37,7 +37,7 @@
     width:100%;
     max-width:300px;
     height:25vh;
-
+    max-height:240px;
     margin-bottom:25px;
     color:#fff;
     position:relative;
@@ -72,9 +72,8 @@ LIGHT GREY  : #E0E0E0
 
 /*PIC REVIEW AFTER TAKING PHOTO*/
 #recent_pic {
-    max-width:calc(100%-30px);
-    margin:0 15px;
-    width:calc(100%-30px);
+    max-width:45vw;
+    max-height:35vh;
 }
 
 .recent_pic{
@@ -105,6 +104,7 @@ LIGHT GREY  : #E0E0E0
 
 #pic_review .daction.keyboard{
     background-color:lightblue;
+    text-indent: -50000px;
 }
 
 .record_audio .audio-recorder{
@@ -383,6 +383,10 @@ LIGHT GREY  : #E0E0E0
     color:#999;
     line-height:23px;
     text-decoration:none;
+}
+
+.project_tag.on:before{
+    color:#96AA3D;
 }
 
 .project_tag:before{

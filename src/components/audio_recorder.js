@@ -18,10 +18,13 @@ export default function AudioRecorderWithIndexDB(props) {
         const update_obj    = {};
         update_obj[audio_name] = blob;
 
+        console.log("photodetails before" , props.stateAudios, blob);
         const copy_audios   = deepMerge(props.stateAudios, update_obj);
 
         //SAVE IT TO STATE ONLY IN CASE THEY WANT TO DISCARD
         props.stateSetAudios(copy_audios);
+        console.log("photodetails after deepmerge" , update_obj, props.stateAudios);
+
     };
 
     return (

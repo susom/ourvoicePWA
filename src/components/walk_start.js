@@ -17,7 +17,8 @@ function WalkStart(props){
     const walk_context      = useContext(WalkContext);
     const walkmap_context   = useContext(WalkmapContext);
 
-    const [takePhoto, setTakePhoto] = useState(false);
+    const [takePhoto, setTakePhoto]                 = useState(false);
+    const [customPhotoPrompt, setCustomPhotoPrompt] = useState("");
 
     const takePhotoHandler = (e) => {
         e.preventDefault();
@@ -26,7 +27,6 @@ function WalkStart(props){
 
     const doneWalkHandler = (e) => {
         const walk_geos = walk_context.data.geotags.concat(walkmap_context.data);
-        console.log("walk_geos", walk_geos);
         updateContext(walk_context, {"geotags" : walk_geos});
 
         //reset walkmap data length to 0;
@@ -56,7 +56,7 @@ function WalkStart(props){
                             <Container>
                                 <Row>
                                     <Col className="custom_takephoto_text">
-                                        <h5 className="offset-sm-1 col-sm-10">&nbps;</h5>
+                                        <h5 className="offset-sm-1 col-sm-10">{customPhotoPrompt}</h5>
                                     </Col>
                                 </Row>
 

@@ -16,6 +16,15 @@ export function putDb(db_table, context_data){
     return update_db();
 }
 
+export async function bulkUpdateDb(db, table, recordsToUpdate){
+    await db.transaction('rw', db[table], async () => {
+        await db[table].bulkPut(recordsToUpdate);
+        // console.log('Records updated successfully!');
+    }).catch(error => {
+        console.error(`Error updating records: ${error}`);
+    });
+}
+
 export function updateContext(context, updates){
     //updating context is so difficult, shallow copys persist, deep copys dont do shit?
     //but nested properties dont register a change without a deepcopy. lose lose... maybe need to restructure Contexts to not nest
@@ -26,7 +35,6 @@ export function updateContext(context, updates){
     }
 
     //OR IF DEEP COPY use lodash
-    //using lodash to deep copy and deep merge doesnt fucking work
     // const updated_obj   = deepMerge(context.data, updates);
 
     context.setData(context_copy);
@@ -63,6 +71,30 @@ export function tsToYmd(ts){
     const month = String(date.getMonth() + 1);
     const day   = String(date.getDate());
     return `${month}/${day}/${year}`;
+}
+
+export function isBase64(str) {
+    if (typeof str !== "string") {
+        return false;
+    }
+    const regex = /^data:(.*?);base64,/;
+    return regex.test(str);
+}
+
+export function buildFileArr(prefix, photos){
+    let file_arr = [];
+    for (let i in photos){
+        let photo = photos[i];
+        file_arr.push(prefix +"_" + photo.name);
+        if(photo.hasOwnProperty("audios")){
+            let audio_keys = Object.keys(photo["audios"]);
+            for(let n in audio_keys){
+                file_arr.push(prefix +"_" + audio_keys[n]);
+            }
+        }
+    }
+
+    return file_arr;
 }
 
 

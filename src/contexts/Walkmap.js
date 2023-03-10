@@ -74,7 +74,6 @@ export const WalkmapContextProvider = ({children}) => {
         //         const data_copy = data;
         //         data_copy.push(curpos);
         //         setData(data_copy);
-        //         console.log("what the fuck now, setData not updateng?" , data, data_copy);
         //
         //             // //SAVE THE POINTS IN GOOGLE FORMAT
         //             // if(utils.checkConnection()){
