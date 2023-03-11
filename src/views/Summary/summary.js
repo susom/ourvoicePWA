@@ -1,14 +1,12 @@
-import React, {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import { Polyline, Marker } from '@react-google-maps/api';
-
-import { Container, Row, Col, Button } from 'react-bootstrap';
 import {Link} from "react-router-dom";
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
 import {db_walks} from "../../database/db";
 import GMapContainer from "../../components/google_maps";
 import {updateContext, putDb} from "../../components/util";
-
 
 import {SessionContext} from "../../contexts/Session";
 import {WalkmapContext} from "../../contexts/Walkmap";
@@ -20,7 +18,6 @@ function ViewBox(props){
     const session_context   = useContext(SessionContext);
     const walkmap_context   = useContext(WalkmapContext);
     const walk_context      = useContext(WalkContext);
-
 
     const [coordinates,setCoordinates]  = useState([]);
     const [photoCount, setPhotoCount]   = useState(0);
@@ -48,12 +45,6 @@ function ViewBox(props){
         }
     },[walk_context.data, coordinates, obsCount]);
 
-    // const newMarker = {
-    //     lat: latLng.lat(),
-    //     lng: latLng.lng()
-    // };
-    // setMarkers([...markers, newMarker]);
-    //
     const resetWalkHandler = (e) => {
         //reset walkmap data length to 0, concat more next time incase they continue walk;
         walkmap_context.data.length = 0;
@@ -160,7 +151,6 @@ function ViewBox(props){
     )
 }
 
-
 export function Summary(){
     const session_context   = useContext(SessionContext);
     const navigate          = useNavigate();
@@ -169,7 +159,7 @@ export function Summary(){
         if (!session_context.data.project_id) {
             navigate('/home');
         }
-    }, [session_context.data.project_id]);
+    }, [session_context.data.project_id, navigate]);
 
     return (
         <ViewBox />

@@ -1,4 +1,4 @@
-import {useEffect, useState, useContext} from "react";
+import { useEffect, useState, useContext } from "react";
 import { Container, Row, Col } from 'react-bootstrap';
 import { CloudUploadFill, CloudUpload} from 'react-bootstrap-icons';
 
@@ -10,10 +10,8 @@ import {tsToYmd, updateContext} from "../../components/util";
 import "../../assets/css/view_upload.css";
 import icon_camera_black from "../../assets/images/icon_camera_black.png";
 import icon_audio_comment_black from "../../assets/images/icon_audio_comment_black.png";
-
 function ViewBox(props){
     const session_context = useContext(SessionContext);
-
     const clearLocal    = () => {
         if(window.confirm('All Discovery Tool data saved on this device will be deleted and reset. Click \'Ok\' to proceed.')){
             //TRUNCATE ALL FOUR LOCAL INDEXDBs'
@@ -60,16 +58,21 @@ function ViewBox(props){
                     <Col sm={{span:2}}><span data-translation-key="upload_status">Status</span></Col>
                 </Row>
 
-                {props.walks.map(item => (
-                    <Row className={`table_row list_data`} key={item.id}>
-                        <Col sm={{span:2}}>{tsToYmd(item.timestamp)}</Col>
-                        <Col sm={{span:2}}>{item.project_id}</Col>
-                        <Col sm={{span:2}} className={`walkid`}>{item.walk_id}</Col>
-                        <Col sm={{span:2}}>{item.photos.length}</Col>
-                        <Col sm={{span:2}}>{countAudios(item.photos) + (item.text_comment !== "" ? 1 : 0)}</Col>
-                        <Col sm={{span:2}}>{item.uploaded ? <CloudUploadFill className={'color_success'}/> : <CloudUpload className={'color_pending'}/>}</Col>
-                    </Row>
-                ))}
+                {props.walks.map(item => {
+                    if(!item.photos.length){
+                        return false;
+                    }
+                    return (
+                        <Row className={`table_row list_data`} key={item.id}>
+                            <Col sm={{span:2}}>{tsToYmd(item.timestamp)}</Col>
+                            <Col sm={{span:2}}>{item.project_id}</Col>
+                            <Col sm={{span:2}} className={`walkid`}>{item.walk_id}</Col>
+                            <Col sm={{span:2}}>{item.photos.length}</Col>
+                            <Col sm={{span:2}}>{countAudios(item.photos) + (item.text_comment !== "" ? 1 : 0)}</Col>
+                            <Col sm={{span:2}}>{item.uploaded ? <CloudUploadFill className={'color_success'}/> : <CloudUpload className={'color_pending'}/>}</Col>
+                        </Row>
+                    )
+                })}
 
                 <Row className={`btn_row`}>
                     <Col>

@@ -26,6 +26,7 @@ function GMap(props){
                 onLoad={(map) => {
                     props.setMap(map);
                 }}
+                options={options}
             >
                 {coordinates.map((coordinate, index) => (
                     <Marker key={index} position={coordinate} />

@@ -33,7 +33,7 @@ export function Consent({Navigate}){
         if (!session_context.data.project_id) {
             navigate('/home');
         }
-    }, [session_context.data.project_id]);
+    }, [session_context.data.project_id,navigate]);
 
     const onClickReturnHome = (e) => {
         e.preventDefault();

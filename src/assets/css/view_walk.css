@@ -404,3 +404,10 @@ LIGHT GREY  : #E0E0E0
     border-top:  13px solid transparent;
     border-bottom:  13px solid transparent;
 }
+
+.loading_photo_ui {
+    margin-top:20%;
+    display:inline-block;
+    max-width: 80px;
+    max-height: 80px;
+}

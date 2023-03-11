@@ -1,4 +1,5 @@
 import {useContext, useState, useEffect} from "react";
+import { Button } from 'react-bootstrap';
 import  Slider  from 'react-slide-out';
 import 'react-slide-out/lib/index.css';
 
@@ -8,6 +9,7 @@ import {db_files} from "../database/db";
 import {buildFileArr, shallowMerge} from "./util";
 
 import "../assets/css/slideout.css";
+import {Link} from "react-router-dom";
 
 function getFileByName(files, name){
     let file = null;
@@ -50,7 +52,7 @@ function SlideOut(props){
             const doc_id = walk.project_id + "_" + walk.user_id + "_" + walk.timestamp ;
             prepSummary(doc_id, walk.photos);
         }
-    }, [walk.photos.length]);
+    }, );
 
     async function prepSummary(doc_id, photos){
         // Query the database for records where fileName matches any value in the array
@@ -74,8 +76,12 @@ function SlideOut(props){
             const img_preview   = <img src={photo_base64} className={`slide_preview`} alt={`preview`}/>;
             const has_audios    = Object.keys(photo.audios).length
                 ? Object.keys(photo.audios).map((audio_name, idx) => {
-                    return <a className={`icon audio`} href="#" key={idx} onClick={(e) => {
-                        handleAudio(e, doc_id + "_" + audio_name) }}>{idx + 1 }</a>
+                    return <Button
+                                key={idx}
+                                className="icon audio"
+                                onClick={(e) => {
+                                    handleAudio(e, doc_id + "_" + audio_name) }
+                            }>{idx + 1 }</Button>
                   })
                 : "";
 

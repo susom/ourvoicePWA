@@ -26,7 +26,7 @@ export function Walk(){
         if (!session_context.data.project_id) {
             navigate('/home');
         }
-    }, [session_context.data.project_id]);
+    }, [session_context.data.project_id,navigate]);
 
     const handleTakePhoto = (dataUri) => {
         setDataUri(dataUri);

@@ -1,22 +1,31 @@
-import {useState,useContext} from "react";
+import {useState,useContext,useEffect} from "react";
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import {Link} from "react-router-dom";
 
+import {SessionContext} from "../contexts/Session";
 import {WalkContext} from "../contexts/Walk";
 import {WalkmapContext} from "../contexts/Walkmap";
 import {db_walks} from "../database/db";
 import {updateContext} from "../components/util";
 
+import loading_photo_ui from "../assets/images/loading_camera.gif";
+import loading_photo_ui_boring from "../assets/images/loading_camera_boring.gif";
 
 function WalkStart(props){
+    const session_context   = useContext(SessionContext);
     const walk_context      = useContext(WalkContext);
     const walkmap_context   = useContext(WalkmapContext);
 
     const [takePhoto, setTakePhoto]                 = useState(false);
+    const [cameraLoaded, setCameraLoaded]           = useState(false);
     const [customPhotoPrompt, setCustomPhotoPrompt] = useState("");
+
+    useEffect(() => {
+        setCustomPhotoPrompt(session_context.data.project_info.custom_take_photo_text);
+    },[]);
 
     const takePhotoHandler = (e) => {
         e.preventDefault();
@@ -46,7 +55,15 @@ function WalkStart(props){
 
     return (
             (takePhoto) ?
-                <Camera onTakePhoto={props.handleTakePhoto} />
+                <>
+                    {
+                        !cameraLoaded && (<div className="react-html5-camera-photo "><img className={`loading_photo_ui`} src={loading_photo_ui_boring} alt={`loading photo UI`}/></div>)
+                    }
+                    <Camera
+                        onTakePhoto={props.handleTakePhoto}
+                        onCameraStart={() => setCameraLoaded(true)}
+                    />
+                </>
            :
                 <Container className="content walk walk_start" >
                     <Row id="walk_start" className="panel">
