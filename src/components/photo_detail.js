@@ -115,6 +115,7 @@ function PhotoDetail(props){
 
                 const bulk_upload_prom  = await db_files.files.bulkPut(files_to_save).then(() => {
                     console.log(files_to_save.length , "files saved to ov_files indexDB");
+                    walk_context.setPhotoCount(walk_context.photoCount + 1);
                 }).catch((error) => {
                     console.log('Error saving files', error);
                 });
@@ -126,7 +127,6 @@ function PhotoDetail(props){
         };
         update_walk();
         // console.log("Saved Walk to INdexDB", walk_update_promise);
-
         clearStates();
         props.setDataUri(null);
         e.stopPropagation();

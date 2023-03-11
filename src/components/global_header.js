@@ -6,6 +6,7 @@ import {CloudCheckFill, CloudMinusFill} from 'react-bootstrap-icons';
 
 import {SessionContext} from "../contexts/Session";
 import {WalkContext} from "../contexts/Walk";
+
 import "../assets/css/global_header.css";
 
 function GlobalHeader() {

@@ -84,13 +84,13 @@ self.addEventListener('activate', event => {
     //Cloud Firestore and Cloud Storage both have offline persistence and automatic upload , even while offline without service worker
     //just cause i read some blog about a guy that found this hybrid approach to be the best performing... maybe thats outdated?
     //neeed to find that blog again.
-    setInterval(() => {
+    setInterval(async () => {
         // Query IndexedDB for new data
         console.log("every 60 seconds, navigator", navigator.onLine);
 
         if(navigator.onLine){
             console.log("in SW , navigator online");
-            const walks_col = db_walks.walks.toCollection();
+            const walks_col = await db_walks.walks.toCollection();
 
             console.log("in SW , put al walks in INDEXB into collection");
             walks_col.count().then(count => {

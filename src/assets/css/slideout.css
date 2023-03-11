@@ -130,7 +130,6 @@ img.slide_preview {
 .slideout .tags:before{
     position:absolute;
     content:"\25CF";
-    color:#96AA3D;
     text-shadow: 0 0 1px #333;
     font-size:11px;
     line-height:0px;
@@ -139,7 +138,7 @@ img.slide_preview {
     width: 1px;
     height:0px;
     top:-1px;
-    border-right:14px solid #ccc;
+    border-right:15px solid #ccc;
     border-top:  13px solid transparent;
     border-bottom:  13px solid transparent;
 }
