@@ -1,14 +1,11 @@
 import {useEffect, useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { Button } from 'react-bootstrap';
 
-import Button from 'react-bootstrap/Button';
-
+import {db_walks, db_project, db_files, db_logs} from "../../database/db";
 import { collection, getDocs, where, query } from "firebase/firestore";
 import {firestore} from "../../database/Firebase";
 // import {signInAnonymously,onAuthStateChanged} from "firebase/auth";
-
-import {db_walks, db_project, db_files, db_logs} from "../../database/db";
-import {updateContext, tsDiffInHours} from "../../components/util";
 
 import {WalkmapContext} from "../../contexts/Walkmap";
 import {SessionContext} from "../../contexts/Session";
@@ -16,6 +13,8 @@ import {WalkContext} from "../../contexts/Walk";
 
 import AlertModal from "../../components/modal";
 import HomeLead from "../../components/home_lead";
+import {updateContext, tsDiffInHours} from "../../components/util";
+
 import "../../assets/css/view_home.css";
 
 function ViewProjectDetails(props){

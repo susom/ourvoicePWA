@@ -2,38 +2,19 @@ import React, {useContext, useEffect, useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import { Polyline, Marker } from '@react-google-maps/api';
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import {Link} from "react-router-dom";
-import Button from "react-bootstrap/Button";
 
 import {db_walks} from "../../database/db";
-import {updateContext, putDb} from "../../components/util";
 import GMapContainer from "../../components/google_maps";
+import {updateContext, putDb} from "../../components/util";
+
 
 import {SessionContext} from "../../contexts/Session";
 import {WalkmapContext} from "../../contexts/Walkmap";
 import {WalkContext} from "../../contexts/Walk";
 
 import "../../assets/css/view_summary.css";
-
-// Add a document with a generated ID.
-// import { addDoc, collection } from "firebase/firestore";
-//
-// try {
-//     const docRef = await addDoc(collection(db, "users"), {
-//         first: "Alan",
-//         middle: "Mathison",
-//         last: "Turing",
-//         born: 1912
-//     });
-//
-//     console.log("Document written with ID: ", docRef.id);
-// } catch (e) {
-//     console.error("Error adding document: ", e);
-// }
-
 
 function ViewBox(props){
     const session_context   = useContext(SessionContext);

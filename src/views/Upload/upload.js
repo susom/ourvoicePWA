@@ -1,19 +1,15 @@
 import {useEffect, useState, useContext} from "react";
+import { Container, Row, Col } from 'react-bootstrap';
+import { CloudUploadFill, CloudUpload} from 'react-bootstrap-icons';
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-
-import {SessionContext} from "../../contexts/Session";
 import {db_files, db_logs, db_project, db_walks} from "../../database/db";
+import {SessionContext} from "../../contexts/Session";
 
 import {tsToYmd, updateContext} from "../../components/util";
 
 import "../../assets/css/view_upload.css";
 import icon_camera_black from "../../assets/images/icon_camera_black.png";
 import icon_audio_comment_black from "../../assets/images/icon_audio_comment_black.png";
-
-import { CloudUploadFill, CloudUpload} from 'react-bootstrap-icons';
 
 function ViewBox(props){
     const session_context = useContext(SessionContext);

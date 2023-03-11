@@ -1,6 +1,5 @@
-import {useState, useEffect} from "react";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import { Modal, Button } from 'react-bootstrap';
+
 import "../assets/css/modal.css";
 function AlertModal(props){
     const modal_title   = props.message.hasOwnProperty("title") ? props.message.title : "";

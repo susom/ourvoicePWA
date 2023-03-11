@@ -2,16 +2,14 @@ import {useState,useContext} from "react";
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import {Link} from "react-router-dom";
-import Button from "react-bootstrap/Button";
 
 import {WalkContext} from "../contexts/Walk";
 import {WalkmapContext} from "../contexts/Walkmap";
-import {updateContext} from "../components/util";
 import {db_walks} from "../database/db";
+import {updateContext} from "../components/util";
+
 
 function WalkStart(props){
     const walk_context      = useContext(WalkContext);

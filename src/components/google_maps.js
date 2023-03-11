@@ -1,5 +1,5 @@
-import React, { useState ,useEffect } from 'react';
-import { GoogleMap, LoadScript, Polyline, Marker } from '@react-google-maps/api';
+import React, { useState } from 'react';
+import { GoogleMap, useJsApiLoader, Polyline, Marker } from '@react-google-maps/api';
 
 function GMap(props){
     const coordinates       = props.coordinates;
@@ -12,66 +12,40 @@ function GMap(props){
         ? { lat: coordinates[0].lat, lng: coordinates[0].lng }
         : { lat: 0, lng: 0 };
 
+    const options = {
+        zoomControl: true,
+        mapTypeControl: true,
+        streetViewControl: true,
+        fullscreenControl: true
+    };
 
     return (<GoogleMap
                 mapContainerStyle={mapContainerStyle}
                 center={center}
                 zoom={16}
-                >
+                onLoad={(map) => {
+                    props.setMap(map);
+                }}
+            >
                 {coordinates.map((coordinate, index) => (
                     <Marker key={index} position={coordinate} />
                 ))}
                 <Polyline path={coordinates} />
             </GoogleMap>);
 }
-const GMapContainer = ({ coordinates }) => {
-    const [apiLoaded, setApiLoaded] = useState(false);
 
-    useEffect(() => {
-        console.log("does this fire every time i enter the view?")
-        if(window.google){
-            setApiLoaded(true);
-        }
-    },[]);
+const GMapContainer = ({ coordinates }) => {
+    const [map, setMap]             = useState(null);
+    const { isLoaded }              = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: 'AIzaSyB7bJMYfQLt_xOhecW4RnHRNhdUCv8zE4M'
+    });
 
     return (
-        !apiLoaded ? <LoadScript googleMapsApiKey="AIzaSyB7bJMYfQLt_xOhecW4RnHRNhdUCv8zE4M" >
-                        <GMap coordinates={coordinates} apiLoaded={apiLoaded}/>
-                    </LoadScript>
-                  : <div> already got the map? </div>
-    );
+                isLoaded
+                    ? <GMap coordinates={coordinates} map={map} setMap={setMap}/>
+                    : <div>Loading...</div>
+    )
 };
-
-// const GMapContainer = (props) => {
-//     const [google,setGoogle] = useState(null);
-//
-//     const onLoad = (map,maps) => {
-//         setGoogle(maps);
-//     }
-//
-//     const mapContainerStyle = {
-//         height: "20vh",
-//         width: "100%"
-//     };
-//
-//     const center = props.coordinates.length > 0
-//         ? { lat: props.coordinates[0].lat, lng: props.coordinates[0].lng }
-//         : { lat: 0, lng: 0 };
-//
-//
-//     return (
-//         <LoadScript googleMapsApiKey={process.env.REACT_APP_GMAPS_API_KEY}
-//                     onLoad={() => console.log("google api loaded")}>
-//             {
-//                 google ? (<GoogleMap
-//                             mapContainerStyle={mapContainerStyle}
-//                             center={center}
-//                             zoom={16}
-//                             onLoad={onLoad}>{props.children}</GoogleMap>)
-//                        : (<div>what the fuck loading</div>)
-//             }
-//         </LoadScript>
-//     );
-// }
 
 export default GMapContainer;

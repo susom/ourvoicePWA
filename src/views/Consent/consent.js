@@ -1,18 +1,12 @@
 import {useContext, useState, useEffect} from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate , Link} from 'react-router-dom';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { v4 as uuid } from 'uuid';
 
-import {Link} from "react-router-dom";
-import Button from "react-bootstrap/Button";
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-
 import {db_walks} from "../../database/db";
-import {updateContext} from "../../components/util";
-
 import {WalkContext} from "../../contexts/Walk";
 import {SessionContext} from "../../contexts/Session";
+import {updateContext} from "../../components/util";
 
 import "../../assets/css/view_consent.css";
 
