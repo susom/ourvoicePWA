@@ -11,7 +11,6 @@ import {WalkmapContext} from "../contexts/Walkmap";
 import {db_walks} from "../database/db";
 import {updateContext} from "../components/util";
 
-import loading_photo_ui from "../assets/images/loading_camera.gif";
 import loading_photo_ui_boring from "../assets/images/loading_camera_boring.gif";
 
 function WalkStart(props){
