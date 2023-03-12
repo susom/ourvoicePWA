@@ -41,6 +41,50 @@ function SlideOut(props){
     const [walkSumm, setWalkSumm]           = useState([]);
 
     useEffect(() => {
+        async function prepSummary(doc_id, photos){
+            // Query the database for records where fileName matches any value in the array
+            const files_arr = buildFileArr(doc_id, photos);
+            const files     = await db_files.files.where('name').anyOf(files_arr).toArray();
+
+            const summ_preview  = photos.map((photo, index) => {
+                //use dexie to get photo + audio
+                const photo_name    = doc_id + "_" + photo.name;
+                const photo_base64  = getFileByName(files, photo_name);
+
+                for(let audio_i in photo.audios){
+                    const audio_name        = doc_id + "_" + audio_i;
+                    const update_obj        = {};
+                    update_obj[audio_name]  = getFileByName(files, audio_name);
+                    //oh now shallowMerge works, but not deepMerge?  FML
+                    const copy_audios       = shallowMerge(walkAudios, update_obj);
+                    setWalkAudios(copy_audios);
+                }
+
+                const img_preview   = <img src={photo_base64} className={`slide_preview`} alt={`preview`}/>;
+                const has_audios    = Object.keys(photo.audios).length
+                    ? Object.keys(photo.audios).map((audio_name, idx) => {
+                        return <Button
+                            key={idx}
+                            className="icon audio"
+                            onClick={(e) => {
+                                handleAudio(e, doc_id + "_" + audio_name) }
+                            }>{idx + 1 }</Button>
+                    })
+                    : "";
+
+                const vote_type     = session_context.data.project_info.thumbs === 2 ? "smilies" : "thumbs";
+                const vote_good     = photo.goodbad === 1 || photo.goodbad === 3 ? <span className={`icon ${vote_type} up`}>smile</span> : "";
+                const vote_bad      = photo.goodbad === 2 || photo.goodbad === 3 ? <span className={`icon ${vote_type} down`}>frown</span> : "";
+                const has_text      = photo.text_comment !== "" ? <span className={`icon keyboard`} >keyboard</span> : "";
+                const has_tags      = photo.hasOwnProperty("tags") && photo.tags.length ? <span className={`icon tags`}>{photo.tags.length}</span> : "";
+
+                return {"photo_id" : index ,"img_preview" : img_preview, "vote_good" : vote_good, "vote_bad" : vote_bad, "has_text": has_text, "has_audios" : has_audios, "has_tags" : has_tags}
+            });
+
+            //SAVE IT TO STATE
+            setWalkSumm(summ_preview);
+        };
+
         //TODO CONSOLIDATE THESE
         if(!session_context.data.in_walk && session_context.previewWalk){
             async function getWalkSummary(){
@@ -62,51 +106,7 @@ function SlideOut(props){
             const doc_id = walk.project_id + "_" + walk.user_id + "_" + walk.timestamp ;
             prepSummary(doc_id, walk.photos);
         }
-    }, [session_context.previewWalk, session_context.data.in_walk, walk_context.data.photos.length, prepSummary, walk_context.data] );
-
-    async function prepSummary(doc_id, photos){
-        // Query the database for records where fileName matches any value in the array
-        const files_arr = buildFileArr(doc_id, photos);
-        const files     = await db_files.files.where('name').anyOf(files_arr).toArray();
-
-        const summ_preview  = photos.map((photo, index) => {
-            //use dexie to get photo + audio
-            const photo_name    = doc_id + "_" + photo.name;
-            const photo_base64  = getFileByName(files, photo_name);
-
-            for(let audio_i in photo.audios){
-                const audio_name        = doc_id + "_" + audio_i;
-                const update_obj        = {};
-                update_obj[audio_name]  = getFileByName(files, audio_name);
-                //oh now shallowMerge works, but not deepMerge?  FML
-                const copy_audios       = shallowMerge(walkAudios, update_obj);
-                setWalkAudios(copy_audios);
-            }
-
-            const img_preview   = <img src={photo_base64} className={`slide_preview`} alt={`preview`}/>;
-            const has_audios    = Object.keys(photo.audios).length
-                ? Object.keys(photo.audios).map((audio_name, idx) => {
-                    return <Button
-                                key={idx}
-                                className="icon audio"
-                                onClick={(e) => {
-                                    handleAudio(e, doc_id + "_" + audio_name) }
-                            }>{idx + 1 }</Button>
-                  })
-                : "";
-
-            const vote_type     = session_context.data.project_info.thumbs === 2 ? "smilies" : "thumbs";
-            const vote_good     = photo.goodbad === 1 || photo.goodbad === 3 ? <span className={`icon ${vote_type} up`}>smile</span> : "";
-            const vote_bad      = photo.goodbad === 2 || photo.goodbad === 3 ? <span className={`icon ${vote_type} down`}>frown</span> : "";
-            const has_text      = photo.text_comment !== "" ? <span className={`icon keyboard`} >keyboard</span> : "";
-            const has_tags      = photo.hasOwnProperty("tags") && photo.tags.length ? <span className={`icon tags`}>{photo.tags.length}</span> : "";
-
-            return {"photo_id" : index ,"img_preview" : img_preview, "vote_good" : vote_good, "vote_bad" : vote_bad, "has_text": has_text, "has_audios" : has_audios, "has_tags" : has_tags}
-        });
-
-        //SAVE IT TO STATE
-        setWalkSumm(summ_preview);
-    };
+    }, [session_context.previewWalk, session_context.data.in_walk, walk_context.data.photos.length, walk_context.data] );
 
     const handleAudio = (e, audio_name) => {
         //TODO ,THIS IS SAME CODE AS IN Photo_detail, maybe move it UP to context?... or?
