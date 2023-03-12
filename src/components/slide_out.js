@@ -1,34 +1,24 @@
-import {useContext, useState, useEffect} from "react";
+import { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from 'react-bootstrap';
 import  Slider  from 'react-slide-out';
 import 'react-slide-out/lib/index.css';
 
-import {SessionContext} from "../contexts/Session";
-import {WalkContext} from "../contexts/Walk";
-import {db_files} from "../database/db";
-import {buildFileArr, shallowMerge} from "./util";
+import { SessionContext } from "../contexts/Session";
+import { WalkContext } from "../contexts/Walk";
+import { db_walks, db_files } from "../database/db";
+import { buildFileArr, shallowMerge, getFileByName } from "./util";
 
 import "../assets/css/slideout.css";
-import {Link} from "react-router-dom";
 
-function getFileByName(files, name){
-    let file = null;
-    if(files.length){
-        for(let i in files){
-            if(name === files[i].name){
-                file = files[i].file;
-                break;
-            }
-        }
-    }
-    return file;
-}
-
-function PhotoList({data}){
+function PhotoList({data, closeSlideOut}){
+    const navigate          = useNavigate();
+    const session_context   = useContext(SessionContext);
     const gotoPhotoPreview = (e) => {
         e.preventDefault();
-        //TODO HOW TO DO NAVIGATE TO photo_detail?
-        console.log("go to walk preview for photo", e, data.photo_id)
+        session_context.setPreviewPhoto(data.photo_id);
+        closeSlideOut();
+        navigate('/walk');
     }
 
     return (
@@ -42,22 +32,42 @@ function PhotoList({data}){
 function SlideOut(props){
     const session_context   = useContext(SessionContext);
     const walk_context      = useContext(WalkContext);
-    const walk              = walk_context.data;
-    const [walkSumm, setWalkSumm]           = useState([]);
+
     const [walkAudios, setWalkAudios]       = useState({});
     const [audioPlaying, setAudioPlaying]   = useState(null);
 
+    const [summProjectID, setSummProjectID] = useState(null);
+    const [summWalkID, setSummWalkID]       = useState(null);
+    const [walkSumm, setWalkSumm]           = useState([]);
+
     useEffect(() => {
-        if(walk.photos.length){
+        //TODO CONSOLIDATE THESE
+        if(!session_context.data.in_walk && session_context.previewWalk){
+            async function getWalkSummary(){
+                const walk_preview  = await db_walks.walks.get(session_context.previewWalk);
+                setSummProjectID(walk_preview.project_id);
+                setSummWalkID(walk_preview.walk_id);
+
+                const doc_id    = walk_preview.project_id + "_" + walk_preview.user_id + "_" + walk_preview.timestamp;
+                prepSummary(doc_id, walk_preview.photos);
+            }
+            getWalkSummary();
+        }
+
+        if(walk_context.data.photos.length){
+            const walk = walk_context.data;
+            setSummProjectID(walk.project_id);
+            setSummWalkID(walk.walk_id);
+
             const doc_id = walk.project_id + "_" + walk.user_id + "_" + walk.timestamp ;
             prepSummary(doc_id, walk.photos);
         }
-    }, );
+    }, [session_context.previewWalk, session_context.data.in_walk, walk_context.data.photos.length, prepSummary, walk_context.data] );
 
     async function prepSummary(doc_id, photos){
         // Query the database for records where fileName matches any value in the array
         const files_arr = buildFileArr(doc_id, photos);
-        const files     = await db_files.files.where('name').anyOf(files_arr).toArray()
+        const files     = await db_files.files.where('name').anyOf(files_arr).toArray();
 
         const summ_preview  = photos.map((photo, index) => {
             //use dexie to get photo + audio
@@ -99,6 +109,7 @@ function SlideOut(props){
     };
 
     const handleAudio = (e, audio_name) => {
+        //TODO ,THIS IS SAME CODE AS IN Photo_detail, maybe move it UP to context?... or?
         e.preventDefault();
         if(e.target.classList.contains("playing")){
             //if playing then stop and remove css
@@ -128,11 +139,11 @@ function SlideOut(props){
     }
 
     const handleClose = () => {
-        props.setIsOpen(false);
+        session_context.setSlideOpen(false);
     }
 
     return (<Slider
-                isOpen={props.isOpen}
+                isOpen={session_context.slideOpen}
                 position="right"
                 onClose={handleClose}
                 onOutsideClick={handleClose}
@@ -141,14 +152,14 @@ function SlideOut(props){
             >
                 <div className={`slideout`}>
                     <hgroup>
-                        <h2>Current Walk Summary</h2>
-                        <h4>Project ID : {walk.project_id}  | Walk Id : {walk.walk_id}</h4>
+                        <h2>Walk Summary</h2>
+                        <h4>Project ID : {summProjectID}  | Walk Id : {summWalkID}</h4>
                     </hgroup>
                     {
                         !walkSumm.length
                             ? (<em>No photos in current walk yet</em>)
                             : walkSumm.map((item,idx) => {
-                                return (<PhotoList key={idx} data={item}/>)
+                                return (<PhotoList key={idx} data={item} closeSlideOut={handleClose}/>)
                             })
                     }
                 </div>

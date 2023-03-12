@@ -24,7 +24,7 @@ function WalkStart(props){
 
     useEffect(() => {
         setCustomPhotoPrompt(session_context.data.project_info.custom_take_photo_text);
-    },[]);
+    },[session_context.data.project_info.custom_take_photo_text]);
 
     const takePhotoHandler = (e) => {
         e.preventDefault();
@@ -42,7 +42,7 @@ function WalkStart(props){
         const update_walk = async () => {
             try {
                 const walk_prom  = await db_walks.walks.put(walk_context.data).then(() => {
-                    console.log(walk_context.data.id, "walk_context already got an id from og add/put, so re-put the walk_context should update new data");
+                    // console.log(walk_context.data.id, "walk_context already got an id from og add/put, so re-put the walk_context should update new data");
                 });
                 return [walk_prom];
             } catch (error) {
@@ -56,7 +56,7 @@ function WalkStart(props){
             (takePhoto) ?
                 <>
                     {
-                        !cameraLoaded && (<div className="react-html5-camera-photo "><img className={`loading_photo_ui`} src={loading_photo_ui_boring} alt={`loading photo UI`}/></div>)
+                        !cameraLoaded && (<div className="react-html5-camera-photo "><img className={`loading_photo_ui`} src={loading_photo_ui_boring} alt={`loading UI`}/></div>)
                     }
                     <Camera
                         onTakePhoto={props.handleTakePhoto}

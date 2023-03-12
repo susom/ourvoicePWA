@@ -53,7 +53,7 @@ export function Consent({Navigate}){
         const save_walk = async () => {
             try {
                 const prom = await db_walks.walks.put(walk_context.data).then(() => {
-                    console.log("Walk in indexDB, How did 'id' get added to the walk_context?!?", walk_context.data.id);
+                    // console.log("Walk in indexDB, id was added automagically", walk_context.data.id);
                 });
 
                 return prom;

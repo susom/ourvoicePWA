@@ -125,9 +125,9 @@ function ViewProjectDetails(props){
                     updateContext(walk_context, {"project_id" : project_data.project_id});
                     console.log("has active project, so auto login, do i need to set session context?", session_context.data, walk_context.data);
                 }else{
-                    console.log("there is no active project or the 24 hour period has expired");
+                    // console.log("there is no active project or the 24 hour period has expired");
                     if(navigator.onLine){
-                        console.log("May or May not have active project, but ONLINE so check server for fresh project data", session_context.data);
+                        // console.log("May or May not have active project, but ONLINE so check server for fresh project data", session_context.data);
                         // if online pull new copy, if offline continue using the stale one for now until next refresh.
                         checkLogin();
                     }else{
@@ -332,7 +332,7 @@ export function Home(){
     const walkmap_context           = useContext(WalkmapContext); //THE API NEEDS TO "warm up" SO KICK IT OFF HERE BUT DONT STORE DATA UNTIL 'in_walk'
     const session_context           = useContext(SessionContext);
 
-    console.log("kick off walkmap to warm up GPS",walkmap_context.data.length);
+    console.log("warm up GPS",walkmap_context.data.length);
 
     const [pcode, setPcode]         = useState("");
     const [pword, setPword]         = useState("");

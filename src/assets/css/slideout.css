@@ -88,10 +88,12 @@ img.slide_preview {
     border-radius:5px;
     text-align:center;
     color:#333;
-    line-height:200%;
+    line-height:140%;
     font-weight:bold;
     font-style:normal;
     text-decoration:none;
+    text-indent:-2px;
+    border:none;
 }
 
 .slideout .audio.playing{

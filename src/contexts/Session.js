@@ -1,5 +1,5 @@
-import {createContext, useState} from 'react';
-import {cloneDeep} from "../components/util";
+import { createContext, useState } from 'react';
+import { cloneDeep } from "../components/util";
 
 const context_init = {
     project_id : "",
@@ -16,15 +16,27 @@ export const SessionContext = createContext({
 
 export const SessionContextProvider = ({children}) => {
     const clean_obj         = cloneDeep(context_init);
-    const [data, setData]   = useState(clean_obj);
+    const [data, setData]                   = useState(clean_obj);
+    const [slideOpen, setSlideOpen]         = useState(false);
+
+    const [previewWalk, setPreviewWalk]         = useState(null);
+    const [previewPhoto, setPreviewPhoto]       = useState(null);
+    const [previewWalkID, setPreviewWalkID]     = useState(null);
+    const [previewProjID, setPreviewProjID]     = useState(null);
 
     const resetData = () => {
         const clean_obj     = cloneDeep(context_init);
         setData(clean_obj);
+        setSlideOpen(false);
+
+        setPreviewWalk(null);
+        setPreviewPhoto(null);
+        setPreviewProjID(null);
+        setPreviewWalkID(null);
     }
 
     return (
-        <SessionContext.Provider value={{data, setData, resetData}}>
+        <SessionContext.Provider value={{data, setData, resetData, slideOpen, setSlideOpen, previewPhoto, setPreviewPhoto, previewWalk, setPreviewWalk, previewWalkID, setPreviewWalkID, previewProjID, setPreviewProjID}}>
             {children}
         </SessionContext.Provider>
     );

@@ -97,5 +97,18 @@ export function buildFileArr(prefix, photos){
     return file_arr;
 }
 
+export function getFileByName(files, name){
+    let file = null;
+    if(files.length){
+        for(let i in files){
+            if(name === files[i].name){
+                file = files[i].file;
+                break;
+            }
+        }
+    }
+    return file;
+}
+
 
 

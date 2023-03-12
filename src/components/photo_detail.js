@@ -1,12 +1,12 @@
-import {useEffect, useState, useContext } from "react";
-import {Link} from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import { Container, Row, Col, Button } from 'react-bootstrap';
 
-import {db_walks, db_files} from "../database/db";
-import {updateContext, hasGeo, cloneDeep} from "../components/util";
+import { db_walks, db_files } from "../database/db";
+import { updateContext, hasGeo, cloneDeep, getFileByName, buildFileArr, shallowMerge } from "../components/util";
 
-import {SessionContext} from "../contexts/Session";
-import {WalkContext} from "../contexts/Walk";
+import { SessionContext } from "../contexts/Session";
+import { WalkContext } from "../contexts/Walk";
 import AudioRecorderWithIndexDB from "../components/audio_recorder";
 
 import icon_walk from "../assets/images/icon_walk.png";
@@ -30,29 +30,85 @@ function PhotoDetail(props){
     const [audios, setAudios]               = useState({});
     const [tags, setTags]                   = useState([]);
     const [rotate, setRotate]               = useState(null);
-    const [spotGeo, setSpotGeo]             = useState({})
-
+    const [spotGeo, setSpotGeo]             = useState({});
+    const [photoPreview, setPhotoPreview]   = useState(icon_walk);
     const [audioPlaying, setAudioPlaying]   = useState(null);
 
+    const [existingFiles, setExistingFiles] = useState([]);
+
     useEffect(() => {
-        // console.log("on entering photo_detail, immedietly get geodata, SO SLOW!");
         if(hasGeo()){
             navigator.geolocation.getCurrentPosition(function(position) {
                 const geoDataPhoto = {latitude : position.coords.latitude, longitude : position.coords.longitude};
                 setSpotGeo(geoDataPhoto);
             });
         }
-    },[]);
+
+        if(props.dataUri !== null) {
+            setPhotoPreview(props.dataUri);
+        }
+
+        if(props.viewPhotoDetail !== null){
+            async function preparePreview(){
+                clearStates();
+                props.setDataUri(null);
+
+                let doc_id;
+                let photo;
+
+                if(session_context.previewWalk !== null){
+                    const walk_preview  = await db_walks.walks.get(session_context.previewWalk);
+                    doc_id      = walk_preview.project_id + "_" + walk_preview.user_id + "_" + walk_preview.timestamp;
+                    photo       = walk_preview.photos[props.viewPhotoDetail];
+                    session_context.setPreviewWalkID(walk_preview.walk_id);
+                    session_context.setPreviewProjID(walk_preview.project_id);
+                }else{
+                    doc_id      = walk_context.data.project_id + "_" + walk_context.data.user_id + "_" + walk_context.data.timestamp;
+                    photo       = walk_context.data.photos[props.viewPhotoDetail];
+                }
+
+                const files_arr = buildFileArr(doc_id,[photo]);
+                const files     = await db_files.files.where('name').anyOf(files_arr).toArray();
+
+                const photo_name    = doc_id + "_" + photo.name;
+                const photo_base64  = getFileByName(files, photo_name);
+                setPhotoPreview(photo_base64);
+
+                //stash the existing files to compare later incase adding more files via slide out edit
+                const existing_files_array = [...Object.keys(photo.audios), photo.name];
+                setExistingFiles(existing_files_array);
+                for(let audio_i in photo.audios){
+                    const audio_name        = doc_id + "_" + audio_i;
+                    const update_obj        = {};
+                    update_obj[audio_i]     = getFileByName(files, audio_name);
+                    const copy_audios       = shallowMerge(audios, update_obj);
+                    setAudios(copy_audios);
+                }
+
+                if(photo.goodbad === 1 || photo.goodbad === 3){
+                    setUpVote(true);
+                }
+                if(photo.goodbad === 2 || photo.goodbad === 3){
+                    setDownVote(true);
+                }
+                setTags(photo.tags);
+                setTextComment(photo.text_comment);
+            }
+            preparePreview();
+        }
+    },[props.viewPhotoDetail, props.dataUri]);
 
     const clearStates = () => {
         setUpVote(false);
         setDownVote(false);
         setShowText(false);
         setTextComment(null);
-        setAudios({});
+        Object.keys(audios).forEach(key => delete audios[key]);
+        setAudios(audios);
         setTags([]);
         setRotate(null)
         setSpotGeo({});
+        props.setDataUri(null);
     }
 
     const voteClick = (e, isUp) => {
@@ -73,23 +129,30 @@ function PhotoDetail(props){
 
     const savePhoto = (e,_this) => {
         e.preventDefault();
+        const files_to_save = [];
 
         const photos        = cloneDeep(walk_context.data.photos);
-        const photo_i       = photos.length;
-        const photo_id      = walk_context.data.project_id + "_" + walk_context.data.user_id + "_" + walk_context.data.timestamp + "_photo_" + photo_i + ".jpg";
+        const photo_i       = session_context.previewPhoto !== null ? session_context.previewPhoto  : photos.length;
+        const photo_name    = "photo_" + photo_i + ".jpg";
+        const photo_id      = walk_context.data.project_id + "_" + walk_context.data.user_id + "_" + walk_context.data.timestamp + "_" + photo_name;
 
-        const upvote_val    = upVote ? 1 : 0;
-        const downvote_val  = downVote ? 2 : 0;
-
-        const files_to_save = [];
-        files_to_save.push({"name" : photo_id, "file" : props.photo});
+        if(!existingFiles.includes(photo_name)){
+            //if existing photo , then dont resave the file to indexdb
+            files_to_save.push({"name" : photo_id, "file" : props.dataUri});
+        }
 
         const audio_names   = {};
         for(let audio_name in audios){
             audio_names[audio_name] = "";
             let audio_id = walk_context.data.project_id + "_" + walk_context.data.user_id + "_" + walk_context.data.timestamp + "_" + audio_name;
-            files_to_save.push({"name" : audio_id, "file" : audios[audio_name]});
+
+            if(!existingFiles.includes(audio_name)){
+                files_to_save.push({"name" : audio_id, "file" : audios[audio_name]});
+            }
         }
+
+        const upvote_val    = upVote ? 1 : 0;
+        const downvote_val  = downVote ? 2 : 0;
 
         const this_photo    = {
             "audios" : audio_names,
@@ -100,18 +163,23 @@ function PhotoDetail(props){
             "tags" : tags,
             "text_comment" : textComment
         }
-        photos.push(this_photo);
+
+        if(session_context.previewPhoto === null) {
+            photos.push(this_photo);
+        }else{
+            photos[session_context.previewPhoto] = this_photo;
+        }
         updateContext(walk_context, {"photos": photos});
 
         const update_walk = async () => {
             try {
                 const walk_prom         = await db_walks.walks.put(walk_context.data).then(() => {
-                    console.log(walk_context.data.id, "walk_context already got an id from og add/put, so re-put the walk_context should update new data");
+                    // console.log(walk_context.data.id, "walk_context already got an id from og add/put, so re-put the walk_context should update new data");
+                    walk_context.setPhotoCount(walk_context.data.photos.length);
                 });
 
                 const bulk_upload_prom  = await db_files.files.bulkPut(files_to_save).then(() => {
-                    console.log(files_to_save.length , "files saved to ov_files indexDB");
-                    walk_context.setPhotoCount(walk_context.photoCount + 1);
+                    // console.log(files_to_save.length , "files saved to ov_files indexDB");
                 }).catch((error) => {
                     console.log('Error saving files', error);
                 });
@@ -122,9 +190,10 @@ function PhotoDetail(props){
             }
         };
         update_walk();
-        // console.log("Saved Walk to INdexDB", walk_update_promise);
+
         clearStates();
-        props.setDataUri(null);
+        session_context.setPreviewWalk(null);
+        session_context.setPreviewPhoto(null);
         e.stopPropagation();
         return true;
     }
@@ -132,7 +201,8 @@ function PhotoDetail(props){
     const deletePhoto = (e,_this) => {
         e.preventDefault();
         clearStates();
-        props.setDataUri(null);
+        session_context.setPreviewWalk(null);
+        session_context.setPreviewPhoto(null);
     }
 
     const handleAudio = (e, audio_name) => {
@@ -168,126 +238,130 @@ function PhotoDetail(props){
         <ViewBox>
             {
                 <Container className="content walk photo_detail">
-                            <Row id="pic_review" className="panel">
-                                <Col className="content">
-                                    <Container>
-                                        <Row className="recent_pic">
-                                            <Col>
-                                                <img src={props.photo ? props.photo : icon_walk} id="recent_pic" alt="current"/>
-                                            </Col>
-                                        </Row>
+                    <Row id="pic_review" className="panel">
+                        <Col className="content">
+                            <Container>
+                                <Row className="recent_pic">
+                                    <Col>
+                                        <img src={photoPreview} id="recent_pic" alt="current"/>
+                                    </Col>
+                                </Row>
 
-                                        <Row>
-                                            <Col sm={{span: 10, offset: 1}} className="consentbox"
-                                                 data-translation-key="why_this_photo">
-                                                Why did you take this photo?
-                                            </Col>
-                                        </Row>
+                                <Row>
+                                    <Col sm={{span: 10, offset: 1}} className="consentbox"
+                                         data-translation-key="why_this_photo">
+                                        Why did you take this photo?
+                                    </Col>
+                                </Row>
 
-                                        <Row className="audio_text">
-                                            <Col sm={{span: 2, offset: 1}} className="text_text">
-                                            <a href="/#" className={`btn daction keyboard ${textComment !== "" && textComment !== null ? "edit" : ""}`} onClick={(e)=>{
-                                                    e.preventDefault();
-                                                    setShowText(!showText);
-                                                    document.getElementById("text_comment").focus();
-                                                }}>keyboard</a>
-                                            </Col>
-                                            <Col sm={{span: 9, offset: 0}} className="record_audio">
-                                                <AudioRecorderWithIndexDB stateAudios={audios} stateSetAudios={setAudios}/>
+                                <Row className="audio_text">
+                                    <Col sm={{span: 2, offset: 1}} className="text_text">
+                                    <a href="/#" className={`btn daction keyboard ${textComment !== "" && textComment !== null ? "edit" : ""}`} onClick={(e)=>{
+                                            e.preventDefault();
+                                            setShowText(!showText);
+                                            document.getElementById("text_comment").focus();
+                                        }}>keyboard</a>
+                                    </Col>
+                                    <Col sm={{span: 9, offset: 0}} className="record_audio">
+                                        <AudioRecorderWithIndexDB stateAudios={audios} stateSetAudios={setAudios}/>
 
-                                                <div id="saved_audio">
-                                                    {
-                                                        Object.keys(audios).map((key, idx) => {
-                                                            return <a href="/#" className="saved" key={key} onClick={(e) => { handleAudio(e, key) }}>{idx+1}</a>
-                                                        })
-                                                    }
-                                                </div>
-                                            </Col>
+                                        <div id="saved_audio">
+                                            {
+                                                Object.keys(audios).map((key, idx) => {
+                                                    return <a href="/#" className="saved" key={key} onClick={(e) => { handleAudio(e, key) }}>{idx+1}</a>
+                                                })
+                                            }
+                                        </div>
+                                    </Col>
 
-                                        </Row>
+                                </Row>
 
-                                        <Row className={`text_comment  ${showText ? "showit" : ""}`}>
-                                            <Col sm={{span: 10, offset: 1}}>
-                                                <textarea id="text_comment" onBlur={(e)=>{
-                                                    setShowText(false);
-                                                    setTextComment(e.target.value);
-                                                }}></textarea>
-                                            </Col>
-                                        </Row>
+                                <Row className={`text_comment  ${showText ? "showit" : ""}`}>
+                                    <Col sm={{span: 10, offset: 1}}>
+                                        <textarea id="text_comment"
+                                                  defaultValue={textComment}
+                                                  onBlur={(e)=>{
+                                            setShowText(false);
+                                            setTextComment(e.target.value);
+                                        }}></textarea>
+                                    </Col>
+                                </Row>
+
+                                {
+                                    session_context.data.project_info.show_project_tags
+                                        ?<div>
+                                            <Row className="project_tags">
+                                                <Col sm={{span: 10, offset: 1}} className="consentbox"
+                                                     data-translation-key="project_tags">What is this photo about?
+                                                </Col>
+                                            </Row>
+                                            <Row className="project_tags">
+                                            {
+                                                session_context.data.project_info.tags.length
+                                                    ? <Col id="project_tags" className="col-sm-10 col-sm-offset-1">
+                                                        {session_context.data.project_info.tags.map((item)=>(
+                                                            <a href="/#" className={`project_tag ${tags.includes(item) ? 'on' : ''}`} key={item} onClick={(e)=> {
+                                                                saveTag(e, item);
+                                                            }}>{item}</a>
+                                                        ))}
+                                                    </Col>
+                                                    : <Col id="no_tags" sm={{span: 10, offset: 1}}><em data-translation-key="no_project_tags">No Tags Currently Available</em></Col>
+                                            }
+                                            </Row>
+                                        </div>
+                                        : ""
+                                }
 
 
+                                <Row>
+                                    <Col sm={{span: 10, offset: 1}} className="consentbox"
+                                         data-translation-key="good_or_bad">Is
+                                        this good or bad for the community?
+                                    </Col>
+                                </Row>
 
+                                <Row className="goodbad votes smilies">
+                                    <Col sm={{span: 2, offset: 2}}><a href="/#"
+                                                                      className={`vote up smilies ${upVote ? 'on' : ''} `}
+                                                                      onClick={(e) => voteClick(e, 1)}>up</a></Col>
+                                    <Col sm={{span: 4, offset: 0}} className="jointext"
+                                         data-translation-key="chose_one">Choose one or both</Col>
+                                    <Col sm={{span: 2, offset: 0}}><a href="/#"
+                                                                      className={`vote down smilies ${downVote ? 'on' : ''}`}
+                                                                      onClick={(e) => voteClick(e, 0)}>down</a></Col>
+                                </Row>
+
+                                <Row className="btns">
+                                    <Col className="row buttons" sm={{span: 10, offset: 1}}>
                                         {
-                                            session_context.data.project_info.show_project_tags
-                                                ?<div>
-                                                    <Row className="project_tags">
-                                                        <Col sm={{span: 10, offset: 1}} className="consentbox"
-                                                             data-translation-key="project_tags">What is this photo about?
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className="project_tags">
-                                                    {
-                                                        session_context.data.project_info.tags.length
-                                                            ? <Col id="project_tags" className="col-sm-10 col-sm-offset-1">
-                                                                {session_context.data.project_info.tags.map((item)=>(
-                                                                    <a href="/#" className={`project_tag ${tags.includes(item) ? 'on' : ''}`} key={item} onClick={(e)=> {
-                                                                        saveTag(e, item);
-                                                                    }}>{item}</a>
-                                                                ))}
-                                                            </Col>
-                                                            : <Col id="no_tags" sm={{span: 10, offset: 1}}><em data-translation-key="no_project_tags">No Tags Currently Available</em></Col>
-                                                    }
-                                                    </Row>
-                                                </div>
-                                                : ""
+                                            session_context.previewWalk == null
+                                            ? (<><Col sm={{span: 2, offset: 2}}>
+                                                <Button
+                                                    className="delete"
+                                                    variant="primary"
+                                                    as={Link} to="/walk"
+                                                    onClick={(e) => {
+                                                        deletePhoto(e);
+                                                    }}
+                                                >Delete</Button>
+                                            </Col>
+                                            <Col sm={{span: 2, offset: 3}}>
+                                                <Button
+                                                    className="save"
+                                                    variant="primary"
+                                                    as={Link} to="/walk"
+                                                    onClick={(e) => {
+                                                        savePhoto(e);
+                                                    }}
+                                                >Save</Button>
+                                            </Col></>)
+                                            : <em>Changes to this Walk/Photo can no longer be saved</em>
                                         }
-
-
-                                        <Row>
-                                            <Col sm={{span: 10, offset: 1}} className="consentbox"
-                                                 data-translation-key="good_or_bad">Is
-                                                this good or bad for the community?
-                                            </Col>
-                                        </Row>
-
-                                        <Row className="goodbad votes smilies">
-                                            <Col sm={{span: 2, offset: 2}}><a href="/#"
-                                                                              className={`vote up smilies ${upVote ? 'on' : ''} `}
-                                                                              onClick={(e) => voteClick(e, 1)}>up</a></Col>
-                                            <Col sm={{span: 4, offset: 0}} className="jointext"
-                                                 data-translation-key="chose_one">Choose one or both</Col>
-                                            <Col sm={{span: 2, offset: 0}}><a href="/#"
-                                                                              className={`vote down smilies ${downVote ? 'on' : ''}`}
-                                                                              onClick={(e) => voteClick(e, 0)}>down</a></Col>
-                                        </Row>
-
-                                        <Row className="btns">
-                                            <Col className="row buttons" sm={{span: 10, offset: 1}}>
-                                                <Col sm={{span: 2, offset: 2}}>
-                                                    <Button
-                                                        className="delete"
-                                                        variant="primary"
-                                                        as={Link} to="/walk"
-                                                        onClick={(e) => {
-                                                            deletePhoto(e);
-                                                        }}
-                                                    >Delete</Button>
-                                                </Col>
-                                                <Col sm={{span: 2, offset: 3}}>
-                                                    <Button
-                                                        className="save"
-                                                        variant="primary"
-                                                        as={Link} to="/walk"
-                                                        onClick={(e) => {
-                                                            savePhoto(e);
-                                                        }}
-                                                    >Save</Button>
-                                                </Col>
-                                            </Col>
-                                        </Row>
-                                    </Container>
-                                </Col>
-                            </Row>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </Col>
+                    </Row>
                 </Container>
             }
         </ViewBox>

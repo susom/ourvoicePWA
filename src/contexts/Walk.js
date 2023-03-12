@@ -28,6 +28,7 @@ export const WalkContextProvider = ({children}) => {
     const resetData = () => {
         const clean_obj     = cloneDeep(context_init);
         setData(clean_obj);
+        setPhotoCount(0);
     }
 
     return (

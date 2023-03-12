@@ -26,12 +26,21 @@ function ViewBox(props){
             props.setWalks([]);
         }
     }
-
     const countAudios   = (photos) => {
         let count = 0;
         for (let i in photos) {
             if (photos[i].hasOwnProperty("audios")) {
                 count += Object.keys(photos[i].audios).length;
+            }
+        }
+        return count;
+    }
+
+    const countTexts    = (photos) => {
+        let count = 0;
+        for (let i in photos) {
+            if (photos[i].text_comment !== "") {
+                count ++;
             }
         }
         return count;
@@ -66,9 +75,13 @@ function ViewBox(props){
                         <Row className={`table_row list_data`} key={item.id}>
                             <Col sm={{span:2}}>{tsToYmd(item.timestamp)}</Col>
                             <Col sm={{span:2}}>{item.project_id}</Col>
-                            <Col sm={{span:2}} className={`walkid`}>{item.walk_id}</Col>
+                            <Col sm={{span:2}} className={`walkid`} onClick={(e) => {
+                                e.preventDefault();
+                                session_context.setPreviewWalk(item.id);
+                                session_context.setSlideOpen(true);
+                            }}>{item.walk_id}</Col>
                             <Col sm={{span:2}}>{item.photos.length}</Col>
-                            <Col sm={{span:2}}>{countAudios(item.photos) + (item.text_comment !== "" ? 1 : 0)}</Col>
+                            <Col sm={{span:2}}>{countAudios(item.photos) + countTexts(item.photos)}</Col>
                             <Col sm={{span:2}}>{item.uploaded ? <CloudUploadFill className={'color_success'}/> : <CloudUpload className={'color_pending'}/>}</Col>
                         </Row>
                     )

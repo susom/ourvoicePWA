@@ -26,7 +26,7 @@ function ViewBox(props){
     useEffect(() => {
         setCoordinates(walk_context.data.geotags);
         setPhotoCount(walk_context.data.photos.length);
-        console.log("walk geo tags", walk_context.data.geotags, coordinates);
+        // console.log("walk geo tags", walk_context.data.geotags, coordinates);
 
         if(walk_context.data.photos.length){
             let fcounts = 0;
@@ -156,10 +156,10 @@ export function Summary(){
     const navigate          = useNavigate();
 
     useEffect(() => {
-        if (!session_context.data.project_id) {
+        if (!session_context.data.in_walk) {
             navigate('/home');
         }
-    }, [session_context.data.project_id, navigate]);
+    }, [session_context.data.in_walk, navigate]);
 
     return (
         <ViewBox />
