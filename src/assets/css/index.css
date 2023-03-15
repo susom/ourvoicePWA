@@ -52,7 +52,7 @@ body {
     bottom:0;
     max-height:7vh;
     text-align:center;
-
+    background:#fff;
     z-index:100;
 }
 
