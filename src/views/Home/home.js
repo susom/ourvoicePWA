@@ -13,6 +13,7 @@ import {WalkContext} from "../../contexts/Walk";
 
 import AlertModal from "../../components/modal";
 import HomeLead from "../../components/home_lead";
+
 import {updateContext, tsDiffInHours} from "../../components/util";
 
 import "../../assets/css/view_home.css";
@@ -284,13 +285,13 @@ function ViewBox(props){
         props.setSignedIn(flag);
         updateContext(session_context, {"signed_in" : flag});
     }
-
     const onClickNavigate = (view) => {
         history(view);
     }
 
     return (
             <div className="content home">
+                
                 <HomeLead signedIn={props.signedIn}/>
 
                 <ViewProjectDetails
