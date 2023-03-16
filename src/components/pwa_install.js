@@ -1,8 +1,10 @@
 // Import necessary libraries
 import { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { Download } from 'react-bootstrap-icons';
+import { Download , XSquare} from 'react-bootstrap-icons';
 import { BrowserView, MobileView } from 'react-device-detect';
+
+import AndroidInstallPrompt from "./pwa_install_android";
 
 import "../assets/css/pwa_install.css";
 import browser_install_1 from "../assets/images/screenshot_browser_install_1.png";
@@ -34,11 +36,7 @@ const PWAInstallModal = () => {
   const renderInstructions = () => {
     if (deviceType === 'Android') {
       return (
-        <>
-          <p>1. Tap the menu button in Chrome.</p>
-          <p>2. Tap "Add to Home Screen".</p>
-          <p>3. Confirm the installation by tapping "Add".</p>
-        </>
+        <AndroidInstallPrompt/>
       );
     }else{
         //iOS or Unknwo
@@ -50,11 +48,11 @@ const PWAInstallModal = () => {
                     <ol>
                         <li >
                             <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={browser_install_1}></img>
-                            <caption>Click on the pictured icon in your URL bar</caption>
+                            <span>Click on the pictured icon in your URL bar</span>
                         </li>
                         <li >
                             <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={browser_install_2}></img>
-                            <caption>Confirm installation by clicking on the "Install" button</caption>
+                            <span>Confirm installation by clicking on the "Install" button</span>
                         </li>
                     </ol>
                 </BrowserView>
@@ -64,18 +62,18 @@ const PWAInstallModal = () => {
                     <ol>
                         <li >
                             <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={safari_install_1}></img>
-                            <caption>Click on the share icon at the bottom of the Safari window (pictured)</caption>
+                            <span>Click on the share icon at the bottom of the Safari window (pictured)</span>
                         </li>
                         <li >
                             <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={safari_install_2}></img>
-                            <caption>Click on "Add to Home Screen" from the context menu that pops up</caption>
+                            <span>Click on "Add to Home Screen" from the context menu that pops up</span>
                         </li>
                         <li >
                             <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={safari_install_3}></img>
-                            <caption>Confirm installation by clicking on "Add"</caption>
+                            <span>Confirm installation by clicking on "Add"</span>
                         </li>
                         <li >
-                            <caption>Finally an app icon will appear somewhere on your device's homescreen!</caption>
+                            <span>Finally an app icon will appear somewhere on your device's homescreen!</span>
                         </li>
                     </ol>
                 </MobileView>
@@ -93,13 +91,11 @@ const PWAInstallModal = () => {
       <Modal show={show} onHide={handleToggle}>
         <Modal.Header>
           <Modal.Title>App Installation Instructions</Modal.Title>
+          <XSquare onClick={handleToggle} className={`modal_close_x_btn`}/>
         </Modal.Header>
         <Modal.Body>
           {renderInstructions()}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleToggle}>Close</Button>
-        </Modal.Footer>
       </Modal>
     </>
   );
