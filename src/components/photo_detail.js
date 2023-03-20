@@ -19,7 +19,7 @@ function ViewBox(props){
     );
 }
 
-function PhotoDetail(props){
+function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail}){
     const session_context   = useContext(SessionContext);
     const walk_context      = useContext(WalkContext);
 
@@ -44,14 +44,14 @@ function PhotoDetail(props){
             });
         }
 
-        if(props.dataUri !== null) {
-            setPhotoPreview(props.dataUri);
+        if(dataUri !== null) {
+            setPhotoPreview(dataUri);
         }
 
-        if(props.viewPhotoDetail !== null){
+        if(viewPhotoDetail !== null){
             async function preparePreview(){
                 clearStates();
-                props.setDataUri(null);
+                setDataUri(null);
 
                 let doc_id;
                 let photo;
@@ -59,12 +59,12 @@ function PhotoDetail(props){
                 if(session_context.previewWalk !== null){
                     const walk_preview  = await db_walks.walks.get(session_context.previewWalk);
                     doc_id      = walk_preview.project_id + "_" + walk_preview.user_id + "_" + walk_preview.timestamp;
-                    photo       = walk_preview.photos[props.viewPhotoDetail];
+                    photo       = walk_preview.photos[viewPhotoDetail];
                     session_context.setPreviewWalkID(walk_preview.walk_id);
                     session_context.setPreviewProjID(walk_preview.project_id);
                 }else{
                     doc_id      = walk_context.data.project_id + "_" + walk_context.data.user_id + "_" + walk_context.data.timestamp;
-                    photo       = walk_context.data.photos[props.viewPhotoDetail];
+                    photo       = walk_context.data.photos[viewPhotoDetail];
                 }
 
                 const files_arr = buildFileArr(doc_id,[photo]);
@@ -96,7 +96,7 @@ function PhotoDetail(props){
             }
             preparePreview();
         }
-    },[props.viewPhotoDetail, props.dataUri]);
+    },[dataUri, viewPhotoDetail, walk_context.data.project_id, walk_context.data.user_id, walk_context.data.timestamp, walk_context.data.photos, audios]);
 
     const clearStates = () => {
         setUpVote(false);
@@ -108,7 +108,7 @@ function PhotoDetail(props){
         setTags([]);
         setRotate(null)
         setSpotGeo({});
-        props.setDataUri(null);
+        setDataUri(null);
     }
 
     const voteClick = (e, isUp) => {
@@ -138,7 +138,7 @@ function PhotoDetail(props){
 
         if(!existingFiles.includes(photo_name)){
             //if existing photo , then dont resave the file to indexdb
-            files_to_save.push({"name" : photo_id, "file" : props.dataUri});
+            files_to_save.push({"name" : photo_id, "file" : dataUri});
         }
 
         const audio_names   = {};

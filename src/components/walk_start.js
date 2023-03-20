@@ -60,6 +60,7 @@ function WalkStart(props){
                     }
                     <Camera
                         onTakePhoto={props.handleTakePhoto}
+                        idealFacingMode="environment" // Prioritize the back camera
                         onCameraStart={() => setCameraLoaded(true)}
                     />
                 </>

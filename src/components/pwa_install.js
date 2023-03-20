@@ -1,6 +1,6 @@
 // Import necessary libraries
 import { useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { Download , XSquare} from 'react-bootstrap-icons';
 import { BrowserView, MobileView } from 'react-device-detect';
 
@@ -47,11 +47,11 @@ const PWAInstallModal = () => {
                         This will enable offline use of the app after being loaded for the first time.</p>
                     <ol>
                         <li >
-                            <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={browser_install_1}></img>
+                            <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={browser_install_1} alt={`figure 1`}></img>
                             <span>Click on the pictured icon in your URL bar</span>
                         </li>
                         <li >
-                            <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={browser_install_2}></img>
+                            <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={browser_install_2} alt={`figure 2`}></img>
                             <span>Confirm installation by clicking on the "Install" button</span>
                         </li>
                     </ol>
@@ -61,15 +61,15 @@ const PWAInstallModal = () => {
                         This will install an app icon on hour homescreen and enable offline use of the app after being loaded for the first time.</p>
                     <ol>
                         <li >
-                            <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={safari_install_1}></img>
+                            <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={safari_install_1} alt={`figure 1`}></img>
                             <span>Click on the share icon at the bottom of the Safari window (pictured)</span>
                         </li>
                         <li >
-                            <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={safari_install_2}></img>
+                            <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={safari_install_2} alt={`figure 2`}></img>
                             <span>Click on "Add to Home Screen" from the context menu that pops up</span>
                         </li>
                         <li >
-                            <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={safari_install_3}></img>
+                            <img style={{ maxWidth: '85%', borderRadius: '10px', display: 'block' }} src={safari_install_3} alt={`figure 3`}></img>
                             <span>Confirm installation by clicking on "Add"</span>
                         </li>
                         <li >

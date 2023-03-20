@@ -106,7 +106,7 @@ function SlideOut(props){
             const doc_id = walk.project_id + "_" + walk.user_id + "_" + walk.timestamp ;
             prepSummary(doc_id, walk.photos);
         }
-    }, [session_context.previewWalk, session_context.data.in_walk, walk_context.data.photos.length, walk_context.data] );
+    },[session_context.data.in_walk, session_context.data.project_info.thumbs, session_context.previewWalk, walk_context.data.photos, walkAudios]);
 
     const handleAudio = (e, audio_name) => {
         //TODO ,THIS IS SAME CODE AS IN Photo_detail, maybe move it UP to context?... or?
