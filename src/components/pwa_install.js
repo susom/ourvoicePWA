@@ -43,7 +43,7 @@ const PWAInstallModal = () => {
         return (
             <>
                 <BrowserView className={`pwa_install`}>
-                    <p>The Discovery Tool can be installed as an app on your desktop or laptop from the Google Chrome Browser.
+                    <p>The Discovery Tool can be installed as an app on your <b>desktop or laptop</b> from the <b>Google Chrome Browser</b>.
                         This will enable offline use of the app after being loaded for the first time.</p>
                     <ol>
                         <li >
@@ -57,7 +57,7 @@ const PWAInstallModal = () => {
                     </ol>
                 </BrowserView>
                 <MobileView className={`pwa_install`}>
-                    <p>The Discovery Tool can be installed as an app on your iOS device (iPhone, iPad) using the safari browser.
+                    <p>The Discovery Tool can be installed as an app on your <b>iOS device (iPhone, iPad)</b> using the <b>Safari browser</b> only.
                         This will install an app icon on hour homescreen and enable offline use of the app after being loaded for the first time.</p>
                     <ol>
                         <li >

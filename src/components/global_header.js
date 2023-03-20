@@ -28,13 +28,13 @@ function GlobalHeader() {
     return (
          <>
             {
-                !show_header 
-                    ? (<PWAInstallModal/> ) 
+                !show_header
+                    ? (<PWAInstallModal/> )
                     : (<div className={`view_header ${in_session ? "in_session" : ""}`}>
                             <div className="app_title">Discovery Tool™</div>
                                 <div className="walk_id"><span className={project_id ? "has_data" : ""}><b>Project:</b> {project_id}</span> <span className={walk_id  ? "has_data" : ""}> | <b>Walk Id:</b> {walk_id}</span></div>
-                
-                            
+
+
                             <Offline>
                                 <span className="online_status"><CloudMinusFill color="red" size={20} /> Offline</span>
                             </Offline>
@@ -42,7 +42,7 @@ function GlobalHeader() {
                                 <span className="online_status"><CloudCheckFill color="green" size={20} /> Online</span>
                             </Online>
                         </div>)
-            
+
             }
         </>
     );

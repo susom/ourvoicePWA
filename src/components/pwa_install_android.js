@@ -33,7 +33,7 @@ const AndroidInstallPrompt = () => {
   return (
     (installPromptEvent || 1) && (
         <div className={`pwa_install android`}>
-            <p>The Discovery Tool can be installed as an app on your Android device using the Chrome browser.
+          <p>The Discovery Tool can be installed as an app on your <b>Android device</b> using the <b>Chrome browser</b>.
                 This will install an app icon on your homescreen and enable offline use of the app after being loaded for the first time.</p>
 
             <dl>
