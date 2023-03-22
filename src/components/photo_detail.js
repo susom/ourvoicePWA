@@ -248,21 +248,21 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                 </Row>
 
                                 <Row>
-                                    <Col sm={{span: 10, offset: 1}} className="consentbox"
+                                    <Col sm={{span: 10, offset: 1}} xs={{span: 10, offset: 1}} className="consentbox"
                                          data-translation-key="why_this_photo">
                                         Why did you take this photo?
                                     </Col>
                                 </Row>
 
                                 <Row className="audio_text">
-                                    <Col sm={{span: 2, offset: 1}} className="text_text">
+                                    <Col sm={{span: 2, offset: 1}} xs={{span: 2, offset: 1}} className="text_text">
                                     <a href="/#" className={`btn daction keyboard ${textComment !== "" && textComment !== null ? "edit" : ""}`} onClick={(e)=>{
                                             e.preventDefault();
                                             setShowText(!showText);
                                             document.getElementById("text_comment").focus();
                                         }}>keyboard</a>
                                     </Col>
-                                    <Col sm={{span: 9, offset: 0}} className="record_audio">
+                                    <Col sm={{span: 9, offset: 0}} xs={{span: 9, offset: 0}} className="record_audio">
                                         <AudioRecorderWithIndexDB stateAudios={audios} stateSetAudios={setAudios}/>
 
                                         <div id="saved_audio">
@@ -277,7 +277,7 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                 </Row>
 
                                 <Row className={`text_comment  ${showText ? "showit" : ""}`}>
-                                    <Col sm={{span: 10, offset: 1}}>
+                                    <Col sm={{span: 10, offset: 1}} xs={{span: 10, offset: 1}}>
                                         <textarea id="text_comment"
                                                   defaultValue={textComment}
                                                   onBlur={(e)=>{
@@ -291,7 +291,7 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                     session_context.data.project_info.show_project_tags
                                         ?<div>
                                             <Row className="project_tags">
-                                                <Col sm={{span: 10, offset: 1}} className="consentbox"
+                                                <Col sm={{span: 10, offset: 1}} xs={{span: 10, offset: 1}} className="consentbox"
                                                      data-translation-key="project_tags">What is this photo about?
                                                 </Col>
                                             </Row>
@@ -305,7 +305,7 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                                             }}>{item}</a>
                                                         ))}
                                                     </Col>
-                                                    : <Col id="no_tags" sm={{span: 10, offset: 1}}><em data-translation-key="no_project_tags">No Tags Currently Available</em></Col>
+                                                    : <Col id="no_tags" sm={{span: 10, offset: 1}} xs={{span: 10, offset: 1}}><em data-translation-key="no_project_tags">No Tags Currently Available</em></Col>
                                             }
                                             </Row>
                                         </div>
@@ -314,28 +314,28 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
 
 
                                 <Row>
-                                    <Col sm={{span: 10, offset: 1}} className="consentbox"
+                                    <Col sm={{span: 10, offset: 1}}  xs={{span: 10, offset: 1}} className="consentbox"
                                          data-translation-key="good_or_bad">Is
                                         this good or bad for the community?
                                     </Col>
                                 </Row>
 
                                 <Row className="goodbad votes smilies">
-                                    <Col sm={{span: 2, offset: 2}}><a href="/#"
+                                    <Col sm={{span: 2, offset: 2}} xs={{span: 2, offset: 2}}><a href="/#"
                                                                       className={`vote up smilies ${upVote ? 'on' : ''} `}
                                                                       onClick={(e) => voteClick(e, 1)}>up</a></Col>
-                                    <Col sm={{span: 4, offset: 0}} className="jointext"
+                                    <Col sm={{span: 2, offset: 2}}  xs={{span: 2, offset: 2}} className="jointext"
                                          data-translation-key="chose_one">Choose one or both</Col>
-                                    <Col sm={{span: 2, offset: 0}}><a href="/#"
+                                    <Col sm={{span: 2, offset: 2}} xs={{span: 2, offset: 2}}><a href="/#"
                                                                       className={`vote down smilies ${downVote ? 'on' : ''}`}
                                                                       onClick={(e) => voteClick(e, 0)}>down</a></Col>
                                 </Row>
 
                                 <Row className="btns">
-                                    <Col className="row buttons" sm={{span: 10, offset: 1}}>
+                                    <Col className="row buttons" sm={{span: 10, offset: 1}} xs={{span: 10, offset: 1}}>
                                         {
                                             session_context.previewWalk == null
-                                            ? (<><Col sm={{span: 2, offset: 2}}>
+                                            ? (<><Col sm={{span: 2, offset: 2}} xs={{span: 2, offset: 2}}>
                                                 <Button
                                                     className="delete"
                                                     variant="primary"
@@ -345,7 +345,7 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                                     }}
                                                 >Delete</Button>
                                             </Col>
-                                            <Col sm={{span: 2, offset: 3}}>
+                                            <Col sm={{span: 2, offset: 3}} xs={{span: 2, offset: 3}}>
                                                 <Button
                                                     className="save"
                                                     variant="primary"

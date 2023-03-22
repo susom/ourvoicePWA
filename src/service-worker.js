@@ -111,7 +111,6 @@ self.addEventListener('activate', event => {
     }, 60000); // Check every 60 (60000ms) seconds
 });
 
-
 //how to use syncManager ? is syncManager appropriate for what im trying to do?
 function testNetworkConnectivityAndSync(tag) {
     fetch('/', { method: 'HEAD' })

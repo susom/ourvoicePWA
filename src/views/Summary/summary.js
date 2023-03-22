@@ -64,17 +64,17 @@ function ViewBox(props){
 
         <Container className="summary">
             <Row>
-                <Col sm={{span:8, offset:2}} className="consentbox vertconnect bigpad green_man_speech"
+                <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}} className="consentbox vertconnect bigpad green_man_speech"
                      data-translation-key="finish_title">Great!
                 </Col>
             </Row>
 
             <Row>
-                <Col sm={{span:8, offset:2}} className="consentbox vertconnect done_photos" data-translation-key="your_route">Your Route</Col>
+                <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}} className="consentbox vertconnect done_photos" data-translation-key="your_route">Your Route</Col>
             </Row>
 
             <Row id="walkmap">
-                <Col sm={{span:8, offset:2}} className="consentbox vertconnect noborå">
+                <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}} className="consentbox vertconnect noborå">
                     <GMapContainer coordinates={coordinates}>
                         {coordinates.map((coordinate, index) => (
                             <Marker key={index} position={coordinate} />
@@ -85,45 +85,45 @@ function ViewBox(props){
             </Row>
 
             <Row>
-                <Col sm={{span:8, offset:2}}  className="consentbox vertconnect"
+                <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}}  className="consentbox vertconnect"
                      data-translation-key="finish_info_1">From home screen, connect to wifi to upload data.
                 </Col>
             </Row>
             <Row>
-                <Col sm={{span:8, offset:2}} className="consentbox horizconnect"></Col>
+                <Col sm={{span:8, offset:2}} xs={{span:8, offset:2}} className="consentbox horizconnect"></Col>
             </Row>
 
             <Row>
-                <Col sm={{span:2, offset:3}} className="consentbox vertconnect nocontent"></Col>
-                <Col sm={{span:2, offset:0}} className="consentbox vertconnect nocontent"></Col>
+                <Col sm={{span:2, offset:3}} xs={{span:2, offset:1}} className="consentbox vertconnect nocontent"></Col>
+                <Col sm={{span:2, offset:0}} xs={{span:2, offset:5}} className="consentbox vertconnect nocontent"></Col>
             </Row>
 
-            <Row sm={{span:6}}>
-                <Col sm={{span:4, offset:2}} className="consentbox vertconnect mr-0" data-translation-key="took_photos">You
+            <Row sm={{span:6}} xs={{span:6}}>
+                <Col sm={{span:4, offset:2}} xs={{span:5, offset:0}} className="consentbox vertconnect mr-0" data-translation-key="took_photos">You
                     took this many photos
                 </Col>
-                <Col sm={{span:4, offset:0}} className="consentbox vertconnect"
+                <Col sm={{span:4, offset:0}} xs={{span:5, offset:0}} className="consentbox vertconnect"
                      data-translation-key="made_comments">You made this many comments
                 </Col>
             </Row>
 
             <Row>
-                <Col sm={{span:2, offset:3}} className="consentbox vertconnect icon camera"></Col>
-                <Col sm={{span:2, offset:0}} className="consentbox vertconnect icon audiocomment"></Col>
+                <Col sm={{span:2, offset:1}} xs={{span:5, offset:0}} className="consentbox vertconnect icon camera"></Col>
+                <Col sm={{span:2, offset:5}} xs={{span:5, offset:0}} className="consentbox vertconnect icon audiocomment"></Col>
             </Row>
 
             <Row>
-                <Col sm={{span:2, offset:3}} className="consentbox  solidbg done_photos" id='photos_took'><b>{photoCount}</b>
+                <Col sm={{span:2, offset:3}} xs={{span:5, offset:0}} className="consentbox  solidbg done_photos" id='photos_took'><b>{photoCount}</b>
                 </Col>
-                <Col sm={{span:2, offset:0}} className="consentbox  solidbg done_audios_text" id='audios_recorded'><b>{obsCount}</b></Col>
+                <Col sm={{span:2, offset:0}} xs={{span:5, offset:0}} className="consentbox  solidbg done_audios_text" id='audios_recorded'><b>{obsCount}</b></Col>
             </Row>
 
             <Row>
-                <Col sm={{span:8, offset:2}} className="consentbox" data-translation-key="are_you_done">Are you done?</Col>
+                <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}} className="consentbox" data-translation-key="are_you_done">Are you done?</Col>
             </Row>
 
-            <Row>
-                <Col sm={{span:4, offset:2}}>
+            <Row className={`btns`}>
+                <Col sm={{span:4, offset:2}} xs={{span:5, offset:0}} className={`consentbox`}>
                     <Button
                         id="yesdone"
                         data-next="finish"
@@ -136,7 +136,7 @@ function ViewBox(props){
                         }}
                     >Yes, Return to homescreen</Button>
                 </Col>
-                <Col sm={{span:4, offset:0}}>
+                <Col sm={{span:4, offset:0}} xs={{span:5}} className={`consentbox`}>
                     <Button
                         id="nocontinue"
                         data-next="step_two"

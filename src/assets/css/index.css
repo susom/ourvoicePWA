@@ -40,7 +40,7 @@ body {
 .view_body{
     position:relative;
     top:50%;
-    transform: translateY(-60%);
+    transform: translateY(-50%);
 }
 
 /*REST OF FOOTER STYLES IN assets/css/global_footer*/

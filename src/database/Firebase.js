@@ -20,8 +20,8 @@ const firebaseConfig = {
     appId: "1:696489330177:web:268b76243b9281a0a3e200",
     measurementId: "G-5MTXG6HGDL",
     persistence: true,
-    experimentalTabSynchronization: true
-    // experimentalForceOwningTab: true
+    // experimentalTabSynchronization: true
+    forceOwnership: true
 };
 
 // Initialize Firebase

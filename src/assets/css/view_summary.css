@@ -1,5 +1,6 @@
 .summary {
-
+    padding-top:120px;
+    padding-bottom:50px;
 }
 
 .container {
@@ -29,6 +30,11 @@
 .consentbox.nobor{
 
 }
+
+.btns .consentbox {
+    border:none;
+}
+
 .icon {
     height:10vh;
     background:#57585A;
@@ -37,7 +43,7 @@
 
 .icon.camera{
     background:#57585A url(../images/icon_camera.png) 50% no-repeat;
-    background-size:80%;
+    background-size:30% !important;
 }
 .icon.audiocomment{
     background:#57585A url(../images/icon_audio_comment.png) 50% no-repeat;

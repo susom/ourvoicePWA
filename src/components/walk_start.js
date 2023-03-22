@@ -71,7 +71,7 @@ function WalkStart(props){
                             <Container>
                                 <Row>
                                     <Col className="custom_takephoto_text">
-                                        <h5 className="offset-sm-1 col-sm-10">{customPhotoPrompt}</h5>
+                                        <h5 className="offset-sm-1 col-sm-10 col-10">{customPhotoPrompt}</h5>
                                     </Col>
                                 </Row>
 

@@ -59,12 +59,12 @@ function ViewBox(props){
                 </Row>
 
                 <Row className={`table_header`}>
-                    <Col sm={{span:2}}><span data-translation-key="date">Date</span></Col>
-                    <Col sm={{span:2}}><span data-translation-key="project">Project</span></Col>
-                    <Col sm={{span:2}}><span data-translation-key="walk_id">ID</span></Col>
-                    <Col sm={{span:2}}><span><img alt='' className={`hdr_icon`} src={icon_camera_black}/></span></Col>
-                    <Col sm={{span:2}}><span><img alt='' className={`hdr_icon`} src={icon_audio_comment_black}/></span></Col>
-                    <Col sm={{span:2}}><span data-translation-key="upload_status">Status</span></Col>
+                    <Col sm={{span:2}} xs={{span:2}}><span data-translation-key="date">Date</span></Col>
+                    <Col sm={{span:2}} xs={{span:2}}><span data-translation-key="project">Project</span></Col>
+                    <Col sm={{span:2}} xs={{span:2}}><span data-translation-key="walk_id">ID</span></Col>
+                    <Col sm={{span:2}} xs={{span:2}}><span><img alt='' className={`hdr_icon`} src={icon_camera_black}/></span></Col>
+                    <Col sm={{span:2}} xs={{span:2}}><span><img alt='' className={`hdr_icon`} src={icon_audio_comment_black}/></span></Col>
+                    <Col sm={{span:2}} xs={{span:2}}><span data-translation-key="upload_status">Status</span></Col>
                 </Row>
 
                 {props.walks.map(item => {
@@ -73,16 +73,16 @@ function ViewBox(props){
                     }
                     return (
                         <Row className={`table_row list_data`} key={item.id}>
-                            <Col sm={{span:2}}>{tsToYmd(item.timestamp)}</Col>
-                            <Col sm={{span:2}}>{item.project_id}</Col>
-                            <Col sm={{span:2}} className={`walkid`} onClick={(e) => {
+                            <Col sm={{span:2}}  xs={{span:2}}>{tsToYmd(item.timestamp)}</Col>
+                            <Col sm={{span:2}}  xs={{span:2}}>{item.project_id}</Col>
+                            <Col sm={{span:2}}  xs={{span:2}} className={`walkid`} onClick={(e) => {
                                 e.preventDefault();
                                 session_context.setPreviewWalk(item.id);
                                 session_context.setSlideOpen(true);
                             }}>{item.walk_id}</Col>
-                            <Col sm={{span:2}}>{item.photos.length}</Col>
-                            <Col sm={{span:2}}>{countAudios(item.photos) + countTexts(item.photos)}</Col>
-                            <Col sm={{span:2}}>{item.uploaded ? <CloudUploadFill className={'color_success'}/> : <CloudUpload className={'color_pending'}/>}</Col>
+                            <Col sm={{span:2}}  xs={{span:2}}>{item.photos.length}</Col>
+                            <Col sm={{span:2}}  xs={{span:2}}>{countAudios(item.photos) + countTexts(item.photos)}</Col>
+                            <Col sm={{span:2}}  xs={{span:2}}>{item.uploaded ? <CloudUploadFill className={'color_success'}/> : <CloudUpload className={'color_pending'}/>}</Col>
                         </Row>
                     )
                 })}

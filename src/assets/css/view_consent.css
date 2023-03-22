@@ -5,6 +5,11 @@
     text-align:center;
 }
 
+.consent_wrap {
+    padding-top:30px;
+    padding-bottom:50px;
+}
+
 .content {
     margin:0 auto;
 }
