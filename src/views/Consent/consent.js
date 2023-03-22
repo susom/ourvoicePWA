@@ -66,92 +66,80 @@ export function Consent({Navigate}){
 
     let consent_pages   = [];
     consent_pages[0]    = (
-        <Container className="content consent">
-            <Row id="consent_0" className="panel">
-                <Col sm={{span:8, offset:2}} xs={{span:12}} className="content">
-                    <Container>
-                        <Row>
-                            <Col sm={{span:10, offset:1}} xs={{span:10, offset:1}} className="consentbox vertconnect green_man_speech"
-                                 data-translation-key="consent_greet">Welcome!
-                            </Col>
-                        </Row>
+        <Container className="content consent panel" id="consent_0">
+            <Row>
+                <Col sm={{span:10, offset:1}} xs={{span:10, offset:1}} className="consentbox vertconnect green_man_speech"
+                     data-translation-key="consent_greet">Welcome!
+                </Col>
+            </Row>
 
-                        <Row>
-                            <Col sm={{span:10, offset:1}} xs={{span:10, offset:1}} className="consentbox vertconnect"
-                                 data-translation-key="consent_info_1">Use the Discovery Tool to take pictures and
-                                explain things in your community that affect healthy living. The Discovery Tool will
-                                make a map of your route.
-                            </Col>
-                        </Row>
+            <Row>
+                <Col sm={{span:10, offset:1}} xs={{span:10, offset:1}} className="consentbox vertconnect"
+                     data-translation-key="consent_info_1">Use the Discovery Tool to take pictures and
+                    explain things in your community that affect healthy living. The Discovery Tool will
+                    make a map of your route.
+                </Col>
+            </Row>
 
-                        <Row>
-                            <Col sm={{span:10, offset:1}} xs={{span:10, offset:1}} className="consentbox"
-                                 data-translation-key="consent_info_2">The information you collect will be stored
-                                securely at Stanford University and will only be used for research purposes. It may be
-                                published or presented, but your identity will never be shared.
-                            </Col>
-                        </Row>
+            <Row>
+                <Col sm={{span:10, offset:1}} xs={{span:10, offset:1}} className="consentbox"
+                     data-translation-key="consent_info_2">The information you collect will be stored
+                    securely at Stanford University and will only be used for research purposes. It may be
+                    published or presented, but your identity will never be shared.
+                </Col>
+            </Row>
 
-                        <Row className="buttons">
-                            <Col>
-                                <Button
-                                    className="btn btn-primary start_walk"
-                                    variant="primary"
-                                    onClick={()=> setCurPage(1)}
-                                >I understand and agree</Button>
-                            </Col>
-                        </Row>
-                    </Container>
+            <Row className="buttons">
+                <Col>
+                    <Button
+                        className="btn btn-primary start_walk"
+                        variant="primary"
+                        onClick={()=> setCurPage(1)}
+                    >I understand and agree</Button>
                 </Col>
             </Row>
         </Container>
     );
     consent_pages[1]    = (
-        <Container className="content consent">
-            <Row id="consent_1" className="panel">
-                <Col sm={{span:8, offset:2}} xs={{span:12}} className="content">
-                    <Container>
-                        <Row>
-                            <Col sm={{span:10, offset:1}} xs={{span:10, offset:1}} className="consentbox" data-translation-key="saftey_tips">Safety Tips</Col>
-                        </Row>
+        <Container className="content consent panel" id="consent_1" >
+            <Row>
+                <Col sm={{span:10, offset:1}} xs={{span:10, offset:1}} className="consentbox" data-translation-key="saftey_tips">Safety Tips</Col>
+            </Row>
 
-                        <Row className="safteytip">
-                            <Col sm={{span:3, offset:1}} xs={{span:3, offset:1}}><span><img alt='' src={pic_walk_with_another}/></span></Col>
-                            <Col sm={7} xs={7}><span data-translation-key="saftey_tips_1">Walk with another person, if possible</span>
-                            </Col>
-                        </Row>
+            <Row className="safteytip">
+                <Col sm={{span:3, offset:1}} xs={{span:3}}><span><img alt='' src={pic_walk_with_another}/></span></Col>
+                <Col sm={7} xs={7}><span data-translation-key="saftey_tips_1">Walk with another person, if possible</span>
+                </Col>
+            </Row>
 
-                        <Row className="safteytip">
-                            <Col sm={{span:3, offset:1}} xs={{span:3, offset:1}}><span><img alt='' src={pic_danger_2}/></span></Col>
-                            <Col sm={7} xs={7}><span data-translation-key="saftey_tips_2">Pay attention and avoid dangerous situations</span>
-                            </Col>
-                        </Row>
+            <Row className="safteytip">
+                <Col sm={{span:3, offset:1}} xs={{span:3}}><span><img alt='' src={pic_danger_2}/></span></Col>
+                <Col sm={7} xs={7}><span data-translation-key="saftey_tips_2">Pay attention and avoid dangerous situations</span>
+                </Col>
+            </Row>
 
-                        <Row className="safteytip">
-                            <Col sm={{span:3, offset:1}} xs={{span:3, offset:1}}><span><img alt='' src={pic_no_faces}/></span></Col>
-                            <Col sm={7} xs={7}><span data-translation-key="saftey_tips_3">Do not take pictures of people's faces</span>
-                            </Col>
-                        </Row>
+            <Row className="safteytip">
+                <Col sm={{span:3, offset:1}} xs={{span:3}}><span><img alt='' src={pic_no_faces}/></span></Col>
+                <Col sm={7} xs={7}><span data-translation-key="saftey_tips_3">Do not take pictures of people's faces</span>
+                </Col>
+            </Row>
 
-                        <Row className="safteytip">
-                            <Col sm={{span:3, offset:1}} xs={{span:3, offset:1}}><span><img alt=''  src={pic_ask_help}/></span></Col>
-                            <Col sm={7} xs={7}><span data-translation-key="saftey_tips_4">Ask for help if you need it</span>
-                            </Col>
-                        </Row>
+            <Row className="safteytip">
+                <Col sm={{span:3, offset:1}} xs={{span:3}}><span><img alt=''  src={pic_ask_help}/></span></Col>
+                <Col sm={7} xs={7}><span data-translation-key="saftey_tips_4">Ask for help if you need it</span>
+                </Col>
+            </Row>
 
-                        <Row className="buttons">
-                            <Col>
-                                <Button
-                                className="btn btn-primary start_walk"
-                                variant="primary"
-                                as={Link} to="/walk"
-                                onClick={(e)=>{
-                                    startWalk(e);
-                                }}
-                            >Start Walk</Button>
-                            </Col>
-                        </Row>
-                    </Container>
+            <Row className="buttons">
+                <Col>
+                    <Button
+                    className="btn btn-primary start_walk"
+                    variant="primary"
+                    as={Link} to="/walk"
+                    onClick={(e)=>{
+                        startWalk(e);
+                    }}
+                >Start Walk</Button>
                 </Col>
             </Row>
         </Container>
