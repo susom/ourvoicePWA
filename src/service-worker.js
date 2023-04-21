@@ -16,10 +16,11 @@ import { StaleWhileRevalidate } from 'workbox-strategies';
 // Your service worker needs to import dexie and you should declare your db within the service worker itself or in a script that it will import.
 // You can also use es6 imports and compile the service worker using webpack but in any case the db instance has to live within the service worker. You can also have another db instance in the DOM that talks to the same DB.
 import { db_walks, db_files } from "./database/db"
-import {firestore, storage} from "./database/Firebase";
+import {firestore, storage, auth} from "./database/Firebase";
 import { doc,  writeBatch, collection, setDoc } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
 import {bulkUpdateDb, cloneDeep, isBase64, buildFileArr} from "./components/util";
+import {signInAnonymously} from "firebase/auth";
 
 clientsClaim();
 
@@ -80,15 +81,28 @@ self.addEventListener('message', (event) => {
 // Any other custom service worker logic can go here.
 self.addEventListener('activate', event => {
     // Set up timer to periodically check IndexedDB
-    //TODO determine if this is even necessary anymore.
+
     //Cloud Firestore and Cloud Storage both have offline persistence and automatic upload , even while offline without service worker
     //just cause i read some blog about a guy that found this hybrid approach to be the best performing... maybe thats outdated?
     //neeed to find that blog again.
+
+    const signIn = async () => {
+        try {
+            if(!auth.currentUser){
+                await signInAnonymously(auth);
+            }
+        } catch (error) {
+            console.error("Error signing in anonymously:", error);
+        }
+    };
+
     setInterval(async () => {
         // Query IndexedDB for new data
         console.log("every 60 seconds, navigator", navigator.onLine);
 
         if(navigator.onLine){
+            signIn();
+
             console.log("in SW , navigator online");
             const walks_col = await db_walks.walks.toCollection();
 

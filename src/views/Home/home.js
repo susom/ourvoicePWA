@@ -4,8 +4,8 @@ import { Button } from 'react-bootstrap';
 
 import {db_walks, db_project, db_files, db_logs} from "../../database/db";
 import { collection, getDocs, where, query } from "firebase/firestore";
-import {firestore} from "../../database/Firebase";
-// import {signInAnonymously,onAuthStateChanged} from "firebase/auth";
+import {firestore, auth} from "../../database/Firebase";
+import useAnonymousSignIn from "../../components/useAnonymousSignIn";
 
 import {WalkmapContext} from "../../contexts/Walkmap";
 import {SessionContext} from "../../contexts/Session";
@@ -22,19 +22,6 @@ function ViewProjectDetails(props){
     const session_context       = useContext(SessionContext);
     const walk_context          = useContext(WalkContext);
     const [status, setStatus]   = useState("");
-
-
-    //hmm by setting firestore rule to request.auth.uid != null it works whether or not im signed in anonymosly?
-    // signInAnonymously(firebaseAuth).then(() => {
-    //     console.log('User signed in anonymously');
-    // }).catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     if (errorCode === 'auth/operation-not-allowed') {
-    //         console.log('Enable anonymous in your firebase console.');
-    //     }
-    //     console.error(error,errorCode,errorMessage);
-    // });
 
     async function checkLogin(){
         const q = query(collection(firestore, "ov_projects")
@@ -333,11 +320,15 @@ export function Home(){
     const walkmap_context           = useContext(WalkmapContext); //THE API NEEDS TO "warm up" SO KICK IT OFF HERE BUT DONT STORE DATA UNTIL 'in_walk'
     const session_context           = useContext(SessionContext);
 
+    console.log("signInAnonymously please just work you fucker");
+    useAnonymousSignIn();
+
     console.log("warm up GPS",walkmap_context.data.length);
 
     const [pcode, setPcode]         = useState("");
     const [pword, setPword]         = useState("");
     const [signedIn, setSignedIn]   = useState(null);
+
 
     useEffect(() => {
         //check if there is a recent login to a project and set in session if so
@@ -403,30 +394,6 @@ export function Home(){
         // }
         // const ov_meta = get_ov_meta();
     }, [session_context]);
-
-    // useEffect(() => {
-    //     //LITERALLY DO NOT NEED THIS SINCE FIREBASE WILL PUSH WHEN ONLINE
-    //     onAuthStateChanged(firebaseAuth, (user) => {
-    //         if (user) {
-    //             // User is signed in, see docs for a list of available properties
-    //             // https://firebase.google.com/docs/reference/js/firebase.User
-    //             const uid = user.uid;
-    //             console.log("user signed in (in this case anon) .", user);
-    //         } else {
-    //             console.log("user signed out");
-    //         }
-    //     });
-    //
-    //     firebaseAuth.signOut().then(() => {
-    //         console.log('User signed in anonymously');
-    //     }).catch(error => {
-    //         if (error.code === 'auth/operation-not-allowed') {
-    //             console.log('Enable anonymous in your firebase console.');
-    //         }
-    //
-    //         console.error(error);
-    //     });;
-    // },[]);
 
     return (
         <ViewBox signedIn={signedIn} setSignedIn={setSignedIn} pcode={pcode} setPcode={setPcode} pword={pword} setPword={setPword}/>
