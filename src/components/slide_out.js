@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from 'react-bootstrap';
 import  Slider  from 'react-slide-out';
 import 'react-slide-out/lib/index.css';
+import { XCircle } from 'react-bootstrap-icons';
+
 
 import { SessionContext } from "../contexts/Session";
 import { WalkContext } from "../contexts/Walk";
@@ -147,13 +149,14 @@ function SlideOut(props){
                 position="right"
                 onClose={handleClose}
                 onOutsideClick={handleClose}
-                size={400}
+                size={300}
                 duration={500}
             >
                 <div className={`slideout`}>
                     <hgroup>
                         <h2>Walk Summary</h2>
                         <h4>Project ID : {summProjectID}  | Walk Id : {summWalkID}</h4>
+                        <XCircle className={`close_slider`} color="#bbb" size={30} onClick={handleClose}/>
                     </hgroup>
                     {
                         !walkSumm.length

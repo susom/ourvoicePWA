@@ -1,6 +1,6 @@
 .buttons button, .buttons .btn{
     display:block;
-    padding: 15px 0;
+    padding: 5px 0;
     margin: 0 auto 17px;
     width:100%;
     max-width: 300px;
@@ -223,10 +223,10 @@ LIGHT GREY  : #E0E0E0
 }
 
 #text_comment{
-    width:86%;
-    height:100px;
+    width:100%;
+    height:80px;
     padding:5px;
-    font-size:120%;
+    font-size:100%;
 }
 #pic_review .device_actions i{
     margin-bottom:5px;
@@ -296,6 +296,10 @@ LIGHT GREY  : #E0E0E0
 }
 
 /*Votes Smilies or Thumbs*/
+.jointext {
+    font-size:85%;
+}
+
 .votes{
     width:calc(100%);
     text-align:center;
@@ -371,11 +375,12 @@ LIGHT GREY  : #E0E0E0
 .project_tag{
     white-space:nowrap;
     position:relative;
-    margin:0 15px 0 10px;
+    margin:0 10px 0 10px;
     displaY:inline-block;
     height:25px;
     border-radius: 0 5px 5px 0;
-    padding: 0 25px 0 15px;
+    padding: 0 10px 0 10px;
+
     background:#E8EDF0;
     border: 0 solid #C7D2D4;
     border-top-width:1px;
@@ -383,6 +388,7 @@ LIGHT GREY  : #E0E0E0
     color:#999;
     line-height:23px;
     text-decoration:none;
+    font-size:77%;
 }
 
 .project_tag.on:before{
@@ -410,4 +416,8 @@ LIGHT GREY  : #E0E0E0
     display:inline-block;
     max-width: 80px;
     max-height: 80px;
+}
+
+.container {
+    margin-bottom:50px;
 }

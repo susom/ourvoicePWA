@@ -248,21 +248,21 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                 </Row>
 
                                 <Row>
-                                    <Col sm={{span: 10, offset: 1}} xs={{span: 10, offset: 1}} className="consentbox"
+                                    <Col xs={{span: 12}} className="consentbox"
                                          data-translation-key="why_this_photo">
                                         Why did you take this photo?
                                     </Col>
                                 </Row>
 
                                 <Row className="audio_text">
-                                    <Col sm={{span: 2, offset: 1}} xs={{span: 2, offset: 1}} className="text_text">
+                                    <Col xs={{span: 3}} className="text_text">
                                     <a href="/#" className={`btn daction keyboard ${textComment !== "" && textComment !== null ? "edit" : ""}`} onClick={(e)=>{
                                             e.preventDefault();
                                             setShowText(!showText);
                                             document.getElementById("text_comment").focus();
                                         }}>keyboard</a>
                                     </Col>
-                                    <Col sm={{span: 9, offset: 0}} xs={{span: 9, offset: 0}} className="record_audio">
+                                    <Col xs={{span: 9}} className="record_audio">
                                         <AudioRecorderWithIndexDB stateAudios={audios} stateSetAudios={setAudios}/>
 
                                         <div id="saved_audio">
@@ -277,7 +277,7 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                 </Row>
 
                                 <Row className={`text_comment  ${showText ? "showit" : ""}`}>
-                                    <Col sm={{span: 10, offset: 1}} xs={{span: 10, offset: 1}}>
+                                    <Col xs={{span: 12}}>
                                         <textarea id="text_comment"
                                                   defaultValue={textComment}
                                                   onBlur={(e)=>{
@@ -291,21 +291,21 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                     session_context.data.project_info.show_project_tags
                                         ?<div>
                                             <Row className="project_tags">
-                                                <Col sm={{span: 10, offset: 1}} xs={{span: 10, offset: 1}} className="consentbox"
+                                                <Col xs={{span: 12}} className="consentbox"
                                                      data-translation-key="project_tags">What is this photo about?
                                                 </Col>
                                             </Row>
                                             <Row className="project_tags">
                                             {
                                                 session_context.data.project_info.tags.length
-                                                    ? <Col id="project_tags" className="col-sm-10 col-sm-offset-1">
+                                                    ? <Col id="project_tags" xs={{span: 12}}>
                                                         {session_context.data.project_info.tags.map((item)=>(
                                                             <a href="/#" className={`project_tag ${tags.includes(item) ? 'on' : ''}`} key={item} onClick={(e)=> {
                                                                 saveTag(e, item);
                                                             }}>{item}</a>
                                                         ))}
                                                     </Col>
-                                                    : <Col id="no_tags" sm={{span: 10, offset: 1}} xs={{span: 10, offset: 1}}><em data-translation-key="no_project_tags">No Tags Currently Available</em></Col>
+                                                    : <Col id="no_tags" xs={{span: 12}}><em data-translation-key="no_project_tags">No Tags Currently Available</em></Col>
                                             }
                                             </Row>
                                         </div>
@@ -314,50 +314,48 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
 
 
                                 <Row>
-                                    <Col sm={{span: 10, offset: 1}}  xs={{span: 10, offset: 1}} className="consentbox"
+                                    <Col xs={{span: 12}} className="consentbox"
                                          data-translation-key="good_or_bad">Is
                                         this good or bad for the community?
                                     </Col>
                                 </Row>
 
                                 <Row className="goodbad votes smilies">
-                                    <Col sm={{span: 2, offset: 2}} xs={{span: 2, offset: 2}}><a href="/#"
+                                    <Col xs={{span: 4}}><a href="/#"
                                                                       className={`vote up smilies ${upVote ? 'on' : ''} `}
                                                                       onClick={(e) => voteClick(e, 1)}>up</a></Col>
-                                    <Col sm={{span: 2, offset: 2}}  xs={{span: 2, offset: 2}} className="jointext"
+                                    <Col xs={{span: 4}} className="jointext"
                                          data-translation-key="chose_one">Choose one or both</Col>
-                                    <Col sm={{span: 2, offset: 2}} xs={{span: 2, offset: 2}}><a href="/#"
+                                    <Col xs={{span: 4}}><a href="/#"
                                                                       className={`vote down smilies ${downVote ? 'on' : ''}`}
                                                                       onClick={(e) => voteClick(e, 0)}>down</a></Col>
                                 </Row>
 
-                                <Row className="btns">
-                                    <Col className="row buttons" sm={{span: 10, offset: 1}} xs={{span: 10, offset: 1}}>
-                                        {
-                                            session_context.previewWalk == null
-                                            ? (<><Col sm={{span: 2, offset: 2}} xs={{span: 2, offset: 2}}>
-                                                <Button
-                                                    className="delete"
-                                                    variant="primary"
-                                                    as={Link} to="/walk"
-                                                    onClick={(e) => {
-                                                        deletePhoto(e);
-                                                    }}
-                                                >Delete</Button>
-                                            </Col>
-                                            <Col sm={{span: 2, offset: 3}} xs={{span: 2, offset: 3}}>
-                                                <Button
-                                                    className="save"
-                                                    variant="primary"
-                                                    as={Link} to="/walk"
-                                                    onClick={(e) => {
-                                                        savePhoto(e);
-                                                    }}
-                                                >Save</Button>
-                                            </Col></>)
-                                            : <em>Changes to this Walk/Photo can no longer be saved</em>
-                                        }
-                                    </Col>
+                                <Row className="btns buttons">
+                                    {
+                                        session_context.previewWalk == null
+                                        ? (<><Col xs={{span: 5}}>
+                                            <Button
+                                                className="delete"
+                                                variant="primary"
+                                                as={Link} to="/walk"
+                                                onClick={(e) => {
+                                                    deletePhoto(e);
+                                                }}
+                                            >Delete</Button>
+                                        </Col>
+                                        <Col xs={{span: 5, offset: 2}}>
+                                            <Button
+                                                className="save"
+                                                variant="primary"
+                                                as={Link} to="/walk"
+                                                onClick={(e) => {
+                                                    savePhoto(e);
+                                                }}
+                                            >Save</Button>
+                                        </Col></>)
+                                        : <em>Changes to this Walk/Photo can no longer be saved</em>
+                                    }
                                 </Row>
                             </Container>
                         </Col>

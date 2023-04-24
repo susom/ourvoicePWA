@@ -1,5 +1,17 @@
+.SlideModal--open {
+    width: 90%;
+    max-width:90%;
+}
+
+.close_slider {
+    position:absolute;
+    top:10px;
+    right:10px;
+    cursor:pointer;
+}
+
 .slideout {
-    padding:20px;
+    padding:10px;
 }
 
 .slideout hgroup{
@@ -30,7 +42,7 @@
 
 .slideout dt span {
     display:inline-block;
-    margin-right:5px;
+    margin-right:0;
 }
 
 .slideout dd {
@@ -44,7 +56,7 @@ img.slide_preview {
 }
 
 .slideout .icon{
-    margin-right:5px;
+    margin-right:2px;
     vertical-align:middle;
 }
 
@@ -54,8 +66,8 @@ img.slide_preview {
 
 .slideout .smilies{
     display:inline-block;
-    width  : 36px;
-    height : 36px;
+    width  : 30px;
+    height : 30px;
     background :  url(../images/icon_smilies.png) bottom left no-repeat;
     background-size:200%;
 }
@@ -103,7 +115,7 @@ img.slide_preview {
 
 .slideout .keyboard {
     display:inline-block;
-    width: 44px;
+    width: 34px;
     border-radius: 5px;
     height: 30px;
     background: lightblue url(../images/icon_keyboard.png) 50% no-repeat;
@@ -115,11 +127,11 @@ img.slide_preview {
 .slideout .tags{
     white-space: nowrap;
     position: relative;
-    margin: 0 15px 0 20px;
+    margin: 0 0 0 10px;
     displaY: inline-block;
     height: 26px;
     border-radius: 0 5px 5px 0;
-    padding: 0 15px 0 15px;
+    padding: 0 10px 0 10px;
     background: #ccc;
     border: 0 solid #C7D2D4;
     border-top-width: 1px;
