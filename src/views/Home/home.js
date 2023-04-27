@@ -17,6 +17,7 @@ import HomeLead from "../../components/home_lead";
 import {updateContext, tsDiffInHours} from "../../components/util";
 
 import "../../assets/css/view_home.css";
+import PermissionRequest from "../../components/permissions";
 
 function ViewProjectDetails(props){
     const session_context       = useContext(SessionContext);
@@ -312,6 +313,7 @@ function ViewBox(props){
                     onClickNav = { onClickNavigate }
                 />
                 <AlertModal show={showModal} handleCancel={handleCancel} handleOK={handleOK} message={alertMessage}/>
+                <PermissionRequest/>
             </div>
     )
 }
