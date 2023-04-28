@@ -10,6 +10,8 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://cra.link/PWA
 
+import {syncData} from "./database/SyncManager";
+
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.
@@ -19,6 +21,7 @@ const isLocalhost = Boolean(
 );
 
 export function register(config) {
+  console.log("register service worker, should never even see any console .logs within in local host");
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
@@ -49,7 +52,15 @@ export function register(config) {
         registerValidSW(swUrl, config);
       }
     });
+  } else{
+    console.log("in localhost so no service worker, just set the interval in the app");
+    fallbackSync();
   }
+}
+
+function fallbackSync() {
+  // Sync data every 60 seconds in the main app
+  syncData();
 }
 
 function registerValidSW(swUrl, config) {
@@ -93,6 +104,7 @@ function registerValidSW(swUrl, config) {
     })
     .catch((error) => {
       console.error('Error during service worker registration:', error);
+      fallbackSync();
     });
 }
 
@@ -121,6 +133,7 @@ function checkValidServiceWorker(swUrl, config) {
     })
     .catch(() => {
       console.log('No internet connection found. App is running in offline mode.');
+      fallbackSync();
     });
 }
 
