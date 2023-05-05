@@ -108,7 +108,6 @@ export async function syncData() {
     //just cause i read some blog about a guy that found this hybrid approach to be the best performing... maybe thats outdated?
     //neeed to find that blog again.
 
-    console.log("syncData motherfucker");
     const signIn = async () => {
         try {
             if(!auth.currentUser){
@@ -126,14 +125,12 @@ export async function syncData() {
         if(navigator.onLine){
             signIn();
 
-            console.log("in syncData maybe SW maybe in APP , navigator online");
             const walks_col = await db_walks.walks.toCollection();
 
             console.log("in syncData maybe SW maybe in APP , put al walks in INDEXB into collection");
             walks_col.count().then(count => {
-                console.log("in syncData maybe SW maybe in APP, quuery walk collection");
                 if (count > 0) {
-                    console.log("in syncData maybe SW maybe in APP, has ", count, "waklks");
+                    console.log("in syncData maybe SW maybe in APP, has ", count, "walks");
                     walks_col.toArray(( arr_data) => {
                         console.log("push to firestore", arr_data);
                         batchPushToFirestore(arr_data);

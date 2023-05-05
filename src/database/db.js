@@ -7,6 +7,7 @@ export const db_project = new Dexie('ov_project');
 db_project.version(1).stores({
     active_project  : 'project_id, audio_comments, custom_take_photo_text, expire_date, languages, name, project_created, project_email, show_project_tags, tags, text_comments, thumbs, ov_meta, timestamp'
     , permissions: 'id, camera, audio, geo'
+    , installed : 'id, is_complete'
 });
 
 export const db_walks = new Dexie('ov_walks');

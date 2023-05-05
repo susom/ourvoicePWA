@@ -55,7 +55,10 @@ function PermissionRequest() {
     }, [loading.camera, loading.audio, loading.geo]);
 
     async function setPermissions(camera, audio, geo) {
-        await db_project.permissions.put({ id: PERMISSIONS_ROW_ID, camera, audio, geo });
+        await db_project.permissions.put({ id: PERMISSIONS_ROW_ID,
+            camera: camera,
+            audio: audio,
+            geo: geo });
 
         if(camera && audio && geo){
             handleToggle();

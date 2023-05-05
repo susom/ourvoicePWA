@@ -322,7 +322,6 @@ export function Home(){
     const walkmap_context           = useContext(WalkmapContext); //THE API NEEDS TO "warm up" SO KICK IT OFF HERE BUT DONT STORE DATA UNTIL 'in_walk'
     const session_context           = useContext(SessionContext);
 
-    console.log("signInAnonymously please just work you fucker");
     useAnonymousSignIn();
 
     console.log("warm up GPS",walkmap_context.data.length);

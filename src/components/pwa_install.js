@@ -1,8 +1,9 @@
 // Import necessary libraries
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import { Download , XSquare} from 'react-bootstrap-icons';
 import { BrowserView, MobileView } from 'react-device-detect';
+import {db_project} from "../database/db";
 
 import AndroidInstallPrompt from "./pwa_install_android";
 
@@ -28,10 +29,62 @@ const getDeviceType = () => {
 
 // Update the PWAInstallModal component to display device-specific instructions
 const PWAInstallModal = () => {
+  const [isInstallButtonVisible, setIsInstallButtonVisible] = useState(false);
   const [show, setShow] = useState(false);
-  const deviceType  = getDeviceType();
+  const deviceType      = getDeviceType();
+  const PWAINSTALLED_ROW_ID = 1;
 
-  const handleToggle = () => setShow(!show);
+  useEffect(() => {
+        const handleBeforeInstallPrompt = (e) => {
+            e.preventDefault();
+            setIsInstallButtonVisible(true);
+        };
+
+        const checkIfInstalled = async () => {
+            const installed = await db_project.installed.get(PWAINSTALLED_ROW_ID);
+
+            if (installed && installed.hasOwnProperty("is_complete") && installed.is_complete) {
+                //ALREADY INSTALLED SO HIDE
+                setIsInstallButtonVisible(false);
+            }else{
+                window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+            }
+        };
+
+        checkIfInstalled();
+
+        //CLEANUP
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        };
+  }, []);
+
+  const handleInstallClick = async () => {
+        handleToggle();
+        await db_project.installed.put({ id: PWAINSTALLED_ROW_ID, is_complete : true });
+        setIsInstallButtonVisible(false);
+
+        // Check if the beforeinstallprompt event has been fired
+        if (window.beforeInstallPromptEvent) {
+            try {
+                // Show the install prompt
+                const promptResult = await window.beforeInstallPromptEvent.prompt();
+
+                // If the user accepts the installation, hide the install button
+                if (promptResult.outcome === 'accepted') {
+                    await db_project.installed.put({ id: PWAINSTALLED_ROW_ID, is_complete : true });
+
+                    setIsInstallButtonVisible(false);
+                }
+            } catch (err) {
+                console.error('Error during installation:', err);
+            }
+        }
+  };
+
+  const handleToggle = () => {
+      setShow(!show);
+  }
 
   const renderInstructions = () => {
     if (deviceType === 'Android') {
@@ -84,9 +137,7 @@ const PWAInstallModal = () => {
 
   return (
     <>
-      <Download onClick={handleToggle} className={`pwa_install_btn`}>
-        Install
-      </Download>
+      { isInstallButtonVisible && (<Download onClick={handleInstallClick} className={`pwa_install_btn`}>Install</Download>) }
 
       <Modal show={show} onHide={handleToggle}>
         <Modal.Header>
