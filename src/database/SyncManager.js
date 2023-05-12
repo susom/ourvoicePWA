@@ -72,7 +72,7 @@ function batchPushToFirestore(walk_data){
             //add each walk route geo data point in order
             setDoc(doc(sub_ref, subid), {geotag})
                 .then((docRef) => {
-                    console.log('in SW Document written with ID: ', docRef.id);
+                    console.log('in SW Document written with ID: ', docRef);
                 }).catch((error) => {
                 console.error('Error adding document: ', error);
             });

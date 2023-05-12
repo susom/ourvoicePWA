@@ -141,7 +141,7 @@ function ViewProjectDetails(props){
         </label>
     ) : (
         <label><span>Passcode</span>
-            <span className="input_field"><input type="password" onChange={ e => props.setPword(e.target.value)} value={props.pword} placeholder='eg; 1234'/></span>
+            <span className="input_field"><input type="password" onChange={ e => props.setPword(e.target.value)} value={props.pword} placeholder='eg; 1234' autoComplete="off"/></span>
         </label>
     );
 
@@ -323,7 +323,7 @@ export function Home(){
     const session_context           = useContext(SessionContext);
 
     useAnonymousSignIn();
-
+    console.log("Anonymousely Signed in to Firebase");
     console.log("warm up GPS",walkmap_context.data.length);
 
     const [pcode, setPcode]         = useState("");
