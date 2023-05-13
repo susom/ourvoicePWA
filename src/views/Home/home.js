@@ -324,7 +324,7 @@ export function Home(){
 
     useAnonymousSignIn();
     console.log("Anonymousely Signed in to Firebase");
-    console.log("warm up GPS",walkmap_context.data.length);
+    console.log("warm up GPS c'mon?  ",walkmap_context.data.length);
 
     const [pcode, setPcode]         = useState("");
     const [pword, setPword]         = useState("");
