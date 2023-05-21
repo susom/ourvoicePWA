@@ -11,12 +11,11 @@ async function uploadFiles(file_arr){
     const files         = await db_files.files.where('name').anyOf(file_arr).toArray();
     // console.log("files to array", files);
     const promises = files.map((file) => {
-        const file_type = file.name.indexOf("audio") > -1 ? "audio_" : "photo_";
+        const file_type     = file.name.indexOf("audio") > -1 ? "audio_" : "photo_";
         const temp          = file.name.split("_" + file_type);
         const file_name     = file_type + temp[1];
         const temp_path     = temp[0].split("_");
         const file_path     = temp_path[0] + "/" + temp_path[1] + "/" + temp_path[2] + "/" + file_name;
-
         const storageRef    = ref(storage, file_path);
         let fileToUpload    = file.file;
         if (isBase64(fileToUpload)) {
@@ -29,11 +28,17 @@ async function uploadFiles(file_arr){
         }
 
         return uploadBytes(storageRef, fileToUpload).then(() => {
-            // console.log(file.name, "uploaded");
-        });
+            console.log(file.name, "uploaded");
+        }).catch((error) => {
+            console.error("Error uploading file", file.name, error);
+        });;
     });
 
-    await Promise.all(promises);
+    try {
+        await Promise.all(promises);
+    } catch (error) {
+        console.error("Error uploading files", error);
+    }
 };
 
 function batchPushToFirestore(walk_data){
@@ -83,6 +88,7 @@ function batchPushToFirestore(walk_data){
 
         //collect records to update the indexdb "uploaded" flag
         const uploaded_record = cloneDeep(item);
+
         uploaded_record.uploaded = 1;
         update_records.push(uploaded_record);
 
