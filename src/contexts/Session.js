@@ -24,6 +24,13 @@ export const SessionContextProvider = ({children}) => {
     const [previewWalkID, setPreviewWalkID]     = useState(null);
     const [previewProjID, setPreviewProjID]     = useState(null);
 
+    const [lastUploadsUpdated, setLastUploadsUpdated] = useState(Date.now());
+
+    // This function can be called to update lastUpdated
+    const updateLastUploadsUpdated = () => {
+        setLastUploadsUpdated(Date.now());
+    };
+
     const resetData = () => {
         const clean_obj     = cloneDeep(context_init);
         setData(clean_obj);
@@ -36,7 +43,7 @@ export const SessionContextProvider = ({children}) => {
     }
 
     return (
-        <SessionContext.Provider value={{data, setData, resetData, slideOpen, setSlideOpen, previewPhoto, setPreviewPhoto, previewWalk, setPreviewWalk, previewWalkID, setPreviewWalkID, previewProjID, setPreviewProjID}}>
+        <SessionContext.Provider value={{data, setData, resetData, slideOpen, setSlideOpen, previewPhoto, setPreviewPhoto, previewWalk, setPreviewWalk, previewWalkID, setPreviewWalkID, previewProjID, setPreviewProjID, lastUploadsUpdated, updateLastUploadsUpdated}}>
             {children}
         </SessionContext.Provider>
     );

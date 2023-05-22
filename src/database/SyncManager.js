@@ -100,8 +100,12 @@ function batchPushToFirestore(walk_data){
     batch.commit().then(() => {
         console.log('in SW and upload the indivdual files' , files_arr);
         uploadFiles(files_arr);
+
         console.log('in SW now update the walks in indexDB');
         bulkUpdateDb(db_walks, "walks", update_records);
+
+        //dispatch an event that the upload table can listen for?
+        window.dispatchEvent(new CustomEvent('indexedDBChange'));
     }).catch((error) => {
         console.error('Batch write failed:', error);
     });
@@ -133,12 +137,10 @@ export async function syncData() {
 
             const walks_col = await db_walks.walks.toCollection();
 
-            console.log("in syncData maybe SW maybe in APP , put al walks in INDEXB into collection");
             walks_col.count().then(count => {
                 if (count > 0) {
                     console.log("in syncData maybe SW maybe in APP, has ", count, "walks");
                     walks_col.toArray(( arr_data) => {
-                        console.log("push to firestore", arr_data);
                         batchPushToFirestore(arr_data);
                     });
                 }

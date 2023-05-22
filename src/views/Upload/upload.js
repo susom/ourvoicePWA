@@ -11,7 +11,13 @@ import "../../assets/css/view_upload.css";
 import icon_camera_black from "../../assets/images/icon_camera_black.png";
 import icon_audio_comment_black from "../../assets/images/icon_audio_comment_black.png";
 function ViewBox(props){
-    const session_context = useContext(SessionContext);
+    const [walks, setWalks] = useState(props.walks);
+    const session_context   = useContext(SessionContext);
+
+    useEffect(() => {
+        setWalks(props.walks);
+    }, [props.walks]);
+
     const clearLocal    = () => {
         if(window.confirm('All Discovery Tool data saved on this device will be deleted and reset. Click \'Ok\' to proceed.')){
             //TRUNCATE ALL FOUR LOCAL INDEXDBs'
@@ -35,7 +41,6 @@ function ViewBox(props){
         }
         return count;
     }
-
     const countTexts    = (photos) => {
         let count = 0;
         for (let i in photos) {
@@ -67,7 +72,7 @@ function ViewBox(props){
                     <Col sm={{span:2}} xs={{span:2}}><span data-translation-key="upload_status">Status</span></Col>
                 </Row>
 
-                {props.walks.map(item => {
+                {walks.map(item => {
                     if(!item.photos.length){
                         return false;
                     }
@@ -98,7 +103,24 @@ function ViewBox(props){
 }
 
 export function Upload(){
-    const [walks, setWalks] = useState([]);
+    const [walks, setWalks]         = useState([]);
+    const { lastUploadsUpdated, updateLastUploadsUpdated } = useContext(SessionContext);
+
+    // In your Upload component
+    useEffect(() => {
+        // Define a function to handle the custom event
+        const handleIndexedDBChange = () => {
+            updateLastUploadsUpdated(Date.now());
+        };
+
+        // Add an event listener for the custom event
+        window.addEventListener('indexedDBChange', handleIndexedDBChange);
+
+        // Remove the event listener when the component unmounts
+        return () => {
+            window.removeEventListener('indexedDBChange', handleIndexedDBChange);
+        };
+    }, []);
 
     useEffect(() => {
         // Query the object store to get the number of records
@@ -116,7 +138,7 @@ export function Upload(){
         }).catch(error => {
             console.error('Error counting walks:', error);
         });
-    },[]);
+    },[lastUploadsUpdated]);
 
     return (
         <ViewBox walks={walks} setWalks={setWalks}/>
