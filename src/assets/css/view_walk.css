@@ -72,20 +72,23 @@ LIGHT GREY  : #E0E0E0
 
 /*PIC REVIEW AFTER TAKING PHOTO*/
 #recent_pic {
-    max-width:45vw;
-    max-height:35vh;
+    /*max-width:45vw;*/
+    max-height:30vh;
 }
 
 .recent_pic{
-    padding:20px 0;
+    padding:20px 0 0;
 }
-
+#pic_review{
+    /*margin-top:-25%;*/
+}
 #pic_review .device_actions {
     text-align: left;
     margin:0;
     height:auto;
     overflow:hidden;
     padding:5px 0;
+    margin-top:-25%;
 }
 
 #pic_review .consentbox{
@@ -418,6 +421,13 @@ LIGHT GREY  : #E0E0E0
     max-height: 80px;
 }
 
-.container {
-    margin-bottom:50px;
+.custom_takephoto_text h5 {
+    font-size: 120%;
+    line-height: 120%;
+    min-height: 75px;
+    margin: 0 auto 20px;
+}
+
+.react-html5-camera-photo {
+    max-height:60vh;
 }

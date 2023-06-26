@@ -63,14 +63,14 @@ function ViewBox(props){
     return (
 
         <Container className="summary">
-            <Row>
+            {/*<Row>
                 <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}} className="consentbox vertconnect bigpad green_man_speech"
                      data-translation-key="finish_title">Great!
                 </Col>
-            </Row>
+            </Row>*/}
 
             <Row>
-                <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}} className="consentbox vertconnect done_photos" data-translation-key="your_route">Your Route</Col>
+                <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}} className="consentbox vertconnect green_man_speech done_photos" data-translation-key="your_route">Here is Your Route</Col>
             </Row>
 
             <Row id="walkmap">
@@ -84,11 +84,11 @@ function ViewBox(props){
                 </Col>
             </Row>
 
-            <Row>
-                <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}}  className="consentbox vertconnect"
-                     data-translation-key="finish_info_1">From home screen, connect to wifi to upload data.
-                </Col>
-            </Row>
+            {/*<Row>*/}
+            {/*    <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}}  className="consentbox vertconnect"*/}
+            {/*         data-translation-key="finish_info_1">From home screen, connect to wifi to upload data.*/}
+            {/*    </Col>*/}
+            {/*</Row>*/}
             <Row>
                 <Col sm={{span:8, offset:2}} xs={{span:8, offset:2}} className="consentbox horizconnect"></Col>
             </Row>
