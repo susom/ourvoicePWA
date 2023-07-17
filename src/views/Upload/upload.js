@@ -18,6 +18,15 @@ function ViewBox(props){
         setWalks(props.walks);
     }, [props.walks]);
 
+    const instructions_upload_text  = session_context.getTranslation("instructions_upload");
+    const data_uploaded_text        = session_context.getTranslation("data_uploaded");
+    const data_pending_text         = session_context.getTranslation("data_pending");
+    const date_text                 = session_context.getTranslation("date");
+    const project_text              = session_context.getTranslation("project");
+    const id_text                   = session_context.getTranslation("walk_id");
+    const status_text               = session_context.getTranslation("upload_status");
+    const delete_stored_text        = session_context.getTranslation("delete_all_data");
+
     const clearLocal    = () => {
         if(window.confirm('All Discovery Tool data saved on this device will be deleted and reset. Click \'Ok\' to proceed.')){
             //TRUNCATE ALL FOUR LOCAL INDEXDBs'
@@ -57,19 +66,19 @@ function ViewBox(props){
                 <Row className={`upload_desc`}>
                     <Col>
                         <p className="instructions_upload">
-                            <span data-translation-key="instructions_upload">Data will upload automatically when your device is online. <br/>This app does not need to be open!</span>
+                            <span>{instructions_upload_text}</span>
                         </p>
-                        <span><CloudUploadFill className={`color_success`}/> Data Uploaded</span> <span> | </span> <span><CloudUpload className={`color_pending`}/> Data Pending Upload</span>
+                        <span><CloudUploadFill className={`color_success`}/> {data_uploaded_text}</span> <span> | </span> <span><CloudUpload className={`color_pending`}/> {data_pending_text}</span>
                     </Col>
                 </Row>
 
                 <Row className={`table_header`}>
-                    <Col sm={{span:2}} xs={{span:2}}><span data-translation-key="date">Date</span></Col>
-                    <Col sm={{span:2}} xs={{span:2}}><span data-translation-key="project">Project</span></Col>
-                    <Col sm={{span:2}} xs={{span:2}}><span data-translation-key="walk_id">ID</span></Col>
+                    <Col sm={{span:2}} xs={{span:2}}><span>{date_text}</span></Col>
+                    <Col sm={{span:2}} xs={{span:2}}><span>{project_text}</span></Col>
+                    <Col sm={{span:2}} xs={{span:2}}><span>{id_text}</span></Col>
                     <Col sm={{span:2}} xs={{span:2}}><span><img alt='' className={`hdr_icon`} src={icon_camera_black}/></span></Col>
                     <Col sm={{span:2}} xs={{span:2}}><span><img alt='' className={`hdr_icon`} src={icon_audio_comment_black}/></span></Col>
-                    <Col sm={{span:2}} xs={{span:2}}><span data-translation-key="upload_status">Status</span></Col>
+                    <Col sm={{span:2}} xs={{span:2}}><span>{status_text}</span></Col>
                 </Row>
 
                 {walks.map(item => {
@@ -94,7 +103,7 @@ function ViewBox(props){
 
                 <Row className={`btn_row`}>
                     <Col>
-                        <button className={`btn btn-danger`} onClick={clearLocal}>Delete All Stored Data</button>
+                        <button className={`btn btn-danger`} onClick={clearLocal}>{delete_stored_text}</button>
                     </Col>
                 </Row>
             </Container>

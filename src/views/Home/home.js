@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from 'react-bootstrap';
 
 import {db_walks, db_project, db_files, db_logs} from "../../database/db";
-import { collection, getDocs, where, query } from "firebase/firestore";
+import { collection, getDocs, collectionGroup, doc,  where, query } from "firebase/firestore";
 import {firestore, auth} from "../../database/Firebase";
 import useAnonymousSignIn from "../../components/useAnonymousSignIn";
 
@@ -20,9 +20,18 @@ import "../../assets/css/view_home.css";
 import PermissionRequest from "../../components/permissions";
 
 function ViewProjectDetails(props){
-    const session_context       = useContext(SessionContext);
-    const walk_context          = useContext(WalkContext);
-    const [status, setStatus]   = useState("");
+    const session_context           = useContext(SessionContext);
+    const walk_context              = useContext(WalkContext);
+    const [status, setStatus]       = useState("");
+    const [language, setLanguage]   = useState([{"lang" : "en", "language" : "English"}]);
+
+    //IF previously logged in , should have session info for project
+    useEffect(() => {
+        if(session_context.data.project_info.languages){
+            setLanguage(session_context.data.project_info.languages);
+        }
+    }, [session_context.data.project_info.languages]); // dependencies array
+
 
     async function checkLogin(){
         const q = query(collection(firestore, "ov_projects")
@@ -54,9 +63,11 @@ function ViewProjectDetails(props){
                             tags                    : data.hasOwnProperty("tags") ? doc.get("tags") : [],
                             text_comments           : parseInt(doc.get("text_comments")),
                             thumbs                  : parseInt(doc.get("thumbs")),
-                            ov_meta                 : null,
+                            ov_meta                 : session_context.translations,
                             timestamp               : Date.now()
                         };
+
+                        setLanguage(active_project_data.languages);
 
                         //TODO GET ov_meta AND PUT IN AP too
                         updateActiveProject(active_project_data);
@@ -68,20 +79,10 @@ function ViewProjectDetails(props){
             });
         }else{
             setStatus("Invalid Project Id or Project Password");
-
             props.setAlertMessage({"title" : "Pleas try again", "body" : "Wrong Project ID or Passcode", "cancel_txt" : "Close" , "ok_txt" : ""});
             props.setShowModal(true);
-
             props.setPword("");
         }
-
-        // USE THIS PATTERN IF NEED TO ONLY PULL NEW SINCE LAST PULL?
-        // onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
-        //     snapshot.forEach((doc) => {
-        //         // const source = snapshot.metadata.fromCache ? "local cache" : "server";
-        //         // console.log("Data came from " + source);
-        //     });
-        // });
     }
 
     async function updateActiveProject(active_project_data) {
@@ -99,26 +100,25 @@ function ViewProjectDetails(props){
         }
     }
 
-    const getPostInfo = (e) => {
+    const getPostInfo = async (e) => {
         e.preventDefault();
 
         if(props.pcode !== "" && props.pword !== ""){
 
             const active_project = db_project.active_project.where({project_id: props.pcode}).first();
-            active_project.then( function(project_data) {
+            active_project.then(async function(project_data) {
                 const diff_hours = project_data ? tsDiffInHours(project_data["timestamp"] , Date.now()) : 999;
                 if(diff_hours <= 24){
                     setStatus("");
                     props.projectSignInOut(true);
                     updateContext(session_context, {"project_id" : project_data.project_id});
                     updateContext(walk_context, {"project_id" : project_data.project_id});
-                    console.log("has active project, so auto login, do i need to set session context?", session_context.data, walk_context.data);
                 }else{
                     // console.log("there is no active project or the 24 hour period has expired");
                     if(navigator.onLine){
                         // console.log("May or May not have active project, but ONLINE so check server for fresh project data", session_context.data);
                         // if online pull new copy, if offline continue using the stale one for now until next refresh.
-                        checkLogin();
+                        await checkLogin();
                     }else{
                         //is offline
                         console.log("May or May not have active project, OFFLINE so auto login", session_context.data);
@@ -131,16 +131,28 @@ function ViewProjectDetails(props){
         }
     };
 
+    const project_id_text       = session_context.getTranslation("project_id");
+    const passcode_text         = session_context.getTranslation("password");
+    const language_text         = session_context.getTranslation("language");
+
     let pw_or_language = props.signedIn  ? (
-        <label><span>Language</span>
+        <label><span>{language_text}</span>
             <span className="input_field">
-                <select onChange={ e => console.log("TODO change language") }>
-                    <option>English</option>
-                </select>
+                {language ? (
+                    <select onChange={ (e) => session_context.handleLanguageChange(e.target.value) }>
+                        {language.map((lang) => (
+                            <option key={lang.lang} value={lang.lang}>
+                                {lang.language}
+                            </option>
+                        ))}
+                    </select>
+                ) : (
+                    <p>Loading languages...</p>
+                )}
             </span>
         </label>
     ) : (
-        <label><span>Passcode</span>
+        <label><span>{passcode_text}</span>
             <span className="input_field"><input type="password" onChange={ e => props.setPword(e.target.value)} value={props.pword} placeholder='eg; 1234' autoComplete="off"/></span>
         </label>
     );
@@ -149,7 +161,7 @@ function ViewProjectDetails(props){
         <form id="signin_project" className="project_setup_form" onSubmit={getPostInfo}>
             <div className="project_login">
                 <p className="signin_status">{status}</p>
-                <label><span>Project ID</span>
+                <label><span>{project_id_text}</span>
                     <span className="input_field"><input type="text" className={props.signedIn ? "signedIn" : ""} disabled={props.signedIn && session_context.data.project_id !== null ? true : false} onChange={ e => props.setPcode(e.target.value) } value={props.pcode} placeholder='eg; ABCD'/></span>
                 </label>
                 {pw_or_language}
@@ -182,8 +194,6 @@ function Actions(props){
                 //RESET UI BY CHANGING SIGN IN /OUT STATE
                 updateContext(session_context, {"project_id" : null, "project_info" : {}});
                 props.projectSignInOut(false);
-
-                console.log("please let me master contexts goddamn it", session_context.data);
             }
             //RESET CLICK COUNT TO 0
             setClicks(0);
@@ -205,6 +215,12 @@ function Actions(props){
         // console.log("change project");
     }
 
+    const start_walk_text       = session_context.getTranslation("start");
+    const change_project_text   = session_context.getTranslation("change_project");
+    const view_data_text        = session_context.getTranslation("view_upload");
+    const setup_text            = session_context.getTranslation("setup_project");
+    const clear_db_text         = session_context.getTranslation("truncate_localdb");
+
     //DO WE STILL NEED AN "upload page"?
     return props.signedIn  ? (
         <div className="home_actions">
@@ -215,7 +231,7 @@ function Actions(props){
                 onClick={(e) => {
                     startConsent(e);
                 }}
-            >Start Walk</Button>
+            >{start_walk_text}</Button>
 
             <Button
                 className="change_project project_setup"
@@ -224,13 +240,13 @@ function Actions(props){
                     changeProject(e);
                 }}
                 as={Link} to="/home"
-            >Change Project</Button>
+            >{change_project_text}</Button>
 
             <Button
                 className="upload_data project_setup"
                 variant="info"
                 as={Link} to="/upload"
-            >View/Upload Data</Button>
+            >{view_data_text}</Button>
         </div>
     ) : (
         <div className="home_actions">
@@ -242,13 +258,13 @@ function Actions(props){
                 onClick={(e) => {
                     signInProject(e);
                 }}
-            >Setup project on this device</Button>
+            >{setup_text}</Button>
 
             <Button
                 variant="warning"
                 className="truncate_database"
                 onClick={onClickDeleteInc}
-            >Truncate Local Database</Button>
+            >{clear_db_text}</Button>
         </div>
     );
 }
@@ -261,12 +277,10 @@ function ViewBox(props){
     const [showModal, setShowModal]         = useState(false);
     const [handleCancel, setHandleCancel]   = useState(() => {
         return () => {
-            console.log("default cancel");
             setShowModal(false);
         }  });
     const [handleOK, setHandleOK]           = useState(() => {
         return () => {
-            console.log("default cancel");
             setShowModal(false);
         } })
     const onSignInOut = (flag) => {
@@ -323,13 +337,11 @@ export function Home(){
     const session_context           = useContext(SessionContext);
 
     useAnonymousSignIn();
-    console.log("Anonymousely Signed in to Firebase");
-    console.log("warm up GPS c'mon?  ",walkmap_context.data.length);
+    console.log("need to 'warm up' GPS?",walkmap_context.data.length);
 
     const [pcode, setPcode]         = useState("");
     const [pword, setPword]         = useState("");
     const [signedIn, setSignedIn]   = useState(null);
-
 
     useEffect(() => {
         //check if there is a recent login to a project and set in session if so
@@ -358,6 +370,7 @@ export function Home(){
                             signed_in : true,
                             project_info : ap
                         };
+
                         updateContext(session_context, session_data);
                         setPcode(ap["project_id"]);
                         setSignedIn(true);

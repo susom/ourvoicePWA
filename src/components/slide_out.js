@@ -144,6 +144,12 @@ function SlideOut(props){
         session_context.setSlideOpen(false);
     }
 
+
+    const walk_summary_text = session_context.getTranslation("walk_summary");
+    const project_text      = session_context.getTranslation("project");
+    const walkid_text       = session_context.getTranslation("walk_id");
+
+
     return (<Slider
                 isOpen={session_context.slideOpen}
                 position="right"
@@ -154,8 +160,8 @@ function SlideOut(props){
             >
                 <div className={`slideout`}>
                     <hgroup>
-                        <h2>Walk Summary</h2>
-                        <h4>Project ID : {summProjectID}  | Walk Id : {summWalkID}</h4>
+                        <h2>{walk_summary_text}</h2>
+                        <h4>{project_text} : {summProjectID}  | {walkid_text} : {summWalkID}</h4>
                         <XCircle className={`close_slider`} color="#bbb" size={30} onClick={handleClose}/>
                     </hgroup>
                     {

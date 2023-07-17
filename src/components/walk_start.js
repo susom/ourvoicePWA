@@ -52,6 +52,11 @@ function WalkStart(props){
         update_walk();
     }
 
+
+    const take_photo_text   = session_context.getTranslation("take_photo");
+    const take_another_text = session_context.getTranslation("take_another");
+    const done_walk_text    = session_context.getTranslation("done_walk");
+
     return (
             (takePhoto) ?
                 <>
@@ -78,8 +83,8 @@ function WalkStart(props){
                                 <Row className="photoaction">
                                     <Col className="actions">
                                         <a href="/#" onClick={takePhotoHandler} className="btn button action daction camera">
-                                            <b data-translation-key="take_photo">Take a photo</b>
-                                            <b data-translation-key="take_another">Take another photo</b>
+                                            <b>{take_photo_text}</b>
+                                            <b>{take_another_text}</b>
                                         </a>
                                     </Col>
                                 </Row>
@@ -93,7 +98,7 @@ function WalkStart(props){
                                             onClick={(e) => {
                                                 doneWalkHandler(e);
                                             }}
-                                        >Done with my walk</Button>
+                                        >{done_walk_text}</Button>
                                     </Col>
                                 </Row>
                             </Container>

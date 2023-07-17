@@ -5,6 +5,7 @@ import { getFirestore , enableIndexedDbPersistence, enableMultiTabIndexedDbPersi
 import { getAuth } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 
+
 // Your Firebase configuration object
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 // Its a PUBLIC API! SO CHECK IT IN

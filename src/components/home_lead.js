@@ -1,7 +1,13 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useContext} from "react";
+import {SessionContext} from "../contexts/Session";
 
 function HomeLead(props){
     const [signedIn, setSignedIn]   = useState(false);
+    const session_context           = useContext(SessionContext);
+
+    const discovery_text            = session_context.getTranslation("discovery_tool");
+    const copyright_text            = session_context.getTranslation("copyright");
+
 
     useEffect(() => {
         setSignedIn(props.signedIn);
@@ -9,9 +15,9 @@ function HomeLead(props){
 
     return  signedIn ? (
         <div className="view_lead">
-            <h2>Discovery Tool™</h2>
+            <h2>{discovery_text}</h2>
             <p>v 4.0.0</p>
-            <cite>© Stanford University 2023</cite>
+            <cite>{copyright_text}</cite>
         </div>
     ) : (
         <div className="view_lead">

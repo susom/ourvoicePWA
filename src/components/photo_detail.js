@@ -234,6 +234,15 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
         }
     }
 
+    const why_this_text     = session_context.getTranslation("why_this_photo");
+    const what_about_text   = session_context.getTranslation("project_tags");
+    const good_or_bad_text  = session_context.getTranslation("good_or_bad");
+    const choose_one_text   = session_context.getTranslation("chose_one");
+    const delete_text       = session_context.getTranslation("delete");
+    const save_text         = session_context.getTranslation("save");
+    const no_tags_text      = session_context.getTranslation("no_tags");
+    const no_edit_text      = session_context.getTranslation("no_edit");
+
     return (
         <ViewBox>
             {
@@ -248,9 +257,8 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                 </Row>
 
                                 <Row>
-                                    <Col xs={{span: 12}} className="consentbox"
-                                         data-translation-key="why_this_photo">
-                                        Why did you take this photo?
+                                    <Col xs={{span: 12}} className="consentbox">
+                                        {why_this_text}
                                     </Col>
                                 </Row>
 
@@ -291,8 +299,7 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                     session_context.data.project_info.show_project_tags
                                         ?<div>
                                             <Row className="project_tags">
-                                                <Col xs={{span: 12}} className="consentbox"
-                                                     data-translation-key="project_tags">What is this photo about?
+                                                <Col xs={{span: 12}} className="consentbox">{what_about_text}
                                                 </Col>
                                             </Row>
                                             <Row className="project_tags">
@@ -305,7 +312,7 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                                             }}>{item}</a>
                                                         ))}
                                                     </Col>
-                                                    : <Col id="no_tags" xs={{span: 12}}><em data-translation-key="no_project_tags">No Tags Currently Available</em></Col>
+                                                    : <Col id="no_tags" xs={{span: 12}}><em>{no_tags_text}</em></Col>
                                             }
                                             </Row>
                                         </div>
@@ -314,9 +321,7 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
 
 
                                 <Row>
-                                    <Col xs={{span: 12}} className="consentbox"
-                                         data-translation-key="good_or_bad">Is
-                                        this good or bad for the community?
+                                    <Col xs={{span: 12}} className="consentbox">{good_or_bad_text}
                                     </Col>
                                 </Row>
 
@@ -324,8 +329,7 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                     <Col xs={{span: 4}}><a href="/#"
                                                                       className={`vote up smilies ${upVote ? 'on' : ''} `}
                                                                       onClick={(e) => voteClick(e, 1)}>up</a></Col>
-                                    <Col xs={{span: 4}} className="jointext"
-                                         data-translation-key="chose_one">Choose one or both</Col>
+                                    <Col xs={{span: 4}} className="jointext">{choose_one_text}</Col>
                                     <Col xs={{span: 4}}><a href="/#"
                                                                       className={`vote down smilies ${downVote ? 'on' : ''}`}
                                                                       onClick={(e) => voteClick(e, 0)}>down</a></Col>
@@ -342,7 +346,7 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                                 onClick={(e) => {
                                                     deletePhoto(e);
                                                 }}
-                                            >Delete</Button>
+                                            >{delete_text}</Button>
                                         </Col>
                                         <Col xs={{span: 5, offset: 2}}>
                                             <Button
@@ -352,9 +356,9 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                                 onClick={(e) => {
                                                     savePhoto(e);
                                                 }}
-                                            >Save</Button>
+                                            >{save_text}</Button>
                                         </Col></>)
-                                        : <em>Changes to this Walk/Photo can no longer be saved</em>
+                                        : <em>{no_edit_text}</em>
                                     }
                                 </Row>
                             </Container>

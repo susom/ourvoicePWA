@@ -60,17 +60,18 @@ function ViewBox(props){
         walk_context.resetData();
     }
 
+    const your_route_text       = session_context.getTranslation("your_route");
+    const your_photos_text      = session_context.getTranslation("took_photos");
+    const your_comments_text    = session_context.getTranslation("made_comments");
+    const are_you_done_text     = session_context.getTranslation("are_you_done");
+    const return_text           = session_context.getTranslation("return_home");
+    const continue_text         = session_context.getTranslation("no_continue");
+
     return (
 
         <Container className="summary">
-            {/*<Row>
-                <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}} className="consentbox vertconnect bigpad green_man_speech"
-                     data-translation-key="finish_title">Great!
-                </Col>
-            </Row>*/}
-
             <Row>
-                <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}} className="consentbox vertconnect green_man_speech done_photos" data-translation-key="your_route">Here is Your Route</Col>
+                <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}} className="consentbox vertconnect green_man_speech done_photos" >{your_route_text}</Col>
             </Row>
 
             <Row id="walkmap">
@@ -84,11 +85,6 @@ function ViewBox(props){
                 </Col>
             </Row>
 
-            {/*<Row>*/}
-            {/*    <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}}  className="consentbox vertconnect"*/}
-            {/*         data-translation-key="finish_info_1">From home screen, connect to wifi to upload data.*/}
-            {/*    </Col>*/}
-            {/*</Row>*/}
             <Row>
                 <Col sm={{span:8, offset:2}} xs={{span:8, offset:2}} className="consentbox horizconnect"></Col>
             </Row>
@@ -99,11 +95,11 @@ function ViewBox(props){
             </Row>
 
             <Row sm={{span:6}} xs={{span:6}}>
-                <Col sm={{span:4, offset:2}} xs={{span:5, offset:0}} className="consentbox vertconnect mr-0" data-translation-key="took_photos">You
-                    took this many photos
+                <Col sm={{span:4, offset:2}} xs={{span:5, offset:0}} className="consentbox vertconnect mr-0" >You
+                    {your_photos_text}
                 </Col>
                 <Col sm={{span:4, offset:0}} xs={{span:5, offset:0}} className="consentbox vertconnect"
-                     data-translation-key="made_comments">You made this many comments
+                     >{your_comments_text}
                 </Col>
             </Row>
 
@@ -119,7 +115,7 @@ function ViewBox(props){
             </Row>
 
             <Row>
-                <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}} className="consentbox" data-translation-key="are_you_done">Are you done?</Col>
+                <Col sm={{span:8, offset:2}} xs={{span:10, offset:1}} className="consentbox">{are_you_done_text}</Col>
             </Row>
 
             <Row className={`btns`}>
@@ -127,24 +123,22 @@ function ViewBox(props){
                     <Button
                         id="yesdone"
                         data-next="finish"
-                        data-translation-key="yes_done"
                         className="btn btn-primary endwalk"
                         variant="primary"
                         as={Link} to="/home"
                         onClick={(e) => {
                             resetWalkHandler(e);
                         }}
-                    >Yes, Return to homescreen</Button>
+                    >{return_text}</Button>
                 </Col>
                 <Col sm={{span:4, offset:0}} xs={{span:5}} className={`consentbox`}>
                     <Button
                         id="nocontinue"
                         data-next="step_two"
-                        data-translation-key="no_continue"
                         className="btn btn-primary continuewalk"
                         variant="primary"
                         as={Link} to="/walk"
-                    >No, I want to continue</Button>
+                    >{continue_text}</Button>
                 </Col>
             </Row>
         </Container>
