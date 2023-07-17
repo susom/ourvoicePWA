@@ -166,6 +166,7 @@
   "offline" : { "en" :  "Offline" },
   "no_tags" : { "en" :  "No Tags Currently Available" },
   "no_edit" : { "en" :  "Changes to this Walk/Photo can no longer be saved" },
+  "no_photos_yet" : {"en" :  "No photos in current walk yet"},
   "walk_summary" : {"en" :  "Walk Summary"},
   "data_uploaded" : {"en" :  "Data Uploaded" },
   "data_pending" : {"en" :  "Data Pending Upload" },

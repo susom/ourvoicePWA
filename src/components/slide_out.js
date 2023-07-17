@@ -148,6 +148,7 @@ function SlideOut(props){
     const walk_summary_text = session_context.getTranslation("walk_summary");
     const project_text      = session_context.getTranslation("project");
     const walkid_text       = session_context.getTranslation("walk_id");
+    const no_photos_text    = session_context.getTranslation("no_photos_yet");
 
 
     return (<Slider
@@ -166,7 +167,7 @@ function SlideOut(props){
                     </hgroup>
                     {
                         !walkSumm.length
-                            ? (<em>No photos in current walk yet</em>)
+                            ? (<em>{no_photos_text}</em>)
                             : walkSumm.map((item,idx) => {
                                 return (<PhotoList key={idx} data={item} closeSlideOut={handleClose}/>)
                             })
