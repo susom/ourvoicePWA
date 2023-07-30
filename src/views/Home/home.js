@@ -153,12 +153,12 @@ function ViewProjectDetails(props){
         </label>
     ) : (
         <label><span>{passcode_text}</span>
-            <span className="input_field"><input type="password" onChange={ e => props.setPword(e.target.value)} value={props.pword} placeholder='eg; 1234' autocomplete="off"/></span>
+            <span className="input_field"><input type="password" onChange={ e => props.setPword(e.target.value)} value={props.pword} placeholder='eg; 1234' autoComplete="off"/></span>
         </label>
     );
 
     return (
-        <form id="signin_project" className="project_setup_form" onSubmit={getPostInfo}>
+        <form id="signin_project" className="project_setup_form" onSubmit={getPostInfo} autoComplete="off">
             <div className="project_login">
                 <p className="signin_status">{status}</p>
                 <label><span>{project_id_text}</span>
