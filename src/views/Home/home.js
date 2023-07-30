@@ -153,7 +153,7 @@ function ViewProjectDetails(props){
         </label>
     ) : (
         <label><span>{passcode_text}</span>
-            <span className="input_field"><input type="password" onChange={ e => props.setPword(e.target.value)} value={props.pword} placeholder='eg; 1234' autoComplete="off"/></span>
+            <span className="input_field"><input type="password" onChange={ e => props.setPword(e.target.value)} value={props.pword} placeholder='eg; 1234' autocomplete="off"/></span>
         </label>
     );
 
