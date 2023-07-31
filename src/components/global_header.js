@@ -7,7 +7,6 @@ import { SessionContext } from "../contexts/Session";
 import { WalkContext } from "../contexts/Walk";
 
 import PWAInstallModal from "../components/pwa_install";
-
 import "../assets/css/global_header.css";
 
 function GlobalHeader() {
@@ -40,7 +39,6 @@ function GlobalHeader() {
                     : (<div className={`view_header ${in_session ? "in_session" : ""}`}>
                             <div className="app_title">{discovery_text}</div>
                             <div className="walk_id"><span className={project_id ? "has_data" : ""}><b>{project_text}:</b> {project_id}</span> <span className={walk_id  ? "has_data" : ""}> | <b>{walkid_text}:</b> {walk_id}</span></div>
-
 
                             <Offline>
                                 <span className="online_status"><CloudMinusFill color="red" size={20} /> Offline</span>

@@ -9,6 +9,8 @@ import { SessionContext } from "../contexts/Session";
 import { WalkContext } from "../contexts/Walk";
 import AudioRecorderWithIndexDB from "../components/audio_recorder";
 
+import PermissionModal from './device_permisssions';
+
 import icon_walk from "../assets/images/icon_walk.png";
 
 function ViewBox(props){
@@ -249,6 +251,7 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                 <Container className="content walk photo_detail">
                     <Row id="pic_review" className="panel">
                         <Col className="content">
+                            <PermissionModal permissionNames={["audio"]} />
                             <Container>
                                 <Row className="recent_pic">
                                     <Col>

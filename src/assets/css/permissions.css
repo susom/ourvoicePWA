@@ -7,6 +7,10 @@
     color:green;
 }
 
+.permissions_spotCheck {
+    /*border:1px solid red;*/
+}
+
 .permission_request {
     border:1px solid #999;
     border-radius:5px;
@@ -19,6 +23,8 @@
     display:block;
     color:#666;
     box-shadow:1px 1px 1px 0 #999;
+    font-size: 92%;
+    line-height: 120%;
 }
 
 .permission_camera{

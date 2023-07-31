@@ -1,14 +1,21 @@
 import {createContext, useState, useContext, useEffect} from 'react';
 import {SessionContext} from "../contexts/Session";
 import {hasGeo} from "../components/util";
+
 export const WalkmapContext = createContext({
     data : {},
-    setData : () => {}
+    setData : () => {},
+    startGeoTracking: () => {}
 });
 
 export const WalkmapContextProvider = ({children}) => {
     const session_context = useContext(SessionContext);
     const [data, setData] = useState([]);
+    const [startTracking, setStartTracking] = useState(false);
+
+    const startGeoTracking = () => {
+        setStartTracking(true);
+    };
 
     const updatePosition = () => {
         if(hasGeo()){
@@ -42,65 +49,16 @@ export const WalkmapContextProvider = ({children}) => {
     };
 
     useEffect(() => {
-        const interval = setInterval(() =>{
-            if(session_context.data.in_walk){
-                updatePosition();
-            }
-        }, 5000);
-
+        let interval;
+        if (startTracking && session_context.data.in_walk) {
+            interval = setInterval(updatePosition, 5000);
+        }
         //when unmounted will clear it
         return () => clearInterval(interval);
-
-        // const interval = navigator.geolocation.watchPosition(
-        // function(position){
-        //     var acuracy = position.coords.accuracy;
-        //     var curLat  = position.coords.latitude;
-        //     var curLong = position.coords.longitude;
-        //
-        //     var curpos = {
-        //          "lat"          : curLat
-        //         ,"lng"          : curLong
-        //         ,"accuracy"     : acuracy
-        //         ,"altitude"     : position.coords.altitude
-        //         ,"heading"      : position.coords.heading
-        //         ,"speed"        : position.coords.speed
-        //         ,"timestamp"    : position.timestamp
-        //     };
-        //
-        //     if(session_context.data.in_walk && acuracy <= 50){
-        //         // if(curLat != prvLat && curLong != prvLong){
-        //         //     app.cache.user[app.cache.current_session].geotags.push(curpos);
-        //
-        //         const data_copy = data;
-        //         data_copy.push(curpos);
-        //         setData(data_copy);
-        //
-        //             // //SAVE THE POINTS IN GOOGLE FORMAT
-        //             // if(utils.checkConnection()){
-        //             //     var current_goog_lat = new google.maps.LatLng(curLat, curLong);
-        //             //     app.cache.currentWalkMap.push(
-        //             //         current_goog_lat
-        //             //     );
-        //             // }
-        //         // }
-        //     }
-        // }
-        // ,function(err){
-        //     console.log(err);
-        // }
-        // ,{
-        //      enableHighAccuracy: true
-        //     ,maximumAge        : 100
-        //     ,timeout           : 5000
-        // });
-        //
-        // return () => {
-        //     navigator.geolocation.clearWatch(interval);
-        // }
-    });
+    }, [startTracking, session_context.data.in_walk]);
 
     return (
-        <WalkmapContext.Provider value={{data, setData}}>
+        <WalkmapContext.Provider value={{data, setData, startGeoTracking}}>
             {children}
         </WalkmapContext.Provider>
     );

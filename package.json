@@ -20,6 +20,7 @@
     "react-dom": "^18.2.0",
     "react-html5-camera-photo": "1.5.10",
     "react-media-recorder": "1.6.6",
+    "react-modal": "^3.16.1",
     "react-router-dom": "^6.4.3",
     "react-scripts": "^4.0.0",
     "react-slide-out": "^0.1.4",
