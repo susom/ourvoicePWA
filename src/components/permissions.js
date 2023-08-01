@@ -25,6 +25,7 @@ function PermissionRequest() {
         <Modal show={modalOpen && (cameraPermission !== 'granted' || audioPermission !== 'granted' || geolocationPermission !== 'granted')}>
             <Modal.Header>
                 <Modal.Title>The Discovery Tool Device Permissions</Modal.Title>
+                {cameraPermission === 'granted' && <XSquare onClick={() => setModalOpen(false)}/>}
             </Modal.Header>
             <Modal.Body>
                 <p>The app must have access to the following device features in order to function. Tap each of the buttons to grant access. This only needs to be done once.</p>
