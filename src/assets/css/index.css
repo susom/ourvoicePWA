@@ -20,7 +20,6 @@ body {
 .view_box{
     width:100vw;
     height:100vh;
-    background:lightblue;
 }
 
 /*REST OF HEADER STYLES IN assets/css/global_header*/

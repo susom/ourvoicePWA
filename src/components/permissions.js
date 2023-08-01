@@ -1,31 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import usePermissions from './usePermissions';
 import PermissionButton from './PermissionButton';
 
-import {Download, XSquare, Lock, Unlock, Mic, MicMute, MicFill, CameraVideo, CameraVideoFill, CameraVideoOff, GeoAlt, GeoAltFill, RefreshCcw} from "react-bootstrap-icons";
-import {Modal} from "react-bootstrap";
-import LoadingSpinner from "./loading_spinner";
+import { XSquare, Lock, MicFill, CameraVideoFill, GeoAltFill } from "react-bootstrap-icons";
+import { Modal } from "react-bootstrap";
 
 import "../assets/css/permissions.css";
 
 function PermissionRequest() {
-    const [permissions, loading, requestPermission] = usePermissions();
-    const [modalOpen, setModalOpen] = useState(true);  // new state variable to control the modal's visibility
+    return;
+    const [permissions, savePermissions, requestPermission, loading] = usePermissions();
+    const [modalOpen, setModalOpen] = useState(true);
 
     const { camera: cameraPermission, audio: audioPermission, geo: geolocationPermission } = permissions;
 
     const handlePermissionRequest = (permissionName) => {
         console.log(permissionName, permissions[permissionName], permissions);
-        if (permissions[permissionName] === 'prompt') {
+        if (permissions[permissionName] === 'prompt' && !loading[permissionName]) {
             requestPermission(permissionName);
         }
     };
+
+    // Show the close button only if camera permission has been granted
+    const showCloseButton = cameraPermission === 'granted';
 
     return (
         <Modal show={modalOpen && (cameraPermission !== 'granted' || audioPermission !== 'granted' || geolocationPermission !== 'granted')}>
             <Modal.Header>
                 <Modal.Title>The Discovery Tool Device Permissions</Modal.Title>
-                {cameraPermission === 'granted' && <XSquare onClick={() => setModalOpen(false)}/>}
+                {showCloseButton && <XSquare onClick={() => setModalOpen(false)}/>}
             </Modal.Header>
             <Modal.Body>
                 <p>The app must have access to the following device features in order to function. Tap each of the buttons to grant access. This only needs to be done once.</p>

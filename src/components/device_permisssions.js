@@ -9,8 +9,9 @@ import LoadingSpinner from "./loading_spinner";
 import "../assets/css/permissions.css"; // Importing the CSS file
 
 function PermissionModal({ permissionNames }) {
+    return;
     const [modalIsOpen, setIsOpen] = useState(false);
-    const [permissions, loading, requestPermission] = usePermissions();
+    const [permissions, savePermissions, requestPermission, loading] = usePermissions();
     const loadingPermissions = Object.values(loading).some(v => v);
 
     const deniedPermissions = permissionNames.filter(permissionName => permissions[permissionName] === "denied");
