@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import usePermissions from './usePermissions';
 import PermissionButton from './PermissionButton';
 
-import {Download, XSquare, Lock, Unlock, Mic, MicMute, MicFill, CameraVideo, CameraVideoFill, CameraVideoOff, GeoAlt, GeoAltFill} from "react-bootstrap-icons";
+import {Download, XSquare, Lock, Unlock, Mic, MicMute, MicFill, CameraVideo, CameraVideoFill, CameraVideoOff, GeoAlt, GeoAltFill, RefreshCcw} from "react-bootstrap-icons";
 import {Modal} from "react-bootstrap";
 import LoadingSpinner from "./loading_spinner";
 
@@ -33,7 +33,6 @@ function PermissionModal({ permissionNames }) {
         >
             <Modal.Header>
                 <Modal.Title>Missing Device Permissions</Modal.Title>
-                {/*{deniedPermissions.length === 0 && <XSquare className="modal_close_x_btn" onClick={() => setIsOpen(false)} />}*/}
             </Modal.Header>
 
             <Modal.Body>

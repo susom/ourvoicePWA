@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import usePermissions from './usePermissions';
 import PermissionButton from './PermissionButton';
 
-import {Download, XSquare, Lock, Unlock, Mic, MicMute, MicFill, CameraVideo, CameraVideoFill, CameraVideoOff, GeoAlt, GeoAltFill} from "react-bootstrap-icons";
+import {Download, XSquare, Lock, Unlock, Mic, MicMute, MicFill, CameraVideo, CameraVideoFill, CameraVideoOff, GeoAlt, GeoAltFill, RefreshCcw} from "react-bootstrap-icons";
 import {Modal} from "react-bootstrap";
 import LoadingSpinner from "./loading_spinner";
 
@@ -25,8 +25,6 @@ function PermissionRequest() {
         <Modal show={modalOpen && (cameraPermission !== 'granted' || audioPermission !== 'granted' || geolocationPermission !== 'granted')}>
             <Modal.Header>
                 <Modal.Title>The Discovery Tool Device Permissions</Modal.Title>
-                {/*{cameraPermission === 'granted' && audioPermission === 'granted' && geolocationPermission === 'granted' && <XSquare className={`modal_close_x_btn`} onClick={() => setModalOpen(false)} />}*/}
-                {cameraPermission === 'granted'  && <XSquare className={`modal_close_x_btn`} onClick={() => setModalOpen(false)} />}
             </Modal.Header>
             <Modal.Body>
                 <p>The app must have access to the following device features in order to function. Tap each of the buttons to grant access. This only needs to be done once.</p>

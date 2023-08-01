@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocalStorage } from './useLocalStorage';
 
 const usePermissions = () => {
     const initialPermissionsState = {
@@ -12,6 +13,9 @@ const usePermissions = () => {
         audio: false,
         geo: false,
     });
+
+    // Get the stored permissions from the local storage.
+    const [storedPermissions, setStoredPermissions] = useLocalStorage("permissions", initialPermissionsState);
 
     const mapPermissionName = (permissionName) => {
         switch (permissionName) {
@@ -32,6 +36,8 @@ const usePermissions = () => {
             ).then(results => {
                 const permissionsState = results.reduce((acc, current) => ({ ...acc, ...current }), {});
                 setPermissions(permissionsState);
+                // If we get any permissions status from the browser, we update our local storage.
+                setStoredPermissions(permissionsState);
             });
         }
     }, []);
@@ -93,9 +99,15 @@ const usePermissions = () => {
             ...prevLoading,
             [permissionName]: false,
         }));
+
+        // Save the updated permissions state in the local storage.
+        setStoredPermissions(permissions);
     };
 
-
+    // Load the stored permissions from the local storage.
+    useEffect(() => {
+        setPermissions(storedPermissions);
+    }, [storedPermissions]);
 
     return [permissions, loading, requestPermission];
 };
