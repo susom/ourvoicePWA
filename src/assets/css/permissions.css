@@ -27,6 +27,11 @@
     line-height: 120%;
 }
 
+.reset_permissions_db{
+    margin-left:10px;
+    display:inline-block;
+}
+
 .permission_camera{
 
 }

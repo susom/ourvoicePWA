@@ -30,7 +30,7 @@ function PermissionModal({ permissionNames }) {
             audio: "prompt",
             geo: "prompt",
         };
-        
+
         try {
             await db_project.permissions.update(1, initialPermissionsState);
             setPermissions(initialPermissionsState); // update the local state
@@ -93,8 +93,8 @@ function PermissionModal({ permissionNames }) {
                                     </ul>
                                 </li>)
                             }
-                            <li>If you have already reset the permissions and still see this message, try clicking on this to reset the local memory
-                                <button onClick={resetDbPermissions}>
+                            <li>If you have followed the instructions above and still see this message, click this button :
+                                <button className="reset_permissions_db btn btn-warning btn-sm" onClick={resetDbPermissions}>
                                     Reset permissions
                                 </button></li>
                         </ul>

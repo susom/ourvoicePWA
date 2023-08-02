@@ -6,8 +6,6 @@ import {deepMerge} from "../components/util";
 import {SessionContext} from "../contexts/Session";
 import {WalkContext} from "../contexts/Walk";
 
-import "../assets/css/audio_recorder.css";
-
 export default function AudioRecorderWithIndexDB(props) {
     const session_context   = useContext(SessionContext);
     const walk_context      = useContext(WalkContext);
