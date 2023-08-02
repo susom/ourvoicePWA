@@ -37,6 +37,7 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
     const [audioPlaying, setAudioPlaying]   = useState(null);
 
     const [existingFiles, setExistingFiles] = useState([]);
+    const has_audio_comments                = session_context.data.project_info.hasOwnProperty("audio_comments") && session_context.data.project_info["audio_comments"];
 
     useEffect(() => {
         if(hasGeo()){
@@ -251,7 +252,8 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                 <Container className="content walk photo_detail">
                     <Row id="pic_review" className="panel">
                         <Col className="content">
-                            <PermissionModal permissionNames={["audio"]} />
+
+
                             <Container>
                                 <Row className="recent_pic">
                                     <Col>
@@ -274,15 +276,23 @@ function PhotoDetail({setDataUri, dataUri, viewPhotoDetail, setViewPhotoDetail})
                                         }}>keyboard</a>
                                     </Col>
                                     <Col xs={{span: 9}} className="record_audio">
-                                        <AudioRecorderWithIndexDB stateAudios={audios} stateSetAudios={setAudios}/>
+                                        {
+                                            session_context.data.project_info["audio_comments"] ? (
+                                                <>
+                                                    <PermissionModal permissionNames={["audio"]} />
+                                                    <AudioRecorderWithIndexDB stateAudios={audios} stateSetAudios={setAudios}/>
 
-                                        <div id="saved_audio">
-                                            {
-                                                Object.keys(audios).map((key, idx) => {
-                                                    return <a href="/#" className="saved" key={key} onClick={(e) => { handleAudio(e, key) }}>{idx+1}</a>
-                                                })
-                                            }
-                                        </div>
+                                                    <div id="saved_audio">
+                                                        {
+                                                            Object.keys(audios).map((key, idx) => {
+                                                                return <a href="/#" className="saved" key={key} onClick={(e) => { handleAudio(e, key) }}>{idx+1}</a>
+                                                            })
+                                                        }
+                                                    </div>
+                                                </>
+                                            )
+                                            : ""
+                                        }
                                     </Col>
 
                                 </Row>

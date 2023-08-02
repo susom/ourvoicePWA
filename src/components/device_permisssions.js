@@ -22,8 +22,6 @@ function PermissionModal({ permissionNames }) {
         "geo" : {"msg" : "The app requires use of the geolocation data for mapping walks around the neighborhood", "icon" : <GeoAltFill size={40}/> },
     }
 
-    console.log(permissionNames);
-
     useEffect(() => {
         if (!loadingPermissions) {
             const isPermissionNotGranted = deniedPermissions.length > 0 || permissionNames.some(permissionName => permissions[permissionName] !== "granted");
@@ -38,15 +36,15 @@ function PermissionModal({ permissionNames }) {
             className="permissions_spotCheck"
         >
             <Modal.Header>
-                <Modal.Title>Missing Device Permissions</Modal.Title>
+                <Modal.Title>Required Device Permissions</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
                 {deniedPermissions.length > 0 && (
                     <div>
-                        <p>The {deniedPermissionsString} permission(s) have been denied. You can re-enable it by following these steps:</p>
+                        <p>The {deniedPermissionsString} permission(s) have been denied. They can be re-enabled by following these steps:</p>
 
-                        <h5>If Installed:</h5>
+                        <h5>If Installed to Home Screen:</h5>
                         <ul>
                             <li>Delete app from home screen and reinstall it from a browser</li>
                         </ul>
@@ -82,17 +80,19 @@ function PermissionModal({ permissionNames }) {
                 )}
                 <div className="permissions">
                     {permissionNames.map(permissionName => (
-                        <div key={permissionName}>
-                            <PermissionButton
-                                permissionName={permissionName}
-                                isGranted={permissions[permissionName] === "granted"}
-                                isLoading={loading[permissionName]}
-                                onGrant={() => requestPermission(permissionName)}
-                                iconGranted={permission_messaging[permissionName]["icon"]}
-                                iconLocked={<Lock size={40}/>}
-                                description={permission_messaging[permissionName]["msg"]}
-                            />
-                        </div>
+                        permissions[permissionName] !== "denied" && (
+                            <div key={permissionName}>
+                                <PermissionButton
+                                    permissionName={permissionName}
+                                    isGranted={permissions[permissionName] === "granted"}
+                                    isLoading={loading[permissionName]}
+                                    onGrant={() => requestPermission(permissionName)}
+                                    iconGranted={permission_messaging[permissionName]["icon"]}
+                                    iconLocked={<Lock size={40}/>}
+                                    description={permission_messaging[permissionName]["msg"]}
+                                />
+                            </div>
+                        )
                     ))}
                 </div>
             </Modal.Body>

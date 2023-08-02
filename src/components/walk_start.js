@@ -77,7 +77,7 @@ function WalkStart(props) {
             <Container className="content walk walk_start" >
                 <Row id="walk_start" className="panel">
                     <Col className="content">
-                        <PermissionModal permissionNames={["geo", "camera"]} onPermissionGranted={walkmap_context.startGeoTracking} />
+                        <PermissionModal permissionNames={["camera","geo"]} onPermissionGranted={walkmap_context.startGeoTracking} />
 
                         <Container>
                             <Row>
