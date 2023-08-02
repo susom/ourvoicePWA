@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import usePermissions from './usePermissions';
 import PermissionButton from './PermissionButton';
+import {db_project} from "../database/db";
 import {getDeviceType} from "./util";
 
 import {Lock, MicFill, CameraVideoFill, GeoAltFill } from "react-bootstrap-icons";
@@ -9,7 +10,8 @@ import {Modal} from "react-bootstrap";
 import "../assets/css/permissions.css"; // Importing the CSS file
 
 function PermissionModal({ permissionNames }) {
-    const [permissions, loading, requestPermission] = usePermissions();
+    const [permissions, loading, requestPermission, setPermissions] = usePermissions();
+
     const [modalIsOpen, setIsOpen]  = useState(false);
     const loadingPermissions        = Object.values(loading).some(v => v);
     const deniedPermissions         = permissionNames.filter(permissionName => permissions[permissionName] === "denied");
@@ -21,6 +23,22 @@ function PermissionModal({ permissionNames }) {
         "audio" : {"msg" : "The app requires use of the microphone for recording observations of neighborhood features", "icon" : <MicFill size={40}/> },
         "geo" : {"msg" : "The app requires use of the geolocation data for mapping walks around the neighborhood", "icon" : <GeoAltFill size={40}/> },
     }
+
+    const resetDbPermissions = async () => {
+        const initialPermissionsState = {
+            camera: "prompt",
+            audio: "prompt",
+            geo: "prompt",
+        };
+        
+        try {
+            await db_project.permissions.update(1, initialPermissionsState);
+            setPermissions(initialPermissionsState); // update the local state
+            console.log("Permissions reset successful");
+        } catch (error) {
+            console.error("Could not reset permissions:", error);
+        }
+    };
 
     useEffect(() => {
         if (!loadingPermissions) {
@@ -75,6 +93,10 @@ function PermissionModal({ permissionNames }) {
                                     </ul>
                                 </li>)
                             }
+                            <li>If you have already reset the permissions and still see this message, try clicking on this to reset the local memory
+                                <button onClick={resetDbPermissions}>
+                                    Reset permissions
+                                </button></li>
                         </ul>
                     </div>
                 )}

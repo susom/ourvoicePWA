@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import {db_project} from "../database/db";
+import {getDeviceType} from "./util";
 
 const usePermissions = () => {
     const initialPermissionsState = {
@@ -23,8 +24,30 @@ const usePermissions = () => {
         }
     };
 
+    const loadDbPermissions = async () => {
+        try {
+            const dbPermissions = await db_project.permissions.get(1);
+            return dbPermissions || initialPermissionsState;
+        } catch (error) {
+            console.error("Could not load permissions from the database:", error);
+            return initialPermissionsState;
+        }
+    };
+
+    const updateDbPermissions = async (permissions) => {
+        try {
+            await db_project.permissions.put({ id: 1, ...permissions });
+        } catch (error) {
+            console.error("Could not update permissions in the database:", error);
+        }
+    }
+
+    const device_type = getDeviceType();
+    //if device_type === "Android"
+    console.log(device_type);
+
     useEffect(() => {
-        if (navigator.permissions) {
+        if (device_type === "Android" && navigator.permissions) {
             Promise.all(
                 Object.keys(initialPermissionsState).map(async (permissionName) => {
                     const permissionStatus = await navigator.permissions.query({ name: mapPermissionName(permissionName) });
@@ -32,6 +55,10 @@ const usePermissions = () => {
                 })
             ).then(results => {
                 const permissionsState = results.reduce((acc, current) => ({ ...acc, ...current }), {});
+                setPermissions(permissionsState);
+            });
+        } else {
+            loadDbPermissions().then(permissionsState => {
                 setPermissions(permissionsState);
             });
         }
@@ -48,18 +75,28 @@ const usePermissions = () => {
                 case 'camera':
                     const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
                     videoStream.getTracks().forEach(track => track.stop());
-                    setPermissions(prevPermissions => ({
-                        ...prevPermissions,
-                        camera: 'granted',
-                    }));
+
+                    setPermissions(prevPermissions => {
+                        const updatedPermissions = {
+                            ...prevPermissions,
+                            camera: 'granted',
+                        };
+                        updateDbPermissions(updatedPermissions);  // Update the database
+                        return updatedPermissions;
+                    });
                     break;
                 case 'audio':
                     const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     audioStream.getTracks().forEach(track => track.stop());
-                    setPermissions(prevPermissions => ({
-                        ...prevPermissions,
-                        audio: 'granted',
-                    }));
+
+                    setPermissions(prevPermissions => {
+                        const updatedPermissions = {
+                            ...prevPermissions,
+                            audio: 'granted',
+                        };
+                        updateDbPermissions(updatedPermissions);  // Update the database
+                        return updatedPermissions;
+                    });
                     break;
                 case 'geo':
                     const granted = await new Promise((resolve) => {
@@ -69,20 +106,29 @@ const usePermissions = () => {
                             resolve('denied');
                         }
                     });
-                    setPermissions(prevPermissions => ({
-                        ...prevPermissions,
-                        geo: granted,
-                    }));
+
+                    setPermissions(prevPermissions => {
+                        const updatedPermissions = {
+                            ...prevPermissions,
+                            geo: 'granted',
+                        };
+                        updateDbPermissions(updatedPermissions);  // Update the database
+                        return updatedPermissions;
+                    });
                     break;
                 default:
                     break;
             }
         } catch (error) {
             if (error.name === 'NotAllowedError') {
-                setPermissions(prevPermissions => ({
-                    ...prevPermissions,
-                    [permissionName]: 'denied',
-                }));
+                setPermissions(prevPermissions => {
+                    const updatedPermissions = {
+                        ...prevPermissions,
+                        [permissionName]: 'denied',
+                    };
+                    updateDbPermissions(updatedPermissions);  // Update the database
+                    return updatedPermissions;
+                });
             } else {
                 console.error(`An error occurred while requesting ${permissionName} permission: ${error}`);
             }
@@ -94,7 +140,7 @@ const usePermissions = () => {
         }));
     };
 
-    return [permissions, loading, requestPermission];
+    return [permissions, loading, requestPermission, setPermissions];
 };
 
 export default usePermissions;

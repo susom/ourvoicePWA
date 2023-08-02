@@ -3,11 +3,11 @@ import _ from "lodash";
 
 export function getDeviceType(){
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-        return 'iOS';
-    }
-    if (/android/i.test(userAgent)) {
+    if (/android|Chrome/i.test(userAgent)) {
         return 'Android';
+    }
+    if (/iPad|iPhone|iPod|Safari/.test(userAgent) && !window.MSStream) {
+        return 'iOS';
     }
     return 'unknown';
 };
