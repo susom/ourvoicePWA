@@ -327,7 +327,7 @@ function ViewBox(props){
                     onClickNav = { onClickNavigate }
                 />
                 <AlertModal show={showModal} handleCancel={handleCancel} handleOK={handleOK} message={alertMessage}/>
-                <PermissionModal permissionNames={["camera","geo"]} />
+                {/*<PermissionModal permissionNames={["camera","geo"]} />*/}
             </div>
     )
 }
