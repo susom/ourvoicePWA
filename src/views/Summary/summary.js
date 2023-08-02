@@ -95,11 +95,11 @@ function ViewBox(props){
             </Row>
 
             <Row sm={{span:6}} xs={{span:6}}>
-                <Col sm={{span:4, offset:2}} xs={{span:5, offset:0}} className="consentbox vertconnect mr-0" >You
+                <Col sm={{span:4, offset:2}} xs={{span:5, offset:0}} className="consentbox vertconnect mr-0" >
                     {your_photos_text}
                 </Col>
-                <Col sm={{span:4, offset:0}} xs={{span:5, offset:0}} className="consentbox vertconnect"
-                     >{your_comments_text}
+                <Col sm={{span:4, offset:0}} xs={{span:5, offset:0}} className="consentbox vertconnect">
+                    {your_comments_text}
                 </Col>
             </Row>
 
