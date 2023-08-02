@@ -41,25 +41,7 @@ export const SessionContextProvider = ({children}) => {
                 const appDataSnapshot = await getDoc(appDataRef);
                 if (appDataSnapshot.exists()) {
                     const appTextData = appDataSnapshot.get('app_text');
-                    console.log("App Text Document:", appTextData);
-
-                    // console.log("lets try this");
-                    // console.log(appTextData["good_or_bad"]["ch"]);
                     setTranslations({ ...defaultTranslations, ...appTextData });
-
-                    // refresh the defaultTranslations.json once in a while with this
-
-                    // const englishTranslations   = Object.entries(appTextData).reduce((acc, [key, value]) => {
-                    //     acc[key] = { "en": value.en };
-                    //     return acc;
-                    // }, {});
-
-                    // let ordered = {};
-                    // Object.keys(englishTranslations).sort().forEach(function(key) {
-                    //     ordered[key] = englishTranslations[key];
-                    // });
-
-                    // console.log(JSON.stringify(ordered, null, 2));
                 }
             } catch (error) {
                 console.error("Error getting documents: ", error);
@@ -71,7 +53,6 @@ export const SessionContextProvider = ({children}) => {
 
     const handleLanguageChange = (language) => {
         setSelectedLanguage(language);
-        console.log("new preferred langauge", language);
     };
 
     // This function can be called to update lastUpdated

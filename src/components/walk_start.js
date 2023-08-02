@@ -15,12 +15,12 @@ import { updateContext } from "../components/util";
 import loading_photo_ui_boring from "../assets/images/loading_camera_boring.gif";
 
 function WalkStart(props) {
-    const session_context = useContext(SessionContext);
-    const walk_context = useContext(WalkContext);
-    const walkmap_context = useContext(WalkmapContext);
+    const session_context   = useContext(SessionContext);
+    const walk_context      = useContext(WalkContext);
+    const walkmap_context   = useContext(WalkmapContext);
 
-    const [takePhoto, setTakePhoto] = useState(false);
-    const [cameraLoaded, setCameraLoaded] = useState(false);
+    const [takePhoto, setTakePhoto]                 = useState(false);
+    const [cameraLoaded, setCameraLoaded]           = useState(false);
     const [customPhotoPrompt, setCustomPhotoPrompt] = useState("");
 
     useEffect(() => {
@@ -57,9 +57,9 @@ function WalkStart(props) {
         update_walk();
     }
 
-    const take_photo_text = session_context.getTranslation("take_photo");
+    const take_photo_text   = session_context.getTranslation("take_photo");
     const take_another_text = session_context.getTranslation("take_another");
-    const done_walk_text = session_context.getTranslation("done_walk");
+    const done_walk_text    = session_context.getTranslation("done_walk");
 
     return (
         (takePhoto) ?
@@ -77,7 +77,7 @@ function WalkStart(props) {
             <Container className="content walk walk_start" >
                 <Row id="walk_start" className="panel">
                     <Col className="content">
-                        <PermissionModal permissionNames={["geo", "photo"]} onPermissionGranted={walkmap_context.startGeoTracking} />
+                        <PermissionModal permissionNames={["geo", "camera"]} onPermissionGranted={walkmap_context.startGeoTracking} />
 
                         <Container>
                             <Row>

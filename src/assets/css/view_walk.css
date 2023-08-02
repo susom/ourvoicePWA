@@ -110,6 +110,8 @@ LIGHT GREY  : #E0E0E0
     text-indent: -50000px;
 }
 
+
+
 .record_audio .audio-recorder{
     color:#333;
     text-shadow:none;
@@ -127,10 +129,11 @@ LIGHT GREY  : #E0E0E0
     box-shadow: 1px 1px 3px 1px #475464;
 }
 .record_audio .audio-recorder.recording {
-    padding:0 20px;
+    padding:0 10px;
 }
 .record_audio .audio-recorder.recording .audio-recorder-status {
     display:inline-block;
+    margin-left:0;
 }
 
 #saved_audio {

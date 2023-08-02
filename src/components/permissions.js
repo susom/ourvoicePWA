@@ -1,34 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import usePermissions from './usePermissions';
 import PermissionButton from './PermissionButton';
 
-import { XSquare, Lock, MicFill, CameraVideoFill, GeoAltFill } from "react-bootstrap-icons";
-import { Modal } from "react-bootstrap";
+import {XSquare, Lock, MicFill, CameraVideoFill, GeoAltFill} from "react-bootstrap-icons";
+import {Modal} from "react-bootstrap";
 
 import "../assets/css/permissions.css";
 
 function PermissionRequest() {
     return;
-    const [permissions, savePermissions, requestPermission, loading] = usePermissions();
-    const [modalOpen, setModalOpen] = useState(true);
+    const [permissions, loading, requestPermission] = usePermissions();
+    const [modalOpen, setModalOpen]                 = useState(true);  // new state variable to control the modal's visibility
 
     const { camera: cameraPermission, audio: audioPermission, geo: geolocationPermission } = permissions;
 
     const handlePermissionRequest = (permissionName) => {
-        console.log(permissionName, permissions[permissionName], permissions);
-        if (permissions[permissionName] === 'prompt' && !loading[permissionName]) {
+        if (permissions[permissionName] === 'prompt') {
             requestPermission(permissionName);
         }
     };
-
-    // Show the close button only if camera permission has been granted
-    const showCloseButton = cameraPermission === 'granted';
 
     return (
         <Modal show={modalOpen && (cameraPermission !== 'granted' || audioPermission !== 'granted' || geolocationPermission !== 'granted')}>
             <Modal.Header>
                 <Modal.Title>The Discovery Tool Device Permissions</Modal.Title>
-                {showCloseButton && <XSquare onClick={() => setModalOpen(false)}/>}
+                {cameraPermission === 'granted'  && <XSquare className={`modal_close_x_btn`} onClick={() => setModalOpen(false)} />}
             </Modal.Header>
             <Modal.Body>
                 <p>The app must have access to the following device features in order to function. Tap each of the buttons to grant access. This only needs to be done once.</p>

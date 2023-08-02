@@ -1,5 +1,17 @@
 import _ from "lodash";
 
+
+export function getDeviceType(){
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return 'iOS';
+    }
+    if (/android/i.test(userAgent)) {
+        return 'Android';
+    }
+    return 'unknown';
+};
+
 export function putDb(db_table, context_data){
     const update_db = async () => {
         try {

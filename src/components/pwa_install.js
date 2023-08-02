@@ -4,6 +4,7 @@ import { Modal } from 'react-bootstrap';
 import { Download , XSquare} from 'react-bootstrap-icons';
 import { BrowserView, MobileView } from 'react-device-detect';
 import {db_project} from "../database/db";
+import {getDeviceType} from "./util";
 
 import AndroidInstallPrompt from "./pwa_install_android";
 
@@ -13,19 +14,6 @@ import browser_install_2 from "../assets/images/screenshot_browser_install_2.png
 import safari_install_1 from "../assets/images/ios_safari_install_1.png";
 import safari_install_2 from "../assets/images/ios_safari_install_2.png";
 import safari_install_3 from "../assets/images/ios_safari_install_3.png";
-
-
-// Detect device type (iOS or Android)
-const getDeviceType = () => {
-  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-    return 'iOS';
-  }
-  if (/android/i.test(userAgent)) {
-    return 'Android';
-  }
-  return 'unknown';
-};
 
 // Update the PWAInstallModal component to display device-specific instructions
 const PWAInstallModal = () => {

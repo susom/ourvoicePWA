@@ -1,41 +1,100 @@
-import { useEffect, useState } from 'react';
-import { db_project } from '../database/db';
-
-const permissionMap = {
-    "camera": "camera",
-    "audio": "microphone",
-    "geo": "geolocation",
-};
+import { useState, useEffect } from 'react';
+import {db_project} from "../database/db";
 
 const usePermissions = () => {
-    const [permissions, setPermissions] = useState({});
-    const [loading, setLoading] = useState(true);
+    const initialPermissionsState = {
+        camera: "prompt",
+        audio: "prompt",
+        geo: "prompt",
+    };
+    const [permissions, setPermissions] = useState(initialPermissionsState);
+    const [loading, setLoading] = useState({
+        camera: false,
+        audio: false,
+        geo: false,
+    });
+
+    const mapPermissionName = (permissionName) => {
+        switch (permissionName) {
+            case 'camera': return 'camera';
+            case 'audio': return 'microphone';
+            case 'geo': return 'geolocation';
+            default: return null;
+        }
+    };
 
     useEffect(() => {
-        const fetchPermissions = async () => {
-            const permissions = await db_project.permissions.get(1);
-            setPermissions(permissions);
-            setLoading(false);
-        };
-        fetchPermissions();
+        if (navigator.permissions) {
+            Promise.all(
+                Object.keys(initialPermissionsState).map(async (permissionName) => {
+                    const permissionStatus = await navigator.permissions.query({ name: mapPermissionName(permissionName) });
+                    return { [permissionName]: permissionStatus.state };
+                })
+            ).then(results => {
+                const permissionsState = results.reduce((acc, current) => ({ ...acc, ...current }), {});
+                setPermissions(permissionsState);
+            });
+        }
     }, []);
 
-    const savePermissions = async (updatedPermissions) => {
-        setLoading(true);
-        await db_project.permissions.put({ id: 1, ...updatedPermissions });
-        setPermissions(updatedPermissions);
-        setLoading(false);
+    const requestPermission = async (permissionName) => {
+        setLoading((prevLoading) => ({
+            ...prevLoading,
+            [permissionName]: true,
+        }));
+
+        try {
+            switch (permissionName) {
+                case 'camera':
+                    const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    videoStream.getTracks().forEach(track => track.stop());
+                    setPermissions(prevPermissions => ({
+                        ...prevPermissions,
+                        camera: 'granted',
+                    }));
+                    break;
+                case 'audio':
+                    const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    audioStream.getTracks().forEach(track => track.stop());
+                    setPermissions(prevPermissions => ({
+                        ...prevPermissions,
+                        audio: 'granted',
+                    }));
+                    break;
+                case 'geo':
+                    const granted = await new Promise((resolve) => {
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(() => resolve('granted'), () => resolve('denied'));
+                        } else {
+                            resolve('denied');
+                        }
+                    });
+                    setPermissions(prevPermissions => ({
+                        ...prevPermissions,
+                        geo: granted,
+                    }));
+                    break;
+                default:
+                    break;
+            }
+        } catch (error) {
+            if (error.name === 'NotAllowedError') {
+                setPermissions(prevPermissions => ({
+                    ...prevPermissions,
+                    [permissionName]: 'denied',
+                }));
+            } else {
+                console.error(`An error occurred while requesting ${permissionName} permission: ${error}`);
+            }
+        }
+
+        setLoading((prevLoading) => ({
+            ...prevLoading,
+            [permissionName]: false,
+        }));
     };
 
-    const requestPermission = async (name) => {
-        const mappedName = permissionMap[name] || name;
-        const permissionStatus = await navigator.permissions.query({ name: mappedName });
-        const updatedPermissions = { ...permissions, [name]: permissionStatus.state };
-        savePermissions(updatedPermissions);
-        return permissionStatus.state;
-    };
-
-    return [permissions, savePermissions, requestPermission, loading];
+    return [permissions, loading, requestPermission];
 };
 
 export default usePermissions;

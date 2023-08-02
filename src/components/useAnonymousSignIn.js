@@ -7,7 +7,6 @@ const useAnonymousSignIn = () => {
         const signIn = async () => {
             try {
                 if(!auth.currentUser){
-                    console.log("no curentUser, so sign in Anon");
                     await signInAnonymously(auth);
                 }
             } catch (error) {
