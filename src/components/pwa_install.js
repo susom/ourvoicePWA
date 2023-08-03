@@ -17,7 +17,7 @@ import safari_install_3 from "../assets/images/ios_safari_install_3.png";
 
 // Update the PWAInstallModal component to display device-specific instructions
 const PWAInstallModal = () => {
-  const [isInstallButtonVisible, setIsInstallButtonVisible] = useState(false);
+  const [isInstallButtonVisible, setIsInstallButtonVisible] = useState(true);
   const [show, setShow] = useState(false);
   const deviceType      = getDeviceType();
   const PWAINSTALLED_ROW_ID = 1;
@@ -33,7 +33,7 @@ const PWAInstallModal = () => {
 
             if (installed && installed.hasOwnProperty("is_complete") && installed.is_complete) {
                 //ALREADY INSTALLED SO HIDE
-                setIsInstallButtonVisible(false);
+                // setIsInstallButtonVisible(false);
             }else{
                 window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
             }
@@ -50,7 +50,7 @@ const PWAInstallModal = () => {
   const handleInstallClick = async () => {
         handleToggle();
         await db_project.installed.put({ id: PWAINSTALLED_ROW_ID, is_complete : true });
-        setIsInstallButtonVisible(false);
+        // setIsInstallButtonVisible(false);
 
         // Check if the beforeinstallprompt event has been fired
         if (window.beforeInstallPromptEvent) {
@@ -62,7 +62,7 @@ const PWAInstallModal = () => {
                 if (promptResult.outcome === 'accepted') {
                     await db_project.installed.put({ id: PWAINSTALLED_ROW_ID, is_complete : true });
 
-                    setIsInstallButtonVisible(false);
+                    // setIsInstallButtonVisible(false);
                 }
             } catch (err) {
                 console.error('Error during installation:', err);
