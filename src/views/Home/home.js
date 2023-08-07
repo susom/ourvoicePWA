@@ -72,13 +72,13 @@ function ViewProjectDetails(props){
                         //TODO GET ov_meta AND PUT IN AP too
                         updateActiveProject(active_project_data);
                     }else{
-                        setStatus("Invalid Project Id or Project Password");
+                        setStatus("Invalid Project Id or Project Passcode");
                         props.setPword("");
                     }
                 }
             });
         }else{
-            setStatus("Invalid Project Id or Project Password");
+            setStatus("Invalid Project Id or Project Passcode");
             props.setAlertMessage({"title" : "Pleas try again", "body" : "Wrong Project ID or Passcode", "cancel_txt" : "Close" , "ok_txt" : ""});
             props.setShowModal(true);
             props.setPword("");
@@ -153,7 +153,7 @@ function ViewProjectDetails(props){
         </label>
     ) : (
         <label><span>{passcode_text}</span>
-            <span className="input_field"><input type="password" onChange={ e => props.setPword(e.target.value)} value={props.pword} placeholder='eg; 1234' autoComplete="off"/></span>
+            <span className="input_field"><input type="text" onChange={ e => props.setPword(e.target.value)} value={props.pword} placeholder='eg; 1234' autoComplete="off"/></span>
         </label>
     );
 
