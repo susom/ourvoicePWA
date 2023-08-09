@@ -31,6 +31,7 @@ export const SessionContextProvider = ({children}) => {
 
     const [selectedLanguage, setSelectedLanguage]       = useState('en');
     const [translations, setTranslations]               = useState(defaultTranslations);
+    const [version, setVersion]                         = useState("v 4.0.0");
 
     useEffect(() => {
         const fetchTranslations = async () => {
@@ -38,10 +39,13 @@ export const SessionContextProvider = ({children}) => {
             const appDataRef    = doc(ovMetaRef, "app_data");
 
             try {
-                const appDataSnapshot = await getDoc(appDataRef);
+                const appDataSnapshot   = await getDoc(appDataRef);
                 if (appDataSnapshot.exists()) {
-                    const appTextData = appDataSnapshot.get('app_text');
+                    const appTextData   = appDataSnapshot.get('app_text');
                     setTranslations({ ...defaultTranslations, ...appTextData });
+
+                    const version       = appDataSnapshot.get('version');
+
                 }
             } catch (error) {
                 console.error("Error getting documents: ", error);
@@ -77,7 +81,7 @@ export const SessionContextProvider = ({children}) => {
     };
 
     return (
-        <SessionContext.Provider value={{data, setData,selectedLanguage,handleLanguageChange, translations, getTranslation, resetData, slideOpen, setSlideOpen, previewPhoto, setPreviewPhoto, previewWalk, setPreviewWalk, previewWalkID, setPreviewWalkID, previewProjID, setPreviewProjID, lastUploadsUpdated, updateLastUploadsUpdated}}>
+        <SessionContext.Provider value={{data, setData,selectedLanguage,handleLanguageChange, translations, getTranslation, resetData, slideOpen, setSlideOpen, previewPhoto, setPreviewPhoto, previewWalk, setPreviewWalk, previewWalkID, setPreviewWalkID, previewProjID, setPreviewProjID, lastUploadsUpdated, updateLastUploadsUpdated, version}}>
             {children}
         </SessionContext.Provider>
     );

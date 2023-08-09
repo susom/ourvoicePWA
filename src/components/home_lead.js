@@ -7,8 +7,8 @@ function HomeLead(props){
 
     const discovery_text            = session_context.getTranslation("discovery_tool");
     const copyright_text            = session_context.getTranslation("copyright");
+    const version                   = session_context.version;
 
-    const [version, setVersion]     = useState("v 4.0.0");
 
 
     useEffect(() => {
