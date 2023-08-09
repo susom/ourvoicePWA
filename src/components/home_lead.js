@@ -8,6 +8,8 @@ function HomeLead(props){
     const discovery_text            = session_context.getTranslation("discovery_tool");
     const copyright_text            = session_context.getTranslation("copyright");
 
+    const [version, setVersion]     = useState("v 4.0.0");
+
 
     useEffect(() => {
         setSignedIn(props.signedIn);
@@ -16,7 +18,7 @@ function HomeLead(props){
     return  signedIn ? (
         <div className="view_lead">
             <h2>{discovery_text}</h2>
-            <p>v 4.0.0</p>
+            <p>{version}</p>
             <cite>{copyright_text}</cite>
         </div>
     ) : (
@@ -24,6 +26,8 @@ function HomeLead(props){
             <p>Thank you for your interest in the Discovery Tool</p>
             <p>The Discovery Tool is only available for use in approved projects.</p>
             <p>For more information please visit<br/><a href="https://ourvoice.stanford.edu">https://ourvoice.stanford.edu</a></p>
+            <p>{version}</p>
+            <cite>{copyright_text}</cite>
         </div>
     );
 }
